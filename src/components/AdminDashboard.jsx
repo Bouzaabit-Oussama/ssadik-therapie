@@ -283,6 +283,52 @@ const DEFAULT_ACCOUNTS_FALLBACK = [
   }
 ];
 
+/**
+ * Helper to match a lead's date string/timestamp against date filter options ('all', 'today', 'week', 'month')
+ */
+function matchesDateFilter(dateInput, filterType) {
+  if (filterType === 'all') return true;
+  if (!dateInput) return false;
+
+  let d;
+  if (typeof dateInput === 'string') {
+    d = new Date(dateInput);
+  } else if (dateInput && dateInput.toDate) {
+    d = dateInput.toDate();
+  } else {
+    d = new Date(dateInput);
+  }
+
+  if (isNaN(d.getTime())) return false;
+
+  const now = new Date();
+
+  // 1. TODAY: Exact calendar day match (same Year, Month, Date)
+  if (filterType === 'today') {
+    return (
+      d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate()
+    );
+  }
+
+  // 2. WEEK: Last 7 calendar days up to end of today
+  if (filterType === 'week') {
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6, 0, 0, 0, 0);
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    return d >= startOfWeek && d <= endOfToday;
+  }
+
+  // 3. MONTH: Last 30 calendar days up to end of today
+  if (filterType === 'month') {
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29, 0, 0, 0, 0);
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    return d >= startOfMonth && d <= endOfToday;
+  }
+
+  return true;
+}
+
 export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -635,23 +681,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   });
 
   // 1. DEDICATED FILTER FOR STATISTICS & ANALYTICS SECTION (Admin Only)
-  const statsLeads = accessibleLeads.filter(lead => {
-    if (statsDateFilter === 'all') return true;
-    if (!lead.date) return false;
-    const leadDate = new Date(lead.date);
-    const now = new Date();
-    if (statsDateFilter === 'today') {
-      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      return leadDate >= startOfToday;
-    } else if (statsDateFilter === 'week') {
-      const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      return leadDate >= startOfWeek;
-    } else if (statsDateFilter === 'month') {
-      const startOfMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      return leadDate >= startOfMonth;
-    }
-    return true;
-  });
+  const statsLeads = accessibleLeads.filter(lead => matchesDateFilter(lead.date, statsDateFilter));
 
   // Compute stats based exclusively on statsDateFilter
   const totalCount = statsLeads.length;
@@ -662,21 +692,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   // 2. DEDICATED FILTER FOR RESERVATIONS TABLE (Search + Status + Table Date Filter)
   const filteredLeads = accessibleLeads.filter(lead => {
     // A. Table Date Filter
-    if (tableDateFilter !== 'all') {
-      if (!lead.date) return false;
-      const leadDate = new Date(lead.date);
-      const now = new Date();
-      if (tableDateFilter === 'today') {
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        if (leadDate < startOfToday) return false;
-      } else if (tableDateFilter === 'week') {
-        const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        if (leadDate < startOfWeek) return false;
-      } else if (tableDateFilter === 'month') {
-        const startOfMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        if (leadDate < startOfMonth) return false;
-      }
-    }
+    if (!matchesDateFilter(lead.date, tableDateFilter)) return false;
 
     // B. Table Status Filter
     const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
