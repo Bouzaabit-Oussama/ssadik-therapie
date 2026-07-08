@@ -303,7 +303,8 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   const [leads, setLeads] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  const [dateFilter, setDateFilter] = useState('all');
+  const [tableDateFilter, setTableDateFilter] = useState('all');
+  const [statsDateFilter, setStatsDateFilter] = useState('all');
   const [showAnalytics, setShowAnalytics] = useState(true);
 
   // Inline edit state
@@ -633,47 +634,67 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
     return leadDate >= cutoffDate;
   });
 
-  // Filter by date first to compute stats for the active time period
-  const dateFilteredLeads = accessibleLeads.filter(lead => {
-    if (dateFilter === 'all') return true;
+  // 1. DEDICATED FILTER FOR STATISTICS & ANALYTICS SECTION (Admin Only)
+  const statsLeads = accessibleLeads.filter(lead => {
+    if (statsDateFilter === 'all') return true;
     if (!lead.date) return false;
     const leadDate = new Date(lead.date);
     const now = new Date();
-    if (dateFilter === 'today') {
+    if (statsDateFilter === 'today') {
       const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       return leadDate >= startOfToday;
-    } else if (dateFilter === 'week') {
+    } else if (statsDateFilter === 'week') {
       const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       return leadDate >= startOfWeek;
-    } else if (dateFilter === 'month') {
+    } else if (statsDateFilter === 'month') {
       const startOfMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       return leadDate >= startOfMonth;
     }
     return true;
   });
 
-  // Compute stats based on the selected date filter
-  const totalCount = dateFilteredLeads.length;
-  const pendingCount = dateFilteredLeads.filter(l => l.status === 'Pending').length;
-  const confirmedCount = dateFilteredLeads.filter(l => l.status === 'Confirmed').length;
-  const cancelledCount = dateFilteredLeads.filter(l => l.status === 'Cancelled').length;
+  // Compute stats based exclusively on statsDateFilter
+  const totalCount = statsLeads.length;
+  const pendingCount = statsLeads.filter(l => l.status === 'Pending').length;
+  const confirmedCount = statsLeads.filter(l => l.status === 'Confirmed').length;
+  const cancelledCount = statsLeads.filter(l => l.status === 'Cancelled').length;
 
-  // Apply status filter and search query to get final list
-  const filteredLeads = dateFilteredLeads.filter(lead => {
+  // 2. DEDICATED FILTER FOR RESERVATIONS TABLE (Search + Status + Table Date Filter)
+  const filteredLeads = accessibleLeads.filter(lead => {
+    // A. Table Date Filter
+    if (tableDateFilter !== 'all') {
+      if (!lead.date) return false;
+      const leadDate = new Date(lead.date);
+      const now = new Date();
+      if (tableDateFilter === 'today') {
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        if (leadDate < startOfToday) return false;
+      } else if (tableDateFilter === 'week') {
+        const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        if (leadDate < startOfWeek) return false;
+      } else if (tableDateFilter === 'month') {
+        const startOfMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        if (leadDate < startOfMonth) return false;
+      }
+    }
+
+    // B. Table Status Filter
     const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
+
+    // C. Search Query
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = 
       lead.name.toLowerCase().includes(searchLower) || 
       lead.whatsapp.includes(searchLower) ||
       (lead.service && lead.service.toLowerCase().includes(searchLower));
-    
+
     return matchesStatus && matchesSearch;
   });
 
-  // Analytics helper functions
+  // Analytics helper functions (driven by statsLeads)
   const getEvolutionData = () => {
     const dailyMap = {};
-    const sortedLeads = [...dateFilteredLeads].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const sortedLeads = [...statsLeads].sort((a, b) => new Date(a.date) - new Date(b.date));
     
     sortedLeads.forEach(lead => {
       if (!lead.date) return;
@@ -716,7 +737,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   const getServiceData = () => {
     const serviceMap = {};
     
-    dateFilteredLeads.forEach(lead => {
+    statsLeads.forEach(lead => {
       const serviceName = lead.service || 'Autre';
       if (!serviceMap[serviceName]) {
         serviceMap[serviceName] = { 
@@ -1045,49 +1066,82 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
         {/* TAB 1: RESERVATIONS VIEW */}
         {activeTab === 'reservations' && (
           <>
-            {/* STATS OVERVIEW CARDS - VISIBLE FOR ADMIN ONLY */}
+            {/* STATS OVERVIEW CARDS & DEDICATED STATS FILTER - VISIBLE FOR ADMIN ONLY */}
             {userProfile?.role === 'admin' && (
-              <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                  <div>
-                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsTotal}</p>
-                    <h3 className="text-2xl md:text-3xl font-black text-therapy-900 mt-1">{totalCount}</h3>
+              <div className="space-y-4">
+                {/* Dedicated Statistics Date Filter Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-sand-200 shadow-xs text-start">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-medical-500" />
+                    <h2 className="text-sm md:text-base font-black text-therapy-900">
+                      {lang === 'ar' ? 'فلتر إحصائيات وحصيلة البيانات' : 'Filtre des Statistiques & Bilan'}
+                    </h2>
                   </div>
-                  <div className="bg-sand-100 text-therapy-800 p-2.5 rounded-xl hidden sm:block">
-                    <Calendar className="w-6 h-6" />
+
+                  <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full">
+                    {[
+                      { key: 'all', label: dt.filterDateAll },
+                      { key: 'today', label: dt.filterDateToday },
+                      { key: 'week', label: dt.filterDateWeek },
+                      { key: 'month', label: dt.filterDateMonth }
+                    ].map(tab => (
+                      <button
+                        key={`stats-${tab.key}`}
+                        onClick={() => setStatsDateFilter(tab.key)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all whitespace-nowrap ${
+                          statsDateFilter === tab.key 
+                            ? 'bg-white text-therapy-900 shadow-xs' 
+                            : 'text-sand-900/60 hover:text-therapy-900'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                  <div>
-                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsPending}</p>
-                    <h3 className="text-2xl md:text-3xl font-black text-amber-600 mt-1">{pendingCount}</h3>
+                <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                    <div>
+                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsTotal}</p>
+                      <h3 className="text-2xl md:text-3xl font-black text-therapy-900 mt-1">{totalCount}</h3>
+                    </div>
+                    <div className="bg-sand-100 text-therapy-800 p-2.5 rounded-xl hidden sm:block">
+                      <Calendar className="w-6 h-6" />
+                    </div>
                   </div>
-                  <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl hidden sm:block">
-                    <Clock className="w-6 h-6" />
-                  </div>
-                </div>
 
-                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                  <div>
-                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsConfirmed}</p>
-                    <h3 className="text-2xl md:text-3xl font-black text-green-600 mt-1">{confirmedCount}</h3>
+                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                    <div>
+                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsPending}</p>
+                      <h3 className="text-2xl md:text-3xl font-black text-amber-600 mt-1">{pendingCount}</h3>
+                    </div>
+                    <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl hidden sm:block">
+                      <Clock className="w-6 h-6" />
+                    </div>
                   </div>
-                  <div className="bg-green-50 text-green-600 p-2.5 rounded-xl hidden sm:block">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                </div>
 
-                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                  <div>
-                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsCancelled}</p>
-                    <h3 className="text-2xl md:text-3xl font-black text-red-600 mt-1">{cancelledCount}</h3>
+                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                    <div>
+                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsConfirmed}</p>
+                      <h3 className="text-2xl md:text-3xl font-black text-green-600 mt-1">{confirmedCount}</h3>
+                    </div>
+                    <div className="bg-green-50 text-green-600 p-2.5 rounded-xl hidden sm:block">
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
                   </div>
-                  <div className="bg-red-50 text-red-600 p-2.5 rounded-xl hidden sm:block">
-                    <XCircle className="w-6 h-6" />
+
+                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                    <div>
+                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsCancelled}</p>
+                      <h3 className="text-2xl md:text-3xl font-black text-red-600 mt-1">{cancelledCount}</h3>
+                    </div>
+                    <div className="bg-red-50 text-red-600 p-2.5 rounded-xl hidden sm:block">
+                      <XCircle className="w-6 h-6" />
+                    </div>
                   </div>
-                </div>
-              </section>
+                </section>
+              </div>
             )}
 
             {/* ANALYTICS SECTION - VISIBLE FOR ADMIN ONLY */}
@@ -1300,10 +1354,10 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                     { key: 'month', label: dt.filterDateMonth }
                   ].map(tab => (
                     <button
-                      key={tab.key}
-                      onClick={() => setDateFilter(tab.key)}
+                      key={`table-date-${tab.key}`}
+                      onClick={() => setTableDateFilter(tab.key)}
                       className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                        dateFilter === tab.key 
+                        tableDateFilter === tab.key 
                           ? 'bg-white text-therapy-900 shadow-sm' 
                           : 'text-sand-900/60 hover:text-therapy-900'
                       }`}
