@@ -88,6 +88,12 @@ export async function updateLeadStatus(leadId, newStatus) {
   }
 }
 
+// List of primary admin emails (case-insensitive)
+const PRIMARY_ADMIN_EMAILS = [
+  "admin@ssadik.com",
+  "ssadik.tanger@gmail.com"
+];
+
 /**
  * Updates details of a lead (name, service, status)
  * @param {string} leadId 
@@ -120,19 +126,23 @@ export async function getUserProfile(uid, email) {
   try {
     const userRef = doc(db, "users", uid);
     const snap = await getDoc(userRef);
+    const normalizedEmail = (email || "").toLowerCase().trim();
+    const isPrimaryAdmin = PRIMARY_ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail);
+
     if (snap.exists()) {
-      return { id: snap.id, ...snap.data() };
+      const data = snap.data();
+      // Upgrade role if user email is in primary admin list but currently set as assistant
+      if (isPrimaryAdmin && data.role !== "admin") {
+        await updateDoc(userRef, { role: "admin" });
+        return { id: snap.id, ...data, role: "admin" };
+      }
+      return { id: snap.id, ...data };
     }
     
-    // Check if users collection is empty to make first user Admin by default, or if email contains 'admin'
-    const usersCol = collection(db, "users");
-    const allUsersSnap = await getDocs(usersCol);
-    const isFirstUser = allUsersSnap.empty;
-    const isAdminEmail = isFirstUser || (email && email.toLowerCase().includes('admin'));
-
+    // Create new profile: primary admin emails get 'admin', all others default to 'assistant'
     const newProfile = {
       email: email || "",
-      role: isAdminEmail ? "admin" : "assistant",
+      role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
       maxDaysView: 7, // Default 7 days view limit for assistants
       createdAt: new Date().toISOString()
@@ -142,14 +152,30 @@ export async function getUserProfile(uid, email) {
     return { id: uid, ...newProfile };
   } catch (error) {
     console.error("Error getting user profile:", error);
-    // Safe fallback profile
+    const normalizedEmail = (email || "").toLowerCase().trim();
+    const isPrimaryAdmin = PRIMARY_ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail);
     return {
       id: uid,
       email: email || "",
-      role: (email && email.toLowerCase().includes('admin')) ? "admin" : "assistant",
+      role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
       maxDaysView: 7
     };
+  }
+}
+
+/**
+ * Updates role of a user (admin <-> assistant)
+ * @param {string} userId 
+ * @param {string} newRole 
+ */
+export async function updateUserRole(userId, newRole) {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, { role: newRole });
+  } catch (error) {
+    console.error("Error updating user role:", error);
+    throw error;
   }
 }
 

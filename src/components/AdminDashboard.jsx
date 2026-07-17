@@ -8,6 +8,7 @@ import {
   getUserProfile,
   getUsersRealtime,
   updateAssistantPermissions,
+  updateUserRole,
   auth 
 } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -355,6 +356,15 @@ export default function AdminDashboard({ lang, setLang, t }) {
   };
 
   // Assistant permissions controls (Admin only)
+  const handleChangeUserRole = async (assistantId, newRole) => {
+    try {
+      await updateUserRole(assistantId, newRole);
+      showToast(dt.toastPermsUpdated);
+    } catch (err) {
+      alert("Error updating user role: " + err.message);
+    }
+  };
+
   const handleToggleCanEdit = async (assistantId, currentVal) => {
     try {
       await updateAssistantPermissions(assistantId, { canEdit: !currentVal });
@@ -1492,18 +1502,22 @@ export default function AdminDashboard({ lang, setLang, t }) {
                             {isSelf && <span className="ms-2 px-2 py-0.5 bg-medical-50 text-medical-600 text-2xs font-extrabold rounded-full">Vous</span>}
                           </td>
 
-                          {/* Role */}
+                          {/* Role Selectable by Admin */}
                           <td className="px-6 py-4 text-start">
-                            {assistant.role === 'admin' ? (
+                            {isSelf ? (
                               <span className="px-2.5 py-1 bg-amber-100 text-amber-900 border border-amber-300 font-black text-2xs rounded-full inline-flex items-center gap-1">
                                 <Crown className="w-3 h-3 text-amber-600" />
                                 {dt.roleAdmin}
                               </span>
                             ) : (
-                              <span className="px-2.5 py-1 bg-emerald-100 text-emerald-900 border border-emerald-300 font-black text-2xs rounded-full inline-flex items-center gap-1">
-                                <UserCog className="w-3 h-3 text-emerald-600" />
-                                {dt.roleAssistant}
-                              </span>
+                              <select
+                                value={assistant.role || 'assistant'}
+                                onChange={(e) => handleChangeUserRole(assistant.id, e.target.value)}
+                                className="px-2.5 py-1 rounded-xl border border-sand-200 text-xs font-bold bg-white focus:ring-2 focus:ring-medical-500 text-therapy-900 shadow-sm"
+                              >
+                                <option value="assistant">{dt.roleAssistant}</option>
+                                <option value="admin">{dt.roleAdmin}</option>
+                              </select>
                             )}
                           </td>
 
