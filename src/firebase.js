@@ -92,24 +92,63 @@ export async function updateLeadStatus(leadId, newStatus) {
   }
 }
 
-// List of primary admin emails (case-insensitive) - admin@cabinet.com is the main admin
+// Primary Admin Email
 const PRIMARY_ADMIN_EMAILS = [
   "admin@cabinet.com"
 ];
 
+// Default Assistant Emails to automatically display for Admin if registered in Auth
+const DEFAULT_ASSISTANT_EMAILS = [
+  "assistante@cabinet.com"
+];
+
 /**
- * Creates a new assistant user in Firebase Auth and Firestore without logging out the current Admin
+ * Creates a new assistant user in Firebase Auth and Firestore without logging out the current Admin.
+ * Handles auth/email-already-in-use gracefully by syncing the Firestore user document.
  * @param {string} email 
  * @param {string} password 
  * @param {Object} permissions 
  */
 export async function createAssistantUser(email, password, permissions = {}) {
+  const cleanEmail = email.trim();
   try {
-    const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-    const newUid = userCredential.user.uid;
+    let newUid = null;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(secondaryAuth, cleanEmail, password);
+      newUid = userCredential.user.uid;
+      await signOut(secondaryAuth);
+    } catch (authErr) {
+      if (authErr.code === 'auth/email-already-in-use') {
+        const usersCol = collection(db, "users");
+        const snapshot = await getDocs(usersCol);
+        const existingDoc = snapshot.docs.find(d => (d.data().email || "").toLowerCase() === cleanEmail.toLowerCase());
+        
+        if (existingDoc) {
+          await updateDoc(doc(db, "users", existingDoc.id), {
+            role: "assistant",
+            canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
+            maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7
+          });
+          return { id: existingDoc.id, ...existingDoc.data() };
+        } else {
+          const newDocRef = doc(usersCol);
+          const newProfile = {
+            email: cleanEmail,
+            role: "assistant",
+            canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
+            maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
+            createdAt: new Date().toISOString()
+          };
+          await setDoc(newDocRef, newProfile);
+          return { id: newDocRef.id, ...newProfile };
+        }
+      } else {
+        throw authErr;
+      }
+    }
 
     const newProfile = {
-      email: email.trim(),
+      email: cleanEmail,
       role: "assistant",
       canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
       maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
@@ -118,9 +157,6 @@ export async function createAssistantUser(email, password, permissions = {}) {
 
     const userRef = doc(db, "users", newUid);
     await setDoc(userRef, newProfile);
-
-    // Immediately sign out secondaryAuth so it doesn't hold state
-    await signOut(secondaryAuth);
     return { id: newUid, ...newProfile };
   } catch (error) {
     console.error("Error creating assistant user:", error);
@@ -152,7 +188,8 @@ export async function updateLeadDetails(leadId, details, updatedBy = "") {
 }
 
 /**
- * Fetches or initializes the user profile (admin vs assistant) from Firestore
+ * Fetches or initializes the user profile (admin vs assistant) from Firestore.
+ * Automatically seeds default assistant profiles if missing so Admin sees them in the dashboard immediately.
  * @param {string} uid 
  * @param {string} email 
  */
@@ -162,6 +199,30 @@ export async function getUserProfile(uid, email) {
     const snap = await getDoc(userRef);
     const normalizedEmail = (email || "").toLowerCase().trim();
     const isPrimaryAdmin = PRIMARY_ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail);
+
+    // If Admin logs in, automatically seed default assistant profiles into Firestore if not present yet
+    if (isPrimaryAdmin) {
+      try {
+        const usersCol = collection(db, "users");
+        const allUsersSnap = await getDocs(usersCol);
+        const existingEmails = allUsersSnap.docs.map(d => (d.data().email || "").toLowerCase().trim());
+
+        for (const defaultEmail of DEFAULT_ASSISTANT_EMAILS) {
+          if (!existingEmails.includes(defaultEmail.toLowerCase())) {
+            const seedRef = doc(usersCol);
+            await setDoc(seedRef, {
+              email: defaultEmail,
+              role: "assistant",
+              canEdit: true,
+              maxDaysView: 7,
+              createdAt: new Date().toISOString()
+            });
+          }
+        }
+      } catch (seedErr) {
+        console.warn("Could not seed default assistants:", seedErr);
+      }
+    }
 
     if (snap.exists()) {
       const data = snap.data();
