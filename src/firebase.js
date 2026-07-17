@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { 
   getFirestore, 
   collection, 
@@ -24,10 +24,14 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
+// Initialize Firebase main app
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Secondary Firebase app instance specifically for Admin creating new assistant accounts without logging out
+const secondaryApp = initializeApp(firebaseConfig, "SecondaryAdminCreatorApp");
+const secondaryAuth = getAuth(secondaryApp);
 
 /**
  * Saves a new lead booking to the Firestore database
@@ -88,11 +92,41 @@ export async function updateLeadStatus(leadId, newStatus) {
   }
 }
 
-// List of primary admin emails (case-insensitive)
+// List of primary admin emails (case-insensitive) - admin@cabinet.com is the main admin
 const PRIMARY_ADMIN_EMAILS = [
-  "admin@ssadik.com",
-  "ssadik.tanger@gmail.com"
+  "admin@cabinet.com"
 ];
+
+/**
+ * Creates a new assistant user in Firebase Auth and Firestore without logging out the current Admin
+ * @param {string} email 
+ * @param {string} password 
+ * @param {Object} permissions 
+ */
+export async function createAssistantUser(email, password, permissions = {}) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+    const newUid = userCredential.user.uid;
+
+    const newProfile = {
+      email: email.trim(),
+      role: "assistant",
+      canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
+      maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
+      createdAt: new Date().toISOString()
+    };
+
+    const userRef = doc(db, "users", newUid);
+    await setDoc(userRef, newProfile);
+
+    // Immediately sign out secondaryAuth so it doesn't hold state
+    await signOut(secondaryAuth);
+    return { id: newUid, ...newProfile };
+  } catch (error) {
+    console.error("Error creating assistant user:", error);
+    throw error;
+  }
+}
 
 /**
  * Updates details of a lead (name, service, status)

@@ -9,6 +9,7 @@ import {
   getUsersRealtime,
   updateAssistantPermissions,
   updateUserRole,
+  createAssistantUser,
   auth 
 } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -41,7 +42,8 @@ import {
   AlertCircle,
   Info,
   Crown,
-  UserCog
+  UserCog,
+  UserPlus
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -135,7 +137,14 @@ const dashboardTranslations = {
     daysOption90: "90 يوم",
     daysOptionAll: "غير محدود",
     toastUpdated: "تم تحديث البيانات بنجاح!",
-    toastPermsUpdated: "تم تحديث صلاحيات المساعد بنجاح!"
+    toastPermsUpdated: "تم تحديث صلاحيات المساعد بنجاح!",
+    addAssistantTitle: "إضافة حساب مساعد جديد",
+    addAssistantDesc: "يمكنك إنشاء حساب مساعد جديد وربطه تلقائياً بنظام Firebase",
+    btnCreateAssistant: "إنشاء حساب المساعد",
+    creatingAssistant: "جاري الإنشاء...",
+    newAssistantEmail: "البريد الإلكتروني للمساعد",
+    newAssistantPassword: "كلمة المرور (6 أحرف على الأقل)",
+    toastAssistantCreated: "تم إنشاء حساب المساعد وتعيين صلاحياته بنجاح!"
   },
   fr: {
     title: "Tableau de Bord - Ssadik Thérapie",
@@ -207,7 +216,14 @@ const dashboardTranslations = {
     daysOption90: "90 jours",
     daysOptionAll: "Illimité",
     toastUpdated: "Réservation mise à jour avec succès !",
-    toastPermsUpdated: "Permissions de l'assistant mises à jour !"
+    toastPermsUpdated: "Permissions de l'assistant mises à jour !",
+    addAssistantTitle: "Créer un nouveau compte Assistant",
+    addAssistantDesc: "Ajoutez un nouveau compte assistant directement lié à Firebase Authentication & Firestore.",
+    btnCreateAssistant: "Créer le compte Assistant",
+    creatingAssistant: "Création en cours...",
+    newAssistantEmail: "Adresse Email de l'assistant",
+    newAssistantPassword: "Mot de passe (min 6 caractères)",
+    toastAssistantCreated: "Compte assistant créé et enregistré avec succès !"
   }
 };
 
@@ -238,6 +254,14 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [editingLeadId, setEditingLeadId] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [editingService, setEditingService] = useState('General');
+
+  // Create Assistant Form State
+  const [newEmail, setNewEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newCanEdit, setNewCanEdit] = useState(true);
+  const [newMaxDaysView, setNewMaxDaysView] = useState('7');
+  const [isCreatingAssistant, setIsCreatingAssistant] = useState(false);
+  const [assistantError, setAssistantError] = useState('');
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState('');
@@ -353,6 +377,34 @@ export default function AdminDashboard({ lang, setLang, t }) {
 
   const handleCancelEdit = () => {
     setEditingLeadId(null);
+  };
+
+  // Create Assistant account handler (Admin only)
+  const handleCreateAssistant = async (e) => {
+    e.preventDefault();
+    if (!newEmail || !newPassword) return;
+    if (newPassword.length < 6) {
+      setAssistantError(lang === 'ar' ? 'كلمة المرور يجب أن تتكون من 6 أحرف على الأقل' : 'Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    setIsCreatingAssistant(true);
+    setAssistantError('');
+
+    try {
+      await createAssistantUser(newEmail, newPassword, {
+        canEdit: newCanEdit,
+        maxDaysView: parseInt(newMaxDaysView, 10)
+      });
+      setNewEmail('');
+      setNewPassword('');
+      showToast(dt.toastAssistantCreated);
+    } catch (err) {
+      console.error("Error creating assistant:", err);
+      setAssistantError(err.message);
+    } finally {
+      setIsCreatingAssistant(false);
+    }
   };
 
   // Assistant permissions controls (Admin only)
@@ -1460,20 +1512,130 @@ export default function AdminDashboard({ lang, setLang, t }) {
 
         {/* TAB 2: ASSISTANTS MANAGEMENT VIEW (ADMIN ONLY) */}
         {activeTab === 'assistants' && userProfile?.role === 'admin' && (
-          <section className="bg-white rounded-3xl border border-sand-200 shadow-md p-6 text-start space-y-6">
-            <div className="flex items-center justify-between border-b border-sand-200/60 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-medical-100 text-medical-700 p-2.5 rounded-2xl">
-                  <UserCheck className="w-6 h-6" />
+          <div className="space-y-8">
+            
+            {/* CREATE ASSISTANT FORM CARD */}
+            <section className="bg-white rounded-3xl border border-sand-200 shadow-md p-6 text-start space-y-5">
+              <div className="flex items-center gap-3 border-b border-sand-200/60 pb-4">
+                <div className="bg-medical-500 text-white p-2.5 rounded-2xl shadow-sm">
+                  <UserPlus className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-black text-therapy-900">{dt.assistantsTitle}</h2>
-                  <p className="text-xs text-sand-900/60 font-medium mt-0.5">
-                    {lang === 'ar' ? 'التحكم في صلاحيات الوصول والتعديل وحدود أقدمية البيانات للمساعدين' : 'Contrôle des autorisations d\'accès, de modification et limites d\'ancienneté.'}
-                  </p>
+                  <h2 className="text-lg font-black text-therapy-900">{dt.addAssistantTitle}</h2>
+                  <p className="text-xs text-sand-900/60 font-medium mt-0.5">{dt.addAssistantDesc}</p>
                 </div>
               </div>
-            </div>
+
+              <form onSubmit={handleCreateAssistant} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                {/* Email Input */}
+                <div className="flex flex-col space-y-1.5 text-start">
+                  <label className="text-xs font-bold text-therapy-900">{dt.newAssistantEmail}</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="email"
+                      required
+                      placeholder="assistante@cabinet.com"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-sand-200 text-xs font-medium focus:ring-2 focus:ring-medical-500 bg-sand-50/50"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Input */}
+                <div className="flex flex-col space-y-1.5 text-start">
+                  <label className="text-xs font-bold text-therapy-900">{dt.newAssistantPassword}</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
+                      <Lock className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-sand-200 text-xs font-medium focus:ring-2 focus:ring-medical-500 bg-sand-50/50"
+                    />
+                  </div>
+                </div>
+
+                {/* Permissions & Max Days */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-col space-y-1.5 text-start">
+                    <label className="text-2xs font-bold text-therapy-900">{dt.colCanEdit}</label>
+                    <select
+                      value={newCanEdit ? "true" : "false"}
+                      onChange={(e) => setNewCanEdit(e.target.value === "true")}
+                      className="w-full px-2.5 py-2.5 rounded-xl border border-sand-200 text-2xs font-bold bg-sand-50/50 text-therapy-900"
+                    >
+                      <option value="true">{dt.permissionAllowed}</option>
+                      <option value="false">{dt.permissionDenied}</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col space-y-1.5 text-start">
+                    <label className="text-2xs font-bold text-therapy-900">{dt.colMaxDays}</label>
+                    <select
+                      value={newMaxDaysView}
+                      onChange={(e) => setNewMaxDaysView(e.target.value)}
+                      className="w-full px-2 py-2.5 rounded-xl border border-sand-200 text-2xs font-bold bg-sand-50/50 text-therapy-900"
+                    >
+                      <option value="7">{dt.daysOption7}</option>
+                      <option value="14">{dt.daysOption14}</option>
+                      <option value="30">{dt.daysOption30}</option>
+                      <option value="90">{dt.daysOption90}</option>
+                      <option value="3650">{dt.daysOptionAll}</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={isCreatingAssistant}
+                  className="w-full bg-medical-500 hover:bg-medical-600 text-white font-extrabold py-2.5 px-4 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-1.5 disabled:bg-medical-300"
+                >
+                  {isCreatingAssistant ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>{dt.creatingAssistant}</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="w-4 h-4" />
+                      <span>{dt.btnCreateAssistant}</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {assistantError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 text-start flex items-center gap-2">
+                  <XCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{assistantError}</span>
+                </div>
+              )}
+            </section>
+
+            {/* LIST OF ASSISTANTS TABLE */}
+            <section className="bg-white rounded-3xl border border-sand-200 shadow-md p-6 text-start space-y-6">
+              <div className="flex items-center justify-between border-b border-sand-200/60 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-medical-100 text-medical-700 p-2.5 rounded-2xl">
+                    <UserCheck className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-black text-therapy-900">{dt.assistantsTitle}</h2>
+                    <p className="text-xs text-sand-900/60 font-medium mt-0.5">
+                      {lang === 'ar' ? 'التحكم في صلاحيات الوصول والتعديل وحدود أقدمية البيانات للمساعدين' : 'Contrôle des autorisations d\'accès, de modification et limites d\'ancienneté.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
             {assistantsList.length === 0 ? (
               <div className="py-12 text-center text-sand-900/50 font-bold">
@@ -1575,8 +1737,9 @@ export default function AdminDashboard({ lang, setLang, t }) {
               </div>
             )}
           </section>
-        )}
-      </main>
-    </div>
-  );
+        </div>
+      )}
+    </main>
+  </div>
+);
 }
