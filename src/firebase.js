@@ -11,7 +11,8 @@ import {
   getDoc,
   setDoc,
   getDocs,
-  updateDoc 
+  updateDoc,
+  deleteDoc
 } from "firebase/firestore";
 
 // Firebase configuration using Vite environment variables
@@ -126,6 +127,7 @@ export async function createAssistantUser(email, password, permissions = {}) {
         if (existingDoc) {
           await updateDoc(doc(db, "users", existingDoc.id), {
             role: "assistant",
+            password: password || existingDoc.data().password || "",
             canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
             maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7
           });
@@ -134,6 +136,7 @@ export async function createAssistantUser(email, password, permissions = {}) {
           const newDocRef = doc(usersCol);
           const newProfile = {
             email: cleanEmail,
+            password: password || "",
             role: "assistant",
             canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
             maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
@@ -149,6 +152,7 @@ export async function createAssistantUser(email, password, permissions = {}) {
 
     const newProfile = {
       email: cleanEmail,
+      password: password || "",
       role: "assistant",
       canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
       maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
@@ -160,6 +164,38 @@ export async function createAssistantUser(email, password, permissions = {}) {
     return { id: newUid, ...newProfile };
   } catch (error) {
     console.error("Error creating assistant user:", error);
+    throw error;
+  }
+}
+
+/**
+ * Updates an assistant account (email, password, permissions, role)
+ * @param {string} userId 
+ * @param {Object} data 
+ */
+export async function updateAssistantAccount(userId, data) {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      ...data,
+      updatedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error("Error updating assistant account:", error);
+    throw error;
+  }
+}
+
+/**
+ * Deletes an assistant account from Firestore
+ * @param {string} userId 
+ */
+export async function deleteAssistantUser(userId) {
+  try {
+    const userRef = doc(db, "users", userId);
+    await deleteDoc(userRef);
+  } catch (error) {
+    console.error("Error deleting assistant user:", error);
     throw error;
   }
 }

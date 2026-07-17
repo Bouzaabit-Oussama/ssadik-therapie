@@ -10,6 +10,8 @@ import {
   updateAssistantPermissions,
   updateUserRole,
   createAssistantUser,
+  updateAssistantAccount,
+  deleteAssistantUser,
   auth 
 } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -43,7 +45,9 @@ import {
   Info,
   Crown,
   UserCog,
-  UserPlus
+  UserPlus,
+  Trash2,
+  Key
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -144,7 +148,12 @@ const dashboardTranslations = {
     creatingAssistant: "جاري الإنشاء...",
     newAssistantEmail: "البريد الإلكتروني للمساعد",
     newAssistantPassword: "كلمة المرور (6 أحرف على الأقل)",
-    toastAssistantCreated: "تم إنشاء حساب المساعد وتعيين صلاحياته بنجاح!"
+    toastAssistantCreated: "تم إنشاء حساب المساعد وتعيين صلاحياته بنجاح!",
+    colPassword: "كلمة المرور",
+    btnDeleteAccount: "حذف",
+    confirmDeleteAccount: "هل أنت تأكد من رغبتك في حذف هذا الحساب؟",
+    toastAccountDeleted: "تم حذف حساب المساعد بنجاح!",
+    toastAccountUpdated: "تم تحديث بيانات الحساب بنجاح!"
   },
   fr: {
     title: "Tableau de Bord - Ssadik Thérapie",
@@ -223,7 +232,12 @@ const dashboardTranslations = {
     creatingAssistant: "Création en cours...",
     newAssistantEmail: "Adresse Email de l'assistant",
     newAssistantPassword: "Mot de passe (min 6 caractères)",
-    toastAssistantCreated: "Compte assistant créé et enregistré avec succès !"
+    toastAssistantCreated: "Compte assistant créé et enregistré avec succès !",
+    colPassword: "Mot de passe",
+    btnDeleteAccount: "Supprimer",
+    confirmDeleteAccount: "Êtes-vous sûr de vouloir supprimer ce compte assistant ?",
+    toastAccountDeleted: "Compte assistant supprimé avec succès !",
+    toastAccountUpdated: "Identifiants mis à jour avec succès !"
   }
 };
 
@@ -262,6 +276,12 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [newMaxDaysView, setNewMaxDaysView] = useState('7');
   const [isCreatingAssistant, setIsCreatingAssistant] = useState(false);
   const [assistantError, setAssistantError] = useState('');
+
+  // Editing & Visibility State for Assistant Accounts
+  const [editingAssistantId, setEditingAssistantId] = useState(null);
+  const [editingAssistantEmail, setEditingAssistantEmail] = useState('');
+  const [editingAssistantPassword, setEditingAssistantPassword] = useState('');
+  const [visiblePasswords, setVisiblePasswords] = useState({});
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState('');
@@ -407,7 +427,45 @@ export default function AdminDashboard({ lang, setLang, t }) {
     }
   };
 
-  // Assistant permissions controls (Admin only)
+  // Assistant permissions & account controls (Admin only)
+  const togglePasswordVisibility = (id) => {
+    setVisiblePasswords(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  const handleStartEditAssistant = (assistant) => {
+    setEditingAssistantId(assistant.id);
+    setEditingAssistantEmail(assistant.email || '');
+    setEditingAssistantPassword(assistant.password || '');
+  };
+
+  const handleSaveEditAssistant = async (assistantId) => {
+    if (!editingAssistantEmail.trim()) return;
+    try {
+      await updateAssistantAccount(assistantId, {
+        email: editingAssistantEmail.trim(),
+        password: editingAssistantPassword
+      });
+      setEditingAssistantId(null);
+      showToast(dt.toastAccountUpdated);
+    } catch (err) {
+      alert("Error updating assistant account: " + err.message);
+    }
+  };
+
+  const handleDeleteAssistant = async (assistantId) => {
+    if (window.confirm(dt.confirmDeleteAccount)) {
+      try {
+        await deleteAssistantUser(assistantId);
+        showToast(dt.toastAccountDeleted);
+      } catch (err) {
+        alert("Error deleting assistant account: " + err.message);
+      }
+    }
+  };
+
   const handleChangeUserRole = async (assistantId, newRole) => {
     try {
       await updateUserRole(assistantId, newRole);
@@ -1631,7 +1689,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
                   <div>
                     <h2 className="text-lg font-black text-therapy-900">{dt.assistantsTitle}</h2>
                     <p className="text-xs text-sand-900/60 font-medium mt-0.5">
-                      {lang === 'ar' ? 'التحكم في صلاحيات الوصول والتعديل وحدود أقدمية البيانات للمساعدين' : 'Contrôle des autorisations d\'accès, de modification et limites d\'ancienneté.'}
+                      {lang === 'ar' ? 'إدارة البريد الإلكتروني، كلمة المرور، والصلاحيات لجميع الحسابات المسجلة' : 'Gestion des identifiants (email/mot de passe), des rôles et des autorisations d\'accès.'}
                     </p>
                   </div>
                 </div>
@@ -1648,20 +1706,108 @@ export default function AdminDashboard({ lang, setLang, t }) {
                   <thead>
                     <tr className="bg-sand-100 border-b border-sand-200 text-therapy-900 font-black text-xs uppercase">
                       <th className="px-6 py-4 text-start font-bold">{dt.colEmail}</th>
+                      <th className="px-6 py-4 text-start font-bold">{dt.colPassword}</th>
                       <th className="px-6 py-4 text-start font-bold">{dt.colRole}</th>
                       <th className="px-6 py-4 text-start font-bold">{dt.colCanEdit}</th>
                       <th className="px-6 py-4 text-start font-bold">{dt.colMaxDays}</th>
+                      <th className="px-6 py-4 text-center font-bold">{dt.colActions}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-sand-200/70">
                     {assistantsList.map((assistant) => {
                       const isSelf = assistant.id === user.uid;
+                      const isEditing = editingAssistantId === assistant.id;
+                      const isPasswordVisible = visiblePasswords[assistant.id];
+
+                      if (isEditing) {
+                        return (
+                          <tr key={assistant.id} className="bg-medical-50/50 transition-colors border-l-4 border-l-medical-500">
+                            {/* Editable Email */}
+                            <td className="px-6 py-4 text-start font-bold text-therapy-900">
+                              <input
+                                type="email"
+                                value={editingAssistantEmail}
+                                onChange={(e) => setEditingAssistantEmail(e.target.value)}
+                                className="w-full px-3 py-1.5 rounded-lg border border-medical-300 focus:ring-2 focus:ring-medical-500 text-xs font-bold bg-white"
+                              />
+                            </td>
+
+                            {/* Editable Password */}
+                            <td className="px-6 py-4 text-start font-bold text-therapy-900">
+                              <input
+                                type="text"
+                                placeholder="Nouveau mot de passe"
+                                value={editingAssistantPassword}
+                                onChange={(e) => setEditingAssistantPassword(e.target.value)}
+                                className="w-full px-3 py-1.5 rounded-lg border border-medical-300 focus:ring-2 focus:ring-medical-500 text-xs font-bold bg-white"
+                              />
+                            </td>
+
+                            {/* Role */}
+                            <td className="px-6 py-4 text-start">
+                              <span className="px-2.5 py-1 bg-sand-100 text-sand-800 font-bold text-2xs rounded-full">
+                                {assistant.role || 'assistant'}
+                              </span>
+                            </td>
+
+                            {/* CanEdit */}
+                            <td className="px-6 py-4 text-start">
+                              <span className="text-xs font-bold text-sand-500">-</span>
+                            </td>
+
+                            {/* MaxDays */}
+                            <td className="px-6 py-4 text-start">
+                              <span className="text-xs font-bold text-sand-500">-</span>
+                            </td>
+
+                            {/* Save / Cancel */}
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex items-center justify-center gap-1.5">
+                                <button
+                                  onClick={() => handleSaveEditAssistant(assistant.id)}
+                                  className="px-3 py-1.5 bg-medical-500 hover:bg-medical-600 text-white rounded-lg font-extrabold text-xs shadow-sm flex items-center gap-1"
+                                >
+                                  <Check className="w-3.5 h-3.5" />
+                                  <span>{dt.btnSave}</span>
+                                </button>
+                                <button
+                                  onClick={() => setEditingAssistantId(null)}
+                                  className="px-2.5 py-1.5 bg-sand-200 hover:bg-sand-300 text-sand-800 rounded-lg font-bold text-xs flex items-center gap-1"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      }
+
                       return (
                         <tr key={assistant.id} className="hover:bg-sand-50/50 transition-colors">
                           {/* Email */}
                           <td className="px-6 py-4 text-start font-bold text-therapy-900">
-                            {assistant.email || "Compte Sans Email"}
+                            <span className="dir-ltr inline-block">{assistant.email || "Compte Sans Email"}</span>
                             {isSelf && <span className="ms-2 px-2 py-0.5 bg-medical-50 text-medical-600 text-2xs font-extrabold rounded-full">Vous</span>}
+                          </td>
+
+                          {/* Password with reveal toggle */}
+                          <td className="px-6 py-4 text-start text-xs font-semibold text-sand-900/70">
+                            {assistant.password ? (
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono dir-ltr">
+                                  {isPasswordVisible ? assistant.password : '••••••••'}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => togglePasswordVisibility(assistant.id)}
+                                  className="text-sand-400 hover:text-therapy-900"
+                                >
+                                  {isPasswordVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                                </button>
+                              </div>
+                            ) : (
+                              <span className="text-sand-400 italic text-2xs">Non affiché</span>
+                            )}
                           </td>
 
                           {/* Role Selectable by Admin */}
@@ -1727,6 +1873,28 @@ export default function AdminDashboard({ lang, setLang, t }) {
                                 <option value={90}>{dt.daysOption90}</option>
                                 <option value={3650}>{dt.daysOptionAll}</option>
                               </select>
+                            )}
+                          </td>
+
+                          {/* Actions: Edit / Delete */}
+                          <td className="px-6 py-4 text-center">
+                            {!isSelf && (
+                              <div className="flex items-center justify-center gap-1.5">
+                                <button
+                                  onClick={() => handleStartEditAssistant(assistant)}
+                                  title={dt.btnEdit}
+                                  className="p-1.5 bg-therapy-50 hover:bg-therapy-100 border border-therapy-200 text-therapy-700 rounded-lg transition-colors"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteAssistant(assistant.id)}
+                                  title={dt.btnDeleteAccount}
+                                  className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
                             )}
                           </td>
                         </tr>
