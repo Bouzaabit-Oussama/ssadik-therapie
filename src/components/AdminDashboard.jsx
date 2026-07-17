@@ -4,6 +4,10 @@ import {
   signOutUser, 
   getLeadsRealtime, 
   updateLeadStatus, 
+  updateLeadDetails,
+  getUserProfile,
+  getUsersRealtime,
+  updateAssistantPermissions,
   auth 
 } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -24,7 +28,19 @@ import {
   Calendar,
   Undo,
   Eye,
-  EyeOff
+  EyeOff,
+  Pencil,
+  Check,
+  X,
+  Shield,
+  UserCheck,
+  Users,
+  Sliders,
+  Settings,
+  AlertCircle,
+  Info,
+  Crown,
+  UserCog
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -39,10 +55,18 @@ import {
   Legend 
 } from 'recharts';
 
+const AVAILABLE_SERVICES = [
+  'Hijama',
+  'Massage',
+  'Acupuncture',
+  'Chiropraxie',
+  'General'
+];
+
 const dashboardTranslations = {
   ar: {
     title: "لوحة التحكم - صادق للعلاج الطبيعي",
-    loginTitle: "تسجيل الدخول للمساعد(ة)",
+    loginTitle: "تسجيل الدخول للمساعد(ة) / المدير",
     emailLabel: "البريد الإلكتروني",
     passwordLabel: "كلمة المرور",
     loginBtn: "دخول",
@@ -52,7 +76,7 @@ const dashboardTranslations = {
     statsPending: "في الانتظار",
     statsConfirmed: "مؤكدة",
     statsCancelled: "ملغاة",
-    searchPlaceholder: "البحث بالاسم أو الهاتف...",
+    searchPlaceholder: "البحث بالاسم، الهاتف أو الخدمة...",
     filterAll: "الكل",
     filterPending: "في الانتظار",
     filterConfirmed: "مؤكدة",
@@ -66,6 +90,9 @@ const dashboardTranslations = {
     btnConfirm: "تأكيد",
     btnCancel: "إلغاء",
     btnReset: "إعادة تعيين",
+    btnEdit: "تعديل",
+    btnSave: "حفظ",
+    btnCancelEdit: "إلغاء",
     whatsappTooltip: "ارسل رسالة تأكيد عبر واتساب",
     noData: "لا توجد حجوزات متطابقة",
     authError: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
@@ -87,11 +114,31 @@ const dashboardTranslations = {
     chartLeadCancelled: "ملغاة",
     chartLeadPending: "في الانتظار",
     conversionRateLabel: "نسبة التأكيد",
-    noDataChart: "لا توجد بيانات كافية لعرض الرسوم البيانية"
+    noDataChart: "لا توجد بيانات كافية لعرض الرسوم البيانية",
+    roleAdmin: "مدير مسؤول",
+    roleAssistant: "مساعد(ة)",
+    tabReservations: "قائمة الحجوزات",
+    tabAssistants: "إدارة المساعدين",
+    assistantNotice: "تنبيه حساب مساعد: يتم عرض الحجوزات الخاصة بآخر {days} أيام فقط.",
+    noEditPermission: "ليس لديك إذن تعديل البيانات.",
+    assistantsTitle: "إدارة حسابات وصلاحيات المساعدين",
+    colEmail: "البريد الإلكتروني",
+    colRole: "الرتبة",
+    colCanEdit: "إذن التعديل",
+    colMaxDays: "حد الأقدمية (أيام)",
+    permissionAllowed: "مسموح بالتعديل",
+    permissionDenied: "قراءة فقط",
+    daysOption7: "7 أيام",
+    daysOption14: "14 يوم",
+    daysOption30: "30 يوم",
+    daysOption90: "90 يوم",
+    daysOptionAll: "غير محدود",
+    toastUpdated: "تم تحديث البيانات بنجاح!",
+    toastPermsUpdated: "تم تحديث صلاحيات المساعد بنجاح!"
   },
   fr: {
     title: "Tableau de Bord - Ssadik Thérapie",
-    loginTitle: "Connexion Assistant(e)",
+    loginTitle: "Connexion Assistant(e) / Admin",
     emailLabel: "Adresse Email",
     passwordLabel: "Mot de passe",
     loginBtn: "Se connecter",
@@ -101,7 +148,7 @@ const dashboardTranslations = {
     statsPending: "En attente",
     statsConfirmed: "Confirmés",
     statsCancelled: "Annulés",
-    searchPlaceholder: "Rechercher par nom ou téléphone...",
+    searchPlaceholder: "Rechercher par nom, téléphone ou service...",
     filterAll: "Tous",
     filterPending: "En attente",
     filterConfirmed: "Confirmés",
@@ -115,6 +162,9 @@ const dashboardTranslations = {
     btnConfirm: "Confirmer",
     btnCancel: "Annuler",
     btnReset: "Réinitialiser",
+    btnEdit: "Éditer",
+    btnSave: "Enregistrer",
+    btnCancelEdit: "Annuler",
     whatsappTooltip: "Envoyer confirmation WhatsApp",
     noData: "Aucune réservation trouvée",
     authError: "Email ou mot de passe incorrect.",
@@ -136,12 +186,33 @@ const dashboardTranslations = {
     chartLeadCancelled: "Annulés",
     chartLeadPending: "En attente",
     conversionRateLabel: "Taux de Confirmation",
-    noDataChart: "Pas assez de données pour afficher les graphiques"
+    noDataChart: "Pas assez de données pour afficher les graphiques",
+    roleAdmin: "Administrateur",
+    roleAssistant: "Assistant(e)",
+    tabReservations: "Réservations",
+    tabAssistants: "Gestion Assistants",
+    assistantNotice: "Mode Assistant : Seules les réservations des {days} derniers jours sont affichées.",
+    noEditPermission: "Accès restreint : Vous n'avez pas l'autorisation de modifier les données.",
+    assistantsTitle: "Gestion des Comptes & Autorisations Assistants",
+    colEmail: "Adresse Email",
+    colRole: "Rôle",
+    colCanEdit: "Droit de Modification",
+    colMaxDays: "Limite d'ancienneté",
+    permissionAllowed: "Autorisé",
+    permissionDenied: "Lecture seule",
+    daysOption7: "7 jours",
+    daysOption14: "14 jours",
+    daysOption30: "30 jours",
+    daysOption90: "90 jours",
+    daysOptionAll: "Illimité",
+    toastUpdated: "Réservation mise à jour avec succès !",
+    toastPermsUpdated: "Permissions de l'assistant mises à jour !"
   }
 };
 
 export default function AdminDashboard({ lang, setLang, t }) {
   const [user, setUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
   
   // Login form state
@@ -151,6 +222,10 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Navigation tab state: 'reservations' | 'assistants'
+  const [activeTab, setActiveTab] = useState('reservations');
+  const [assistantsList, setAssistantsList] = useState([]);
+
   // Leads and filter states
   const [leads, setLeads] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -158,13 +233,32 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [dateFilter, setDateFilter] = useState('all');
   const [showAnalytics, setShowAnalytics] = useState(true);
 
+  // Inline edit state
+  const [editingLeadId, setEditingLeadId] = useState(null);
+  const [editingName, setEditingName] = useState('');
+  const [editingService, setEditingService] = useState('General');
+
+  // Toast feedback
+  const [toastMessage, setToastMessage] = useState('');
+
   const dt = dashboardTranslations[lang] || dashboardTranslations['fr'];
   const isRtl = lang === 'ar';
 
-  // Monitor auth state
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3500);
+  };
+
+  // Monitor auth state & load user profile (Admin / Assistant)
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        const profile = await getUserProfile(currentUser.uid, currentUser.email);
+        setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
       setLoadingAuth(false);
     });
     return () => unsubscribe();
@@ -179,6 +273,16 @@ export default function AdminDashboard({ lang, setLang, t }) {
     });
     return () => unsubscribe();
   }, [user]);
+
+  // Listen to Users/Assistants list if logged in as Admin
+  useEffect(() => {
+    if (!user || userProfile?.role !== 'admin') return;
+
+    const unsubscribe = getUsersRealtime((fetchedUsers) => {
+      setAssistantsList(fetchedUsers);
+    });
+    return () => unsubscribe();
+  }, [user, userProfile]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -206,22 +310,75 @@ export default function AdminDashboard({ lang, setLang, t }) {
   };
 
   const handleUpdateStatus = async (leadId, newStatus) => {
+    const canEdit = userProfile?.role === 'admin' || userProfile?.canEdit;
+    if (!canEdit) {
+      showToast(dt.noEditPermission);
+      return;
+    }
+
     try {
       await updateLeadStatus(leadId, newStatus);
+      showToast(dt.toastUpdated);
     } catch (err) {
       alert("Error updating status: " + err.message);
     }
   };
 
+  // Inline editing handlers
+  const handleStartEdit = (lead) => {
+    const canEdit = userProfile?.role === 'admin' || userProfile?.canEdit;
+    if (!canEdit) {
+      showToast(dt.noEditPermission);
+      return;
+    }
+    setEditingLeadId(lead.id);
+    setEditingName(lead.name);
+    setEditingService(lead.service || 'General');
+  };
+
+  const handleSaveEdit = async (leadId) => {
+    if (!editingName.trim()) return;
+    try {
+      await updateLeadDetails(leadId, {
+        name: editingName.trim(),
+        service: editingService
+      }, user?.email || "");
+      setEditingLeadId(null);
+      showToast(dt.toastUpdated);
+    } catch (err) {
+      alert("Error saving: " + err.message);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingLeadId(null);
+  };
+
+  // Assistant permissions controls (Admin only)
+  const handleToggleCanEdit = async (assistantId, currentVal) => {
+    try {
+      await updateAssistantPermissions(assistantId, { canEdit: !currentVal });
+      showToast(dt.toastPermsUpdated);
+    } catch (err) {
+      alert("Error updating permissions: " + err.message);
+    }
+  };
+
+  const handleChangeMaxDays = async (assistantId, newMaxDays) => {
+    try {
+      await updateAssistantPermissions(assistantId, { maxDaysView: parseInt(newMaxDays, 10) });
+      showToast(dt.toastPermsUpdated);
+    } catch (err) {
+      alert("Error updating max days: " + err.message);
+    }
+  };
+
   const getWhatsAppLink = (lead) => {
-    // Format Moroccan numbers for Global WhatsApp wa.me links
-    // e.g. 0612345678 -> 212612345678 or +2126... -> 2126...
     let cleanPhone = lead.whatsapp.replace(/[\s\-\+]/g, '');
     if (cleanPhone.startsWith('0')) {
       cleanPhone = '212' + cleanPhone.substring(1);
     }
 
-    // Determine booking date display
     let formattedDate = "";
     try {
       formattedDate = new Date(lead.date).toLocaleString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
@@ -234,7 +391,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
       formattedDate = lead.date;
     }
 
-    // Multilingual templates
     const message = lang === 'ar'
       ? `مرحباً ${lead.name}، معك مركز صادق للعلاج الطبيعي بطنجة. نود تأكيد موعد حصتك الخاصة بـ (${lead.service}) المحجوزة بتاريخ ${formattedDate}. هل هذا التوقيت لا يزال مناسباً لك؟`
       : `Bonjour ${lead.name}, c'est Ssadik Thérapie à Tanger. Je souhaite confirmer votre réservation pour la séance de (${lead.service}) demandée le ${formattedDate}. Est-ce que ce créneau vous convient toujours ?`;
@@ -242,8 +398,24 @@ export default function AdminDashboard({ lang, setLang, t }) {
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   };
 
+  // Restrict leads per assistant maxDaysView rule
+  const accessibleLeads = leads.filter(lead => {
+    if (!userProfile || userProfile.role === 'admin') return true;
+    
+    const maxDays = userProfile.maxDaysView !== undefined ? userProfile.maxDaysView : 7;
+    if (maxDays >= 3650) return true; // Unlimited
+    
+    if (!lead.date) return false;
+    const leadDate = new Date(lead.date);
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - maxDays);
+    cutoffDate.setHours(0, 0, 0, 0);
+
+    return leadDate >= cutoffDate;
+  });
+
   // Filter by date first to compute stats for the active time period
-  const dateFilteredLeads = leads.filter(lead => {
+  const dateFilteredLeads = accessibleLeads.filter(lead => {
     if (dateFilter === 'all') return true;
     if (!lead.date) return false;
     const leadDate = new Date(lead.date);
@@ -267,7 +439,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const confirmedCount = dateFilteredLeads.filter(l => l.status === 'Confirmed').length;
   const cancelledCount = dateFilteredLeads.filter(l => l.status === 'Cancelled').length;
 
-  // Then apply status filter and search query to get the final list
+  // Apply status filter and search query to get final list
   const filteredLeads = dateFilteredLeads.filter(lead => {
     const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
     const searchLower = searchQuery.toLowerCase();
@@ -279,11 +451,9 @@ export default function AdminDashboard({ lang, setLang, t }) {
     return matchesStatus && matchesSearch;
   });
 
-  // 1. Group leads by day for the daily trend chart
+  // Analytics helper functions
   const getEvolutionData = () => {
     const dailyMap = {};
-    
-    // Sort leads chronologically
     const sortedLeads = [...dateFilteredLeads].sort((a, b) => new Date(a.date) - new Date(b.date));
     
     sortedLeads.forEach(lead => {
@@ -324,7 +494,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
     });
   };
 
-  // 2. Group leads by service for popularity & conversion rates
   const getServiceData = () => {
     const serviceMap = {};
     
@@ -355,7 +524,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
     });
   };
 
-  // Custom tooltips
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -408,7 +576,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
   if (!user) {
     return (
       <div className="min-h-screen bg-sand-50 flex flex-col justify-center items-center p-4" dir={isRtl ? 'rtl' : 'ltr'}>
-        {/* Language switch at top */}
         <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
           <button 
             onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
@@ -420,7 +587,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
         </div>
 
         <div className="w-full max-w-md">
-          {/* Brand/Clinic Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl md:text-3xl font-black text-therapy-900 tracking-tight">
               {lang === 'ar' ? 'صادق للعلاج الطبيعي' : 'Ssadik Thérapie'}
@@ -428,7 +594,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
             <p className="text-sm font-semibold text-sand-900/50 mt-1">Tanger, Maroc</p>
           </div>
 
-          {/* Login Card */}
           <div className="bg-white rounded-3xl p-6 md:p-8 border border-sand-200 shadow-xl relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-medical-500 to-medical-700"></div>
 
@@ -438,7 +603,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
             </h2>
 
             <form onSubmit={handleLogin} className="space-y-5">
-              {/* Email */}
               <div className="flex flex-col space-y-1.5 text-start">
                 <label className="text-xs font-bold text-therapy-900">
                   {dt.emailLabel}
@@ -458,7 +622,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
                 </div>
               </div>
 
-              {/* Password */}
               <div className="flex flex-col space-y-1.5 text-start">
                 <label className="text-xs font-bold text-therapy-900">
                   {dt.passwordLabel}
@@ -489,7 +652,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
                 </div>
               </div>
 
-              {/* Error Info */}
               {loginError && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 text-start flex items-center gap-2">
                   <XCircle className="w-4 h-4 flex-shrink-0" />
@@ -497,7 +659,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
                 </div>
               )}
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={isLoggingIn}
@@ -515,7 +676,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
             </form>
           </div>
 
-          {/* Return to site */}
           <div className="text-center mt-6">
             <a 
               href="/" 
@@ -531,26 +691,79 @@ export default function AdminDashboard({ lang, setLang, t }) {
 
   // MAIN DASHBOARD PANEL
   return (
-    <div className="min-h-screen bg-sand-50 text-sand-900 flex flex-col font-sans" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-sand-50 text-sand-900 flex flex-col font-sans relative" dir={isRtl ? 'rtl' : 'ltr'}>
+      
+      {/* Toast Notification Floating Alert */}
+      {toastMessage && (
+        <div className="fixed bottom-6 start-1/2 -translate-x-1/2 z-50 bg-therapy-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-therapy-700 text-xs md:text-sm font-extrabold flex items-center gap-2 animate-bounce">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Top Navigation Bar */}
       <header className="sticky top-0 bg-white border-b border-sand-200/60 z-20 shadow-sm px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          {/* Title & Brand */}
+          
+          {/* Title, Brand & User Role Badge */}
           <div className="flex items-center gap-3">
-            <div className="bg-medical-500 text-white p-2 rounded-xl">
+            <div className="bg-medical-500 text-white p-2.5 rounded-2xl shadow-sm">
               <TrendingUp className="w-6 h-6" />
             </div>
             <div className="text-start">
-              <h1 className="text-lg md:text-xl font-black text-therapy-900 leading-tight">
-                {dt.title}
-              </h1>
-              <p className="text-xs font-bold text-sand-400">Tanger, Maroc • {user.email}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg md:text-xl font-black text-therapy-900 leading-tight">
+                  {dt.title}
+                </h1>
+                {/* User Role Badge */}
+                {userProfile?.role === 'admin' ? (
+                  <span className="px-2.5 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 font-black text-2xs rounded-full flex items-center gap-1">
+                    <Crown className="w-3 h-3 text-amber-600" />
+                    <span>{dt.roleAdmin}</span>
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-900 border border-emerald-300 font-black text-2xs rounded-full flex items-center gap-1">
+                    <UserCog className="w-3 h-3 text-emerald-600" />
+                    <span>{dt.roleAssistant}</span>
+                  </span>
+                )}
+              </div>
+              <p className="text-xs font-bold text-sand-400 mt-0.5">Tanger, Maroc • {user.email}</p>
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-3">
-            {/* Lang switch */}
+          {/* Action buttons & Admin Navigation Tabs */}
+          <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
+            
+            {/* Admin Tabs */}
+            {userProfile?.role === 'admin' && (
+              <div className="flex bg-sand-100 p-1 rounded-xl gap-1">
+                <button
+                  onClick={() => setActiveTab('reservations')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                    activeTab === 'reservations' 
+                      ? 'bg-white text-therapy-900 shadow-sm' 
+                      : 'text-sand-600 hover:text-therapy-900'
+                  }`}
+                >
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{dt.tabReservations}</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('assistants')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+                    activeTab === 'assistants' 
+                      ? 'bg-white text-medical-700 shadow-sm' 
+                      : 'text-sand-600 hover:text-therapy-900'
+                  }`}
+                >
+                  <Users className="w-3.5 h-3.5" />
+                  <span>{dt.tabAssistants}</span>
+                </button>
+              </div>
+            )}
+
+            {/* Language switch */}
             <button 
               onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-sand-100 hover:bg-sand-200 text-xs font-bold text-therapy-900 transition-colors"
@@ -559,7 +772,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
               <span>{lang === 'ar' ? 'Français' : 'عربي'}</span>
             </button>
 
-            {/* Public website */}
+            {/* Return to website */}
             <a 
               href="/"
               className="px-3 py-2 rounded-xl border border-sand-200 hover:bg-sand-100 text-xs font-bold text-therapy-900 transition-colors text-center"
@@ -579,512 +792,776 @@ export default function AdminDashboard({ lang, setLang, t }) {
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
-        {/* STATS OVERVIEW CARDS */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Total */}
-          <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-            <div>
-              <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsTotal}</p>
-              <h3 className="text-2xl md:text-3xl font-black text-therapy-900 mt-1">{totalCount}</h3>
-            </div>
-            <div className="bg-sand-100 text-therapy-800 p-2.5 rounded-xl hidden sm:block">
-              <Calendar className="w-6 h-6" />
-            </div>
-          </div>
-
-          {/* Card 2: Pending */}
-          <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-            <div>
-              <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsPending}</p>
-              <h3 className="text-2xl md:text-3xl font-black text-amber-600 mt-1">{pendingCount}</h3>
-            </div>
-            <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl hidden sm:block">
-              <Clock className="w-6 h-6" />
-            </div>
-          </div>
-
-          {/* Card 3: Confirmed */}
-          <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-            <div>
-              <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsConfirmed}</p>
-              <h3 className="text-2xl md:text-3xl font-black text-green-600 mt-1">{confirmedCount}</h3>
-            </div>
-            <div className="bg-green-50 text-green-600 p-2.5 rounded-xl hidden sm:block">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-          </div>
-
-          {/* Card 4: Cancelled */}
-          <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-            <div>
-              <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsCancelled}</p>
-              <h3 className="text-2xl md:text-3xl font-black text-red-600 mt-1">{cancelledCount}</h3>
-            </div>
-            <div className="bg-red-50 text-red-600 p-2.5 rounded-xl hidden sm:block">
-              <XCircle className="w-6 h-6" />
-            </div>
-          </div>
-        </section>
-
-        {/* ANALYTICS SECTION */}
-        <section className="bg-white rounded-3xl border border-sand-200 shadow-md overflow-hidden text-start">
-          {/* Header */}
-          <div className="p-4 md:p-6 border-b border-sand-200/60 flex justify-between items-center bg-sand-50/50">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <h2 className="text-base md:text-lg font-black text-therapy-900 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-medical-500" />
-                <span>{dt.analyticsTitle}</span>
-              </h2>
-              {totalCount > 0 && (
-                <span className="inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-bold bg-medical-50 text-medical-600 border border-medical-200">
-                  {dt.conversionRateLabel}: {Math.round((confirmedCount / (totalCount || 1)) * 100)}%
-                </span>
-              )}
-            </div>
-            <button
-              onClick={() => setShowAnalytics(!showAnalytics)}
-              className="text-xs font-extrabold text-medical-600 hover:text-medical-700 hover:underline flex items-center gap-1.5"
-            >
-              {showAnalytics ? dt.analyticsToggleHide : dt.analyticsToggleShow}
-            </button>
-          </div>
-          
-          {/* Charts Content */}
-          {showAnalytics && (
-            <div className="p-4 md:p-6">
-              {totalCount === 0 ? (
-                <div className="py-12 text-center text-sand-900/50 font-bold">
-                  <TrendingUp className="w-12 h-12 mx-auto text-sand-300 mb-3" />
-                  <p>{dt.noDataChart}</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Daily Evolution Chart */}
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-bold text-therapy-900 px-1">
-                      {dt.chartEvolutionTitle}
-                    </h3>
-                    <div className="h-[300px] w-full" dir="ltr">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
-                          data={getEvolutionData()}
-                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                        >
-                          <defs>
-                            <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.2}/>
-                              <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
-                            </linearGradient>
-                            <linearGradient id="colorConfirmed" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                            </linearGradient>
-                            <linearGradient id="colorCancelled" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2}/>
-                              <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis 
-                            dataKey="label" 
-                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
-                            stroke="#e2e8f0"
-                          />
-                          <YAxis 
-                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
-                            stroke="#e2e8f0" 
-                            allowDecimals={false}
-                          />
-                          <Tooltip content={<CustomTooltip />} />
-                          <Legend tick={{ fontSize: 11, fontWeight: 'bold' }} />
-                          <Area 
-                            type="monotone" 
-                            dataKey={dt.chartLeadTotal} 
-                            stroke="#0ea5e9" 
-                            strokeWidth={2}
-                            fillOpacity={1} 
-                            fill="url(#colorTotal)" 
-                          />
-                          <Area 
-                            type="monotone" 
-                            dataKey={dt.chartLeadConfirmed} 
-                            stroke="#10b981" 
-                            strokeWidth={2}
-                            fillOpacity={1} 
-                            fill="url(#colorConfirmed)" 
-                          />
-                          <Area 
-                            type="monotone" 
-                            dataKey={dt.chartLeadCancelled} 
-                            stroke="#f43f5e" 
-                            strokeWidth={2}
-                            fillOpacity={1} 
-                            fill="url(#colorCancelled)" 
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  {/* Service Performance Chart */}
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-bold text-therapy-900 px-1">
-                      {dt.chartServiceTitle}
-                    </h3>
-                    <div className="h-[300px] w-full" dir="ltr">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={getServiceData()}
-                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis 
-                            dataKey="service" 
-                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
-                            stroke="#e2e8f0"
-                          />
-                          <YAxis 
-                            yAxisId="left"
-                            orientation="left"
-                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
-                            stroke="#e2e8f0"
-                            allowDecimals={false}
-                          />
-                          <YAxis 
-                            yAxisId="right"
-                            orientation="right"
-                            domain={[0, 100]}
-                            tick={{ fontSize: 10, fill: '#0ea5e9', fontWeight: 'bold' }}
-                            stroke="#e2e8f0"
-                            unit="%"
-                          />
-                          <Tooltip content={<ServiceTooltip />} />
-                          <Legend tick={{ fontSize: 11, fontWeight: 'bold' }} />
-                          <Bar 
-                            yAxisId="left"
-                            dataKey={dt.chartLeadTotal} 
-                            fill="#cbd5e1" 
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={30}
-                          />
-                          <Bar 
-                            yAxisId="left"
-                            dataKey={dt.chartLeadConfirmed} 
-                            fill="#10b981" 
-                            radius={[4, 4, 0, 0]}
-maxBarSize={30}
-                          />
-                          <Bar 
-                            yAxisId="right"
-                            dataKey={dt.conversionRateLabel} 
-                            fill="#0ea5e9" 
-                            radius={[4, 4, 0, 0]}
-                            maxBarSize={20}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </section>
-
-        {/* SEARCH AND FILTERS CONTROLS */}
-        <section className="bg-white rounded-3xl p-4 md:p-6 border border-sand-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Search box */}
-          <div className="relative w-full lg:w-80">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
-              <Search className="w-4 h-4" />
-            </div>
-            <input
-              type="text"
-              placeholder={dt.searchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full ps-9 pe-4 py-2.5 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium text-xs md:text-sm text-sand-900 bg-sand-50/50"
-            />
-          </div>
-
-          {/* Filter tabs groups */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-            {/* Status Filter */}
-            <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
-              {[
-                { key: 'All', label: dt.filterAll },
-                { key: 'Pending', label: dt.filterPending },
-                { key: 'Confirmed', label: dt.filterConfirmed },
-                { key: 'Cancelled', label: dt.filterCancelled }
-              ].map(tab => (
-                <button
-                  key={tab.key}
-                  onClick={() => setStatusFilter(tab.key)}
-                  className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                    statusFilter === tab.key 
-                      ? 'bg-white text-therapy-900 shadow-sm' 
-                      : 'text-sand-900/60 hover:text-therapy-900'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Date Filter */}
-            <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
-              {[
-                { key: 'all', label: dt.filterDateAll },
-                { key: 'today', label: dt.filterDateToday },
-                { key: 'week', label: dt.filterDateWeek },
-                { key: 'month', label: dt.filterDateMonth }
-              ].map(tab => (
-                <button
-                  key={tab.key}
-                  onClick={() => setDateFilter(tab.key)}
-                  className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                    dateFilter === tab.key 
-                      ? 'bg-white text-therapy-900 shadow-sm' 
-                      : 'text-sand-900/60 hover:text-therapy-900'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* RESERVATIONS LIST */}
-        <section className="bg-white rounded-3xl border border-sand-200 shadow-md overflow-hidden">
-          {filteredLeads.length === 0 ? (
-            <div className="py-16 text-center text-sand-900/50 font-bold">
-              <Calendar className="w-12 h-12 mx-auto text-sand-300 mb-3" />
-              <p>{dt.noData}</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              {/* DESKTOP TABLE VIEW */}
-              <table className="w-full text-start border-collapse hidden md:table">
-                <thead>
-                  <tr className="bg-sand-100 border-b border-sand-200 text-therapy-900 font-black text-xs uppercase text-start">
-                    <th className="px-6 py-4 text-start font-bold">{dt.colName}</th>
-                    <th className="px-6 py-4 text-start font-bold">{dt.colPhone}</th>
-                    <th className="px-6 py-4 text-start font-bold">{dt.colService}</th>
-                    <th className="px-6 py-4 text-start font-bold">{dt.colDate}</th>
-                    <th className="px-6 py-4 text-start font-bold">{dt.colStatus}</th>
-                    <th className="px-6 py-4 text-center font-bold">{dt.colActions}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-sand-200/70">
-                  {filteredLeads.map((lead) => {
-                    const statusColors = {
-                      Pending: 'bg-amber-50 text-amber-700 border-amber-200',
-                      Confirmed: 'bg-green-50 text-green-700 border-green-200',
-                      Cancelled: 'bg-red-50 text-red-700 border-red-200'
-                    }[lead.status] || 'bg-sand-50 text-sand-700 border-sand-200';
-
-                    const statusLabels = {
-                      Pending: dt.statusPendingLabel,
-                      Confirmed: dt.statusConfirmedLabel,
-                      Cancelled: dt.statusCancelledLabel
-                    }[lead.status] || lead.status;
-
-                    return (
-                      <tr key={lead.id} className="hover:bg-sand-50/50 transition-colors">
-                        {/* Name */}
-                        <td className="px-6 py-4 text-start font-bold text-therapy-900">
-                          {lead.name}
-                        </td>
-                        
-                        {/* WhatsApp Phone */}
-                        <td className="px-6 py-4 text-start font-semibold text-sand-900/70">
-                          <span className="dir-ltr inline-block text-sm">{lead.whatsapp}</span>
-                        </td>
-
-                        {/* Service requested */}
-                        <td className="px-6 py-4 text-start">
-                          <span className="inline-block px-2.5 py-1 text-xs font-bold bg-medical-50 text-medical-600 rounded-lg border border-medical-100">
-                            {lead.service}
-                          </span>
-                        </td>
-
-                        {/* Date submitted */}
-                        <td className="px-6 py-4 text-start text-xs font-bold text-sand-900/60">
-                          {new Date(lead.date).toLocaleString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </td>
-
-                        {/* Status Badge */}
-                        <td className="px-6 py-4 text-start">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${statusColors}`}>
-                            {statusLabels}
-                          </span>
-                        </td>
-
-                        {/* Action buttons */}
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            {lead.status === 'Pending' ? (
-                              <>
-                                {/* Confirm */}
-                                <button
-                                  onClick={() => handleUpdateStatus(lead.id, 'Confirmed')}
-                                  title={dt.btnConfirm}
-                                  className="p-1.5 bg-green-50 hover:bg-green-100 border border-green-200 text-green-600 rounded-lg transition-colors"
-                                >
-                                  <CheckCircle2 className="w-4 h-4" />
-                                </button>
-                                {/* Cancel */}
-                                <button
-                                  onClick={() => handleUpdateStatus(lead.id, 'Cancelled')}
-                                  title={dt.btnCancel}
-                                  className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors"
-                                >
-                                  <XCircle className="w-4 h-4" />
-                                </button>
-                              </>
-                            ) : (
-                              /* Reset to pending if confirmed/cancelled */
-                              <button
-                                onClick={() => handleUpdateStatus(lead.id, 'Pending')}
-                                title={dt.btnReset}
-                                className="p-1.5 bg-sand-100 hover:bg-sand-200 border border-sand-200 text-sand-600 rounded-lg transition-colors"
-                              >
-                                <Undo className="w-4 h-4" />
-                              </button>
-                            )}
-
-                            {/* WhatsApp link */}
-                            <a
-                              href={getWhatsAppLink(lead)}
-                              target="_blank"
-                              rel="noreferrer"
-                              title={dt.whatsappTooltip}
-                              className="p-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-600 rounded-lg transition-colors flex items-center justify-center"
-                            >
-                              <MessageSquare className="w-4 h-4" />
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-
-              {/* MOBILE CARDS VIEW */}
-              <div className="grid grid-cols-1 divide-y divide-sand-200 md:hidden">
-                {filteredLeads.map((lead) => {
-                  const statusColors = {
-                    Pending: 'bg-amber-50 text-amber-700 border-amber-200',
-                    Confirmed: 'bg-green-50 text-green-700 border-green-200',
-                    Cancelled: 'bg-red-50 text-red-700 border-red-200'
-                  }[lead.status] || 'bg-sand-50 text-sand-700 border-sand-200';
-
-                  const statusLabels = {
-                    Pending: dt.statusPendingLabel,
-                    Confirmed: dt.statusConfirmedLabel,
-                    Cancelled: dt.statusCancelledLabel
-                  }[lead.status] || lead.status;
-
-                  return (
-                    <div key={lead.id} className="p-4 space-y-3 text-start">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-bold text-therapy-900 text-base">{lead.name}</h4>
-                          <span className="inline-block px-2 py-0.5 mt-1 text-2xs font-bold bg-medical-50 text-medical-600 rounded border border-medical-100">
-                            {lead.service}
-                          </span>
-                        </div>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-bold border ${statusColors}`}>
-                          {statusLabels}
-                        </span>
-                      </div>
-
-                      <div className="space-y-1 text-xs text-sand-900/60 font-semibold">
-                        <div className="flex items-center gap-1.5">
-                          <Phone className="w-3.5 h-3.5 text-sand-400" />
-                          <span className="dir-ltr text-start">{lead.whatsapp}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-sand-400" />
-                          <span>
-                            {new Date(lead.date).toLocaleString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </span>
-                        </div>
-                      </div>
-
-                      {lead.message && (
-                        <div className="text-xs bg-sand-50 p-2.5 rounded-xl border border-sand-200 text-sand-900/80 font-medium">
-                          {lead.message}
-                        </div>
-                      )}
-
-                      {/* Mobile Actions block */}
-                      <div className="flex justify-between items-center pt-2 border-t border-sand-100">
-                        {/* WhatsApp contact */}
-                        <a
-                          href={getWhatsAppLink(lead)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors"
-                        >
-                          <MessageSquare className="w-4 h-4" />
-                          <span>WhatsApp</span>
-                        </a>
-
-                        {/* Status updates */}
-                        <div className="flex gap-2">
-                          {lead.status === 'Pending' ? (
-                            <>
-                              <button
-                                onClick={() => handleUpdateStatus(lead.id, 'Confirmed')}
-                                className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors"
-                              >
-                                <CheckCircle2 className="w-4 h-4" />
-                                <span>{dt.btnConfirm}</span>
-                              </button>
-                              <button
-                                onClick={() => handleUpdateStatus(lead.id, 'Cancelled')}
-                                className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 transition-colors"
-                              >
-                                <XCircle className="w-4 h-4" />
-                                <span>{dt.btnCancel}</span>
-                              </button>
-                            </>
-                          ) : (
-                            <button
-                              onClick={() => handleUpdateStatus(lead.id, 'Pending')}
-                              className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-sand-600 bg-sand-100 border border-sand-200 rounded-xl hover:bg-sand-200 transition-colors"
-                            >
-                              <Undo className="w-3.5 h-3.5" />
-                              <span>{dt.btnReset}</span>
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+        {/* Assistant Informative Banner */}
+        {userProfile?.role === 'assistant' && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-3 text-start">
+            <div className="flex items-center gap-3">
+              <div className="bg-emerald-100 text-emerald-700 p-2 rounded-xl">
+                <Info className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-xs md:text-sm font-extrabold text-emerald-950">
+                  {dt.assistantNotice.replace('{days}', userProfile?.maxDaysView || 7)}
+                </h4>
+                <p className="text-2xs md:text-xs font-semibold text-emerald-800 mt-0.5">
+                  {userProfile?.canEdit ? `✓ ${dt.permissionAllowed}` : `🔒 ${dt.permissionDenied}`}
+                </p>
               </div>
             </div>
-          )}
-        </section>
+          </div>
+        )}
+
+        {/* TAB 1: RESERVATIONS VIEW */}
+        {activeTab === 'reservations' && (
+          <>
+            {/* STATS OVERVIEW CARDS - VISIBLE FOR ADMIN ONLY */}
+            {userProfile?.role === 'admin' && (
+              <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsTotal}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-therapy-900 mt-1">{totalCount}</h3>
+                  </div>
+                  <div className="bg-sand-100 text-therapy-800 p-2.5 rounded-xl hidden sm:block">
+                    <Calendar className="w-6 h-6" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsPending}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-amber-600 mt-1">{pendingCount}</h3>
+                  </div>
+                  <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl hidden sm:block">
+                    <Clock className="w-6 h-6" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsConfirmed}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-green-600 mt-1">{confirmedCount}</h3>
+                  </div>
+                  <div className="bg-green-50 text-green-600 p-2.5 rounded-xl hidden sm:block">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsCancelled}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-red-600 mt-1">{cancelledCount}</h3>
+                  </div>
+                  <div className="bg-red-50 text-red-600 p-2.5 rounded-xl hidden sm:block">
+                    <XCircle className="w-6 h-6" />
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* ANALYTICS SECTION - VISIBLE FOR ADMIN ONLY */}
+            {userProfile?.role === 'admin' && (
+              <section className="bg-white rounded-3xl border border-sand-200 shadow-md overflow-hidden text-start">
+                <div className="p-4 md:p-6 border-b border-sand-200/60 flex justify-between items-center bg-sand-50/50">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <h2 className="text-base md:text-lg font-black text-therapy-900 flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-medical-500" />
+                      <span>{dt.analyticsTitle}</span>
+                    </h2>
+                    {totalCount > 0 && (
+                      <span className="inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-bold bg-medical-50 text-medical-600 border border-medical-200">
+                        {dt.conversionRateLabel}: {Math.round((confirmedCount / (totalCount || 1)) * 100)}%
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setShowAnalytics(!showAnalytics)}
+                    className="text-xs font-extrabold text-medical-600 hover:text-medical-700 hover:underline flex items-center gap-1.5"
+                  >
+                    {showAnalytics ? dt.analyticsToggleHide : dt.analyticsToggleShow}
+                  </button>
+                </div>
+                
+                {showAnalytics && (
+                  <div className="p-4 md:p-6">
+                    {totalCount === 0 ? (
+                      <div className="py-12 text-center text-sand-900/50 font-bold">
+                        <TrendingUp className="w-12 h-12 mx-auto text-sand-300 mb-3" />
+                        <p>{dt.noDataChart}</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Daily Evolution Chart */}
+                        <div className="space-y-4">
+                          <h3 className="text-sm font-bold text-therapy-900 px-1">
+                            {dt.chartEvolutionTitle}
+                          </h3>
+                          <div className="h-[300px] w-full" dir="ltr">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <AreaChart
+                                data={getEvolutionData()}
+                                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                              >
+                                <defs>
+                                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.2}/>
+                                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                                  </linearGradient>
+                                  <linearGradient id="colorConfirmed" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                  </linearGradient>
+                                  <linearGradient id="colorCancelled" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2}/>
+                                    <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
+                                  </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                                <XAxis 
+                                  dataKey="label" 
+                                  tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
+                                  stroke="#e2e8f0"
+                                />
+                                <YAxis 
+                                  tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                                  stroke="#e2e8f0" 
+                                  allowDecimals={false}
+                                />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Legend tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                <Area 
+                                  type="monotone" 
+                                  dataKey={dt.chartLeadTotal} 
+                                  stroke="#0ea5e9" 
+                                  strokeWidth={2}
+                                  fillOpacity={1} 
+                                  fill="url(#colorTotal)" 
+                                />
+                                <Area 
+                                  type="monotone" 
+                                  dataKey={dt.chartLeadConfirmed} 
+                                  stroke="#10b981" 
+                                  strokeWidth={2}
+                                  fillOpacity={1} 
+                                  fill="url(#colorConfirmed)" 
+                                />
+                                <Area 
+                                  type="monotone" 
+                                  dataKey={dt.chartLeadCancelled} 
+                                  stroke="#f43f5e" 
+                                  strokeWidth={2}
+                                  fillOpacity={1} 
+                                  fill="url(#colorCancelled)" 
+                                />
+                              </AreaChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+
+                        {/* Service Performance Chart */}
+                        <div className="space-y-4">
+                          <h3 className="text-sm font-bold text-therapy-900 px-1">
+                            {dt.chartServiceTitle}
+                          </h3>
+                          <div className="h-[300px] w-full" dir="ltr">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <BarChart
+                                data={getServiceData()}
+                                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                              >
+                                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                                <XAxis 
+                                  dataKey="service" 
+                                  tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
+                                  stroke="#e2e8f0"
+                                />
+                                <YAxis 
+                                  yAxisId="left"
+                                  orientation="left"
+                                  tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                                  stroke="#e2e8f0"
+                                  allowDecimals={false}
+                                />
+                                <YAxis 
+                                  yAxisId="right"
+                                  orientation="right"
+                                  domain={[0, 100]}
+                                  tick={{ fontSize: 10, fill: '#0ea5e9', fontWeight: 'bold' }}
+                                  stroke="#e2e8f0"
+                                  unit="%"
+                                />
+                                <Tooltip content={<ServiceTooltip />} />
+                                <Legend tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                                <Bar 
+                                  yAxisId="left"
+                                  dataKey={dt.chartLeadTotal} 
+                                  fill="#cbd5e1" 
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={30}
+                                />
+                                <Bar 
+                                  yAxisId="left"
+                                  dataKey={dt.chartLeadConfirmed} 
+                                  fill="#10b981" 
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={30}
+                                />
+                                <Bar 
+                                  yAxisId="right"
+                                  dataKey={dt.conversionRateLabel} 
+                                  fill="#0ea5e9" 
+                                  radius={[4, 4, 0, 0]}
+                                  maxBarSize={20}
+                                />
+                              </BarChart>
+                            </ResponsiveContainer>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* SEARCH AND FILTERS CONTROLS */}
+            <section className="bg-white rounded-3xl p-4 md:p-6 border border-sand-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div className="relative w-full lg:w-80">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
+                  <Search className="w-4 h-4" />
+                </div>
+                <input
+                  type="text"
+                  placeholder={dt.searchPlaceholder}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full ps-9 pe-4 py-2.5 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium text-xs md:text-sm text-sand-900 bg-sand-50/50"
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
+                  {[
+                    { key: 'All', label: dt.filterAll },
+                    { key: 'Pending', label: dt.filterPending },
+                    { key: 'Confirmed', label: dt.filterConfirmed },
+                    { key: 'Cancelled', label: dt.filterCancelled }
+                  ].map(tab => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setStatusFilter(tab.key)}
+                      className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
+                        statusFilter === tab.key 
+                          ? 'bg-white text-therapy-900 shadow-sm' 
+                          : 'text-sand-900/60 hover:text-therapy-900'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
+                  {[
+                    { key: 'all', label: dt.filterDateAll },
+                    { key: 'today', label: dt.filterDateToday },
+                    { key: 'week', label: dt.filterDateWeek },
+                    { key: 'month', label: dt.filterDateMonth }
+                  ].map(tab => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setDateFilter(tab.key)}
+                      className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
+                        dateFilter === tab.key 
+                          ? 'bg-white text-therapy-900 shadow-sm' 
+                          : 'text-sand-900/60 hover:text-therapy-900'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* RESERVATIONS TABLE */}
+            <section className="bg-white rounded-3xl border border-sand-200 shadow-md overflow-hidden">
+              {filteredLeads.length === 0 ? (
+                <div className="py-16 text-center text-sand-900/50 font-bold">
+                  <Calendar className="w-12 h-12 mx-auto text-sand-300 mb-3" />
+                  <p>{dt.noData}</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  {/* DESKTOP TABLE VIEW */}
+                  <table className="w-full text-start border-collapse hidden md:table">
+                    <thead>
+                      <tr className="bg-sand-100 border-b border-sand-200 text-therapy-900 font-black text-xs uppercase text-start">
+                        <th className="px-6 py-4 text-start font-bold">{dt.colName}</th>
+                        <th className="px-6 py-4 text-start font-bold">{dt.colPhone}</th>
+                        <th className="px-6 py-4 text-start font-bold">{dt.colService}</th>
+                        <th className="px-6 py-4 text-start font-bold">{dt.colDate}</th>
+                        <th className="px-6 py-4 text-start font-bold">{dt.colStatus}</th>
+                        <th className="px-6 py-4 text-center font-bold">{dt.colActions}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-sand-200/70">
+                      {filteredLeads.map((lead) => {
+                        const statusColors = {
+                          Pending: 'bg-amber-50 text-amber-700 border-amber-200',
+                          Confirmed: 'bg-green-50 text-green-700 border-green-200',
+                          Cancelled: 'bg-red-50 text-red-700 border-red-200'
+                        }[lead.status] || 'bg-sand-50 text-sand-700 border-sand-200';
+
+                        const statusLabels = {
+                          Pending: dt.statusPendingLabel,
+                          Confirmed: dt.statusConfirmedLabel,
+                          Cancelled: dt.statusCancelledLabel
+                        }[lead.status] || lead.status;
+
+                        const isEditingThisRow = editingLeadId === lead.id;
+
+                        if (isEditingThisRow) {
+                          return (
+                            <tr key={lead.id} className="bg-medical-50/50 transition-colors border-l-4 border-l-medical-500">
+                              {/* Editable Name */}
+                              <td className="px-6 py-4 text-start font-bold text-therapy-900">
+                                <input
+                                  type="text"
+                                  value={editingName}
+                                  onChange={(e) => setEditingName(e.target.value)}
+                                  className="w-full px-3 py-1.5 rounded-lg border border-medical-300 focus:ring-2 focus:ring-medical-500 text-sm font-bold bg-white text-sand-900"
+                                />
+                              </td>
+                              
+                              {/* WhatsApp Phone */}
+                              <td className="px-6 py-4 text-start font-semibold text-sand-900/70">
+                                <span className="dir-ltr inline-block text-sm">{lead.whatsapp}</span>
+                              </td>
+
+                              {/* Editable Service Select */}
+                              <td className="px-6 py-4 text-start">
+                                <select
+                                  value={editingService}
+                                  onChange={(e) => setEditingService(e.target.value)}
+                                  className="px-3 py-1.5 rounded-lg border border-medical-300 focus:ring-2 focus:ring-medical-500 text-xs font-bold bg-white text-medical-700"
+                                >
+                                  {AVAILABLE_SERVICES.map(s => (
+                                    <option key={s} value={s}>{s}</option>
+                                  ))}
+                                </select>
+                              </td>
+
+                              {/* Date */}
+                              <td className="px-6 py-4 text-start text-xs font-bold text-sand-900/60">
+                                {new Date(lead.date).toLocaleString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </td>
+
+                              {/* Status Badge */}
+                              <td className="px-6 py-4 text-start">
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${statusColors}`}>
+                                  {statusLabels}
+                                </span>
+                              </td>
+
+                              {/* Save / Cancel Buttons */}
+                              <td className="px-6 py-4 text-center">
+                                <div className="flex items-center justify-center gap-1.5">
+                                  <button
+                                    onClick={() => handleSaveEdit(lead.id)}
+                                    title={dt.btnSave}
+                                    className="px-3 py-1.5 bg-medical-500 hover:bg-medical-600 text-white rounded-lg font-extrabold text-xs shadow-sm flex items-center gap-1 transition-all"
+                                  >
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>{dt.btnSave}</span>
+                                  </button>
+                                  <button
+                                    onClick={handleCancelEdit}
+                                    title={dt.btnCancelEdit}
+                                    className="px-2.5 py-1.5 bg-sand-200 hover:bg-sand-300 text-sand-800 rounded-lg font-bold text-xs flex items-center gap-1 transition-all"
+                                  >
+                                    <X className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        }
+
+                        return (
+                          <tr key={lead.id} className="hover:bg-sand-50/50 transition-colors">
+                            {/* Name */}
+                            <td className="px-6 py-4 text-start font-bold text-therapy-900">
+                              {lead.name}
+                            </td>
+                            
+                            {/* WhatsApp Phone */}
+                            <td className="px-6 py-4 text-start font-semibold text-sand-900/70">
+                              <span className="dir-ltr inline-block text-sm">{lead.whatsapp}</span>
+                            </td>
+
+                            {/* Service requested */}
+                            <td className="px-6 py-4 text-start">
+                              <span className="inline-block px-2.5 py-1 text-xs font-bold bg-medical-50 text-medical-600 rounded-lg border border-medical-100">
+                                {lead.service}
+                              </span>
+                            </td>
+
+                            {/* Date submitted */}
+                            <td className="px-6 py-4 text-start text-xs font-bold text-sand-900/60">
+                              {new Date(lead.date).toLocaleString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </td>
+
+                            {/* Status Badge */}
+                            <td className="px-6 py-4 text-start">
+                              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${statusColors}`}>
+                                {statusLabels}
+                              </span>
+                            </td>
+
+                            {/* Action buttons */}
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                
+                                {/* Edit Button */}
+                                {(userProfile?.role === 'admin' || userProfile?.canEdit) && (
+                                  <button
+                                    onClick={() => handleStartEdit(lead)}
+                                    title={dt.btnEdit}
+                                    className="p-1.5 bg-therapy-50 hover:bg-therapy-100 border border-therapy-200 text-therapy-700 rounded-lg transition-colors flex items-center justify-center"
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </button>
+                                )}
+
+                                {lead.status === 'Pending' ? (
+                                  <>
+                                    <button
+                                      onClick={() => handleUpdateStatus(lead.id, 'Confirmed')}
+                                      title={dt.btnConfirm}
+                                      className="p-1.5 bg-green-50 hover:bg-green-100 border border-green-200 text-green-600 rounded-lg transition-colors"
+                                    >
+                                      <CheckCircle2 className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleUpdateStatus(lead.id, 'Cancelled')}
+                                      title={dt.btnCancel}
+                                      className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors"
+                                    >
+                                      <XCircle className="w-4 h-4" />
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    onClick={() => handleUpdateStatus(lead.id, 'Pending')}
+                                    title={dt.btnReset}
+                                    className="p-1.5 bg-sand-100 hover:bg-sand-200 border border-sand-200 text-sand-600 rounded-lg transition-colors"
+                                  >
+                                    <Undo className="w-4 h-4" />
+                                  </button>
+                                )}
+
+                                <a
+                                  href={getWhatsAppLink(lead)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  title={dt.whatsappTooltip}
+                                  className="p-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-600 rounded-lg transition-colors flex items-center justify-center"
+                                >
+                                  <MessageSquare className="w-4 h-4" />
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+
+                  {/* MOBILE CARDS VIEW */}
+                  <div className="grid grid-cols-1 divide-y divide-sand-200 md:hidden">
+                    {filteredLeads.map((lead) => {
+                      const statusColors = {
+                        Pending: 'bg-amber-50 text-amber-700 border-amber-200',
+                        Confirmed: 'bg-green-50 text-green-700 border-green-200',
+                        Cancelled: 'bg-red-50 text-red-700 border-red-200'
+                      }[lead.status] || 'bg-sand-50 text-sand-700 border-sand-200';
+
+                      const statusLabels = {
+                        Pending: dt.statusPendingLabel,
+                        Confirmed: dt.statusConfirmedLabel,
+                        Cancelled: dt.statusCancelledLabel
+                      }[lead.status] || lead.status;
+
+                      const isEditingThisCard = editingLeadId === lead.id;
+
+                      if (isEditingThisCard) {
+                        return (
+                          <div key={lead.id} className="p-4 space-y-3 bg-medical-50/50 border-l-4 border-l-medical-500 text-start">
+                            <div className="flex flex-col space-y-1">
+                              <label className="text-xs font-bold text-therapy-900">{dt.colName}</label>
+                              <input
+                                type="text"
+                                value={editingName}
+                                onChange={(e) => setEditingName(e.target.value)}
+                                className="w-full px-3 py-2 rounded-xl border border-medical-300 text-sm font-bold bg-white"
+                              />
+                            </div>
+                            <div className="flex flex-col space-y-1">
+                              <label className="text-xs font-bold text-therapy-900">{dt.colService}</label>
+                              <select
+                                value={editingService}
+                                onChange={(e) => setEditingService(e.target.value)}
+                                className="w-full px-3 py-2 rounded-xl border border-medical-300 text-xs font-bold bg-white text-medical-700"
+                              >
+                                {AVAILABLE_SERVICES.map(s => (
+                                  <option key={s} value={s}>{s}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="flex justify-end gap-2 pt-2">
+                              <button
+                                onClick={handleCancelEdit}
+                                className="px-3 py-1.5 bg-sand-200 text-sand-800 text-xs font-bold rounded-xl"
+                              >
+                                {dt.btnCancelEdit}
+                              </button>
+                              <button
+                                onClick={() => handleSaveEdit(lead.id)}
+                                className="px-4 py-1.5 bg-medical-500 text-white text-xs font-extrabold rounded-xl shadow-sm flex items-center gap-1"
+                              >
+                                <Check className="w-3.5 h-3.5" />
+                                <span>{dt.btnSave}</span>
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div key={lead.id} className="p-4 space-y-3 text-start">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h4 className="font-bold text-therapy-900 text-base">{lead.name}</h4>
+                              <span className="inline-block px-2 py-0.5 mt-1 text-2xs font-bold bg-medical-50 text-medical-600 rounded border border-medical-100">
+                                {lead.service}
+                              </span>
+                            </div>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-bold border ${statusColors}`}>
+                              {statusLabels}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1 text-xs text-sand-900/60 font-semibold">
+                            <div className="flex items-center gap-1.5">
+                              <Phone className="w-3.5 h-3.5 text-sand-400" />
+                              <span className="dir-ltr text-start">{lead.whatsapp}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5 text-sand-400" />
+                              <span>
+                                {new Date(lead.date).toLocaleString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Mobile Actions block */}
+                          <div className="flex justify-between items-center pt-2 border-t border-sand-100">
+                            <div className="flex gap-1.5">
+                              <a
+                                href={getWhatsAppLink(lead)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors"
+                              >
+                                <MessageSquare className="w-4 h-4" />
+                                <span>WhatsApp</span>
+                              </a>
+                              {(userProfile?.role === 'admin' || userProfile?.canEdit) && (
+                                <button
+                                  onClick={() => handleStartEdit(lead)}
+                                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-therapy-700 bg-therapy-50 border border-therapy-200 rounded-xl hover:bg-therapy-100 transition-colors"
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                  <span>{dt.btnEdit}</span>
+                                </button>
+                              )}
+                            </div>
+
+                            <div className="flex gap-2">
+                              {lead.status === 'Pending' ? (
+                                <>
+                                  <button
+                                    onClick={() => handleUpdateStatus(lead.id, 'Confirmed')}
+                                    className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors"
+                                  >
+                                    <CheckCircle2 className="w-4 h-4" />
+                                    <span>{dt.btnConfirm}</span>
+                                  </button>
+                                  <button
+                                    onClick={() => handleUpdateStatus(lead.id, 'Cancelled')}
+                                    className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 transition-colors"
+                                  >
+                                    <XCircle className="w-4 h-4" />
+                                    <span>{dt.btnCancel}</span>
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  onClick={() => handleUpdateStatus(lead.id, 'Pending')}
+                                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-sand-600 bg-sand-100 border border-sand-200 rounded-xl hover:bg-sand-200 transition-colors"
+                                >
+                                  <Undo className="w-3.5 h-3.5" />
+                                  <span>{dt.btnReset}</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </section>
+          </>
+        )}
+
+        {/* TAB 2: ASSISTANTS MANAGEMENT VIEW (ADMIN ONLY) */}
+        {activeTab === 'assistants' && userProfile?.role === 'admin' && (
+          <section className="bg-white rounded-3xl border border-sand-200 shadow-md p-6 text-start space-y-6">
+            <div className="flex items-center justify-between border-b border-sand-200/60 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="bg-medical-100 text-medical-700 p-2.5 rounded-2xl">
+                  <UserCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-therapy-900">{dt.assistantsTitle}</h2>
+                  <p className="text-xs text-sand-900/60 font-medium mt-0.5">
+                    {lang === 'ar' ? 'التحكم في صلاحيات الوصول والتعديل وحدود أقدمية البيانات للمساعدين' : 'Contrôle des autorisations d\'accès, de modification et limites d\'ancienneté.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {assistantsList.length === 0 ? (
+              <div className="py-12 text-center text-sand-900/50 font-bold">
+                <Users className="w-12 h-12 mx-auto text-sand-300 mb-3" />
+                <p>{lang === 'ar' ? 'لا يوجد حسابات مساعدين مسجلة بعد' : 'Aucun compte assistant trouvé.'}</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-start border-collapse">
+                  <thead>
+                    <tr className="bg-sand-100 border-b border-sand-200 text-therapy-900 font-black text-xs uppercase">
+                      <th className="px-6 py-4 text-start font-bold">{dt.colEmail}</th>
+                      <th className="px-6 py-4 text-start font-bold">{dt.colRole}</th>
+                      <th className="px-6 py-4 text-start font-bold">{dt.colCanEdit}</th>
+                      <th className="px-6 py-4 text-start font-bold">{dt.colMaxDays}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-sand-200/70">
+                    {assistantsList.map((assistant) => {
+                      const isSelf = assistant.id === user.uid;
+                      return (
+                        <tr key={assistant.id} className="hover:bg-sand-50/50 transition-colors">
+                          {/* Email */}
+                          <td className="px-6 py-4 text-start font-bold text-therapy-900">
+                            {assistant.email || "Compte Sans Email"}
+                            {isSelf && <span className="ms-2 px-2 py-0.5 bg-medical-50 text-medical-600 text-2xs font-extrabold rounded-full">Vous</span>}
+                          </td>
+
+                          {/* Role */}
+                          <td className="px-6 py-4 text-start">
+                            {assistant.role === 'admin' ? (
+                              <span className="px-2.5 py-1 bg-amber-100 text-amber-900 border border-amber-300 font-black text-2xs rounded-full inline-flex items-center gap-1">
+                                <Crown className="w-3 h-3 text-amber-600" />
+                                {dt.roleAdmin}
+                              </span>
+                            ) : (
+                              <span className="px-2.5 py-1 bg-emerald-100 text-emerald-900 border border-emerald-300 font-black text-2xs rounded-full inline-flex items-center gap-1">
+                                <UserCog className="w-3 h-3 text-emerald-600" />
+                                {dt.roleAssistant}
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Toggle Edit Permission */}
+                          <td className="px-6 py-4 text-start">
+                            {assistant.role === 'admin' ? (
+                              <span className="text-xs font-extrabold text-amber-700">Accès Total</span>
+                            ) : (
+                              <button
+                                onClick={() => handleToggleCanEdit(assistant.id, assistant.canEdit !== false)}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 ${
+                                  assistant.canEdit !== false 
+                                    ? 'bg-green-50 text-green-700 border-green-300 hover:bg-green-100' 
+                                    : 'bg-red-50 text-red-700 border-red-300 hover:bg-red-100'
+                                }`}
+                              >
+                                {assistant.canEdit !== false ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5 text-green-600" />
+                                    <span>{dt.permissionAllowed}</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Lock className="w-3.5 h-3.5 text-red-600" />
+                                    <span>{dt.permissionDenied}</span>
+                                  </>
+                                )}
+                              </button>
+                            )}
+                          </td>
+
+                          {/* Max Days View Select */}
+                          <td className="px-6 py-4 text-start">
+                            {assistant.role === 'admin' ? (
+                              <span className="text-xs font-extrabold text-amber-700">Illimité</span>
+                            ) : (
+                              <select
+                                value={assistant.maxDaysView !== undefined ? assistant.maxDaysView : 7}
+                                onChange={(e) => handleChangeMaxDays(assistant.id, e.target.value)}
+                                className="px-3 py-1.5 rounded-xl border border-sand-200 text-xs font-bold bg-sand-50 focus:ring-2 focus:ring-medical-500 text-therapy-900"
+                              >
+                                <option value={7}>{dt.daysOption7}</option>
+                                <option value={14}>{dt.daysOption14}</option>
+                                <option value={30}>{dt.daysOption30}</option>
+                                <option value={90}>{dt.daysOption90}</option>
+                                <option value={3650}>{dt.daysOptionAll}</option>
+                              </select>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        )}
       </main>
     </div>
   );
