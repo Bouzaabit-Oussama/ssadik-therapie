@@ -269,7 +269,8 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [editingName, setEditingName] = useState('');
   const [editingService, setEditingService] = useState('General');
 
-  // Create Assistant Form State
+  // Create Assistant Form & Modal State
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newCanEdit, setNewCanEdit] = useState(true);
@@ -418,6 +419,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
       });
       setNewEmail('');
       setNewPassword('');
+      setIsAddModalOpen(false);
       showToast(dt.toastAssistantCreated);
     } catch (err) {
       console.error("Error creating assistant:", err);
@@ -1572,116 +1574,9 @@ export default function AdminDashboard({ lang, setLang, t }) {
         {activeTab === 'assistants' && userProfile?.role === 'admin' && (
           <div className="space-y-8">
             
-            {/* CREATE ASSISTANT FORM CARD */}
-            <section className="bg-white rounded-3xl border border-sand-200 shadow-md p-6 text-start space-y-5">
-              <div className="flex items-center gap-3 border-b border-sand-200/60 pb-4">
-                <div className="bg-medical-500 text-white p-2.5 rounded-2xl shadow-sm">
-                  <UserPlus className="w-6 h-6" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-black text-therapy-900">{dt.addAssistantTitle}</h2>
-                  <p className="text-xs text-sand-900/60 font-medium mt-0.5">{dt.addAssistantDesc}</p>
-                </div>
-              </div>
-
-              <form onSubmit={handleCreateAssistant} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                {/* Email Input */}
-                <div className="flex flex-col space-y-1.5 text-start">
-                  <label className="text-xs font-bold text-therapy-900">{dt.newAssistantEmail}</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
-                      <Mail className="w-4 h-4" />
-                    </div>
-                    <input
-                      type="email"
-                      required
-                      placeholder="assistante@cabinet.com"
-                      value={newEmail}
-                      onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-sand-200 text-xs font-medium focus:ring-2 focus:ring-medical-500 bg-sand-50/50"
-                    />
-                  </div>
-                </div>
-
-                {/* Password Input */}
-                <div className="flex flex-col space-y-1.5 text-start">
-                  <label className="text-xs font-bold text-therapy-900">{dt.newAssistantPassword}</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
-                      <Lock className="w-4 h-4" />
-                    </div>
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-sand-200 text-xs font-medium focus:ring-2 focus:ring-medical-500 bg-sand-50/50"
-                    />
-                  </div>
-                </div>
-
-                {/* Permissions & Max Days */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex flex-col space-y-1.5 text-start">
-                    <label className="text-2xs font-bold text-therapy-900">{dt.colCanEdit}</label>
-                    <select
-                      value={newCanEdit ? "true" : "false"}
-                      onChange={(e) => setNewCanEdit(e.target.value === "true")}
-                      className="w-full px-2.5 py-2.5 rounded-xl border border-sand-200 text-2xs font-bold bg-sand-50/50 text-therapy-900"
-                    >
-                      <option value="true">{dt.permissionAllowed}</option>
-                      <option value="false">{dt.permissionDenied}</option>
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col space-y-1.5 text-start">
-                    <label className="text-2xs font-bold text-therapy-900">{dt.colMaxDays}</label>
-                    <select
-                      value={newMaxDaysView}
-                      onChange={(e) => setNewMaxDaysView(e.target.value)}
-                      className="w-full px-2 py-2.5 rounded-xl border border-sand-200 text-2xs font-bold bg-sand-50/50 text-therapy-900"
-                    >
-                      <option value="7">{dt.daysOption7}</option>
-                      <option value="14">{dt.daysOption14}</option>
-                      <option value="30">{dt.daysOption30}</option>
-                      <option value="90">{dt.daysOption90}</option>
-                      <option value="3650">{dt.daysOptionAll}</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Submit button */}
-                <button
-                  type="submit"
-                  disabled={isCreatingAssistant}
-                  className="w-full bg-medical-500 hover:bg-medical-600 text-white font-extrabold py-2.5 px-4 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-1.5 disabled:bg-medical-300"
-                >
-                  {isCreatingAssistant ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>{dt.creatingAssistant}</span>
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="w-4 h-4" />
-                      <span>{dt.btnCreateAssistant}</span>
-                    </>
-                  )}
-                </button>
-              </form>
-
-              {assistantError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 text-start flex items-center gap-2">
-                  <XCircle className="w-4 h-4 flex-shrink-0" />
-                  <span>{assistantError}</span>
-                </div>
-              )}
-            </section>
-
             {/* LIST OF ASSISTANTS TABLE */}
             <section className="bg-white rounded-3xl border border-sand-200 shadow-md p-6 text-start space-y-6">
-              <div className="flex items-center justify-between border-b border-sand-200/60 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-sand-200/60 pb-4 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-medical-100 text-medical-700 p-2.5 rounded-2xl">
                     <UserCheck className="w-6 h-6" />
@@ -1693,6 +1588,17 @@ export default function AdminDashboard({ lang, setLang, t }) {
                     </p>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => {
+                    setAssistantError('');
+                    setIsAddModalOpen(true);
+                  }}
+                  className="px-4 py-2.5 bg-medical-500 hover:bg-medical-600 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-2 self-start sm:self-auto"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>{lang === 'ar' ? 'إضافة مساعد جديد +' : 'Ajouter un Assistant +'}</span>
+                </button>
               </div>
 
             {assistantsList.length === 0 ? (
@@ -1907,6 +1813,134 @@ export default function AdminDashboard({ lang, setLang, t }) {
           </section>
         </div>
       )}
+
+        {/* ADD ASSISTANT POPUP MODAL */}
+        {isAddModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-therapy-900/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-sand-200 p-6 space-y-6 text-start relative animate-scale-up">
+              <div className="flex items-center justify-between border-b border-sand-200 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-medical-500 text-white p-2.5 rounded-2xl shadow-sm">
+                    <UserPlus className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-black text-therapy-900">{dt.addAssistantTitle}</h3>
+                    <p className="text-xs text-sand-900/60 font-medium mt-0.5">{dt.addAssistantDesc}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="p-2 text-sand-400 hover:text-therapy-900 hover:bg-sand-100 rounded-xl transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateAssistant} className="space-y-4">
+                {/* Email Input */}
+                <div className="flex flex-col space-y-1.5 text-start">
+                  <label className="text-xs font-bold text-therapy-900">{dt.newAssistantEmail}</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="email"
+                      required
+                      placeholder="assistante@cabinet.com"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-sand-200 text-xs font-medium focus:ring-2 focus:ring-medical-500 bg-sand-50/50"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Input */}
+                <div className="flex flex-col space-y-1.5 text-start">
+                  <label className="text-xs font-bold text-therapy-900">{dt.newAssistantPassword}</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
+                      <Lock className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full ps-9 pe-3 py-2.5 rounded-xl border border-sand-200 text-xs font-medium focus:ring-2 focus:ring-medical-500 bg-sand-50/50"
+                    />
+                  </div>
+                </div>
+
+                {/* Permissions & Max Days */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col space-y-1.5 text-start">
+                    <label className="text-xs font-bold text-therapy-900">{dt.colCanEdit}</label>
+                    <select
+                      value={newCanEdit ? "true" : "false"}
+                      onChange={(e) => setNewCanEdit(e.target.value === "true")}
+                      className="w-full px-3 py-2.5 rounded-xl border border-sand-200 text-xs font-bold bg-sand-50/50 text-therapy-900"
+                    >
+                      <option value="true">{dt.permissionAllowed}</option>
+                      <option value="false">{dt.permissionDenied}</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col space-y-1.5 text-start">
+                    <label className="text-xs font-bold text-therapy-900">{dt.colMaxDays}</label>
+                    <select
+                      value={newMaxDaysView}
+                      onChange={(e) => setNewMaxDaysView(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-xl border border-sand-200 text-xs font-bold bg-sand-50/50 text-therapy-900"
+                    >
+                      <option value="7">{dt.daysOption7}</option>
+                      <option value="14">{dt.daysOption14}</option>
+                      <option value="30">{dt.daysOption30}</option>
+                      <option value="90">{dt.daysOption90}</option>
+                      <option value="3650">{dt.daysOptionAll}</option>
+                    </select>
+                  </div>
+                </div>
+
+                {assistantError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 text-start flex items-center gap-2">
+                    <XCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{assistantError}</span>
+                  </div>
+                )}
+
+                {/* Submit & Cancel Buttons */}
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-sand-200">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddModalOpen(false)}
+                    className="px-4 py-2.5 bg-sand-100 hover:bg-sand-200 text-sand-800 font-bold rounded-xl text-xs transition-colors"
+                  >
+                    {lang === 'ar' ? 'إلغاء' : 'Annuler'}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isCreatingAssistant}
+                    className="bg-medical-500 hover:bg-medical-600 text-white font-extrabold py-2.5 px-5 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-1.5 disabled:bg-medical-300"
+                  >
+                    {isCreatingAssistant ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>{dt.creatingAssistant}</span>
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus className="w-4 h-4" />
+                        <span>{dt.btnCreateAssistant}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
     </main>
   </div>
 );

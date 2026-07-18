@@ -248,6 +248,7 @@ export async function getUserProfile(uid, email) {
             const seedRef = doc(usersCol);
             await setDoc(seedRef, {
               email: defaultEmail,
+              password: defaultEmail,
               role: "assistant",
               canEdit: true,
               maxDaysView: 7,
