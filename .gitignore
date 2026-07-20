@@ -31,3 +31,11 @@ mingit/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Firebase service account keys and credentials
+/fire base SDK/
+*.json
+!package.json
+!firebase.json
+!firebase-*.json
+

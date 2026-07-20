@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { saveLead } from '../firebase';
+
 
 export default function Contact({ t, onOpenModal }) {
   const [formData, setFormData] = useState({
@@ -35,24 +37,53 @@ export default function Contact({ t, onOpenModal }) {
     setStatus('loading');
 
     try {
-      const response = await fetch(GOOGLE_SHEET_URL || 'https://httpbin.org/post', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          date: new Date().toLocaleString(),
-          source: 'Contact Form'
-        }),
-      });
+      const leadPayload = {
+        name: formData.name.trim(),
+        whatsapp: formData.whatsapp.trim(),
+        service: formData.service,
+        message: formData.message || "",
+        date: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        source: 'Contact Form',
+        status: 'Pending'
+      };
 
-      if (response.ok) {
-        setStatus('success');
-        setFormData({ name: '', whatsapp: '', service: '', message: '' });
+      // Concurrently save to Firestore and post to Google Sheets
+      const firestorePromise = saveLead(leadPayload);
+      
+      let sheetsPromise = Promise.resolve();
+      if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes('YOUR-WEBHOOK-ID')) {
+        sheetsPromise = fetch(GOOGLE_SHEET_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...leadPayload,
+            date: new Date().toLocaleString()
+          }),
+        }).catch(err => {
+          console.error("Google Sheets webhook error:", err);
+          // Do not fail the user submission if Google Sheets fails but Firestore succeeds
+        });
       } else {
-        setStatus('error');
+        // Fallback POST if URL is not configured or is demo
+        sheetsPromise = fetch(GOOGLE_SHEET_URL || 'https://httpbin.org/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...leadPayload,
+            date: new Date().toLocaleString()
+          }),
+        }).catch(err => console.error("Demo post error:", err));
       }
+
+      await Promise.all([firestorePromise, sheetsPromise]);
+
+      setStatus('success');
+      setFormData({ name: '', whatsapp: '', service: '', message: '' });
     } catch (error) {
       console.error('Error submitting form:', error);
       setStatus('error');

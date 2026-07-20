@@ -8,6 +8,8 @@ import Expertise from './components/Expertise';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import LeadModal from './components/LeadModal';
+import AdminDashboard from './components/AdminDashboard';
+
 
 // Configurable Webhook URL for Google Sheets.
 // You can replace this value with your actual Google Apps Script Webhook URL.
@@ -49,6 +51,11 @@ export default function App() {
   };
 
   const t = translations[lang];
+
+  // Render Admin Dashboard if visiting /admin route
+  if (window.location.pathname === '/admin') {
+    return <AdminDashboard lang={lang} setLang={setLang} t={t} />;
+  }
 
   return (
     <div className="min-h-screen bg-sand-50 text-sand-900 overflow-x-hidden">

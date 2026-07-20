@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Loader2, PhoneCall } from 'lucide-react';
+import { saveLead } from '../firebase';
+
 
 export default function LeadModal({ isOpen, onClose, defaultService, t }) {
   const [name, setName] = useState('');
@@ -68,32 +70,55 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
     setErrorMessage('');
 
     try {
-      // Post form data to the Google Sheet URL webhook
-      const response = await fetch(GOOGLE_SHEET_URL || 'https://httpbin.org/post', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: name.trim(),
-          whatsapp: whatsappClean,
-          service: service,
-          date: new Date().toLocaleString(),
-          userAgent: navigator.userAgent,
-          source: 'Lead Modal'
-        }),
-      });
+      const leadPayload = {
+        name: name.trim(),
+        whatsapp: whatsappClean,
+        service: service,
+        date: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        source: 'Lead Modal',
+        status: 'Pending'
+      };
 
-      if (response.ok) {
-        setStatus('success');
-        // Close modal after 2.5 seconds success state
-        setTimeout(() => {
-          onClose();
-        }, 2500);
+      // Concurrently save to Firestore and post to Google Sheets
+      const firestorePromise = saveLead(leadPayload);
+      
+      let sheetsPromise = Promise.resolve();
+      if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes('YOUR-WEBHOOK-ID')) {
+        sheetsPromise = fetch(GOOGLE_SHEET_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...leadPayload,
+            date: new Date().toLocaleString()
+          }),
+        }).catch(err => {
+          console.error("Google Sheets webhook error:", err);
+          // Do not fail the user submission if Google Sheets fails but Firestore succeeds
+        });
       } else {
-        setStatus('error');
-        setErrorMessage(t.modal.error);
+        // Fallback POST if URL is not configured or is demo
+        sheetsPromise = fetch(GOOGLE_SHEET_URL || 'https://httpbin.org/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...leadPayload,
+            date: new Date().toLocaleString()
+          }),
+        }).catch(err => console.error("Demo post error:", err));
       }
+
+      await Promise.all([firestorePromise, sheetsPromise]);
+
+      setStatus('success');
+      // Close modal after 2.5 seconds success state
+      setTimeout(() => {
+        onClose();
+      }, 2500);
     } catch (err) {
       console.error('Error posting lead data:', err);
       setStatus('error');
