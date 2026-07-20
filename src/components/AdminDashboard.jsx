@@ -22,7 +22,9 @@ import {
   Globe, 
   Loader2,
   Calendar,
-  Undo
+  Undo,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 const dashboardTranslations = {
@@ -105,6 +107,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Leads and filter states
   const [leads, setLeads] = useState([]);
@@ -285,13 +288,24 @@ export default function AdminDashboard({ lang, setLang, t }) {
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full ps-10 pe-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 bg-sand-50/50 font-medium text-sm text-sand-900"
+                    className="w-full ps-10 pe-10 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 bg-sand-50/50 font-medium text-sm text-sand-900"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 end-0 flex items-center pe-3.5 text-sand-400 hover:text-therapy-900"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
                 </div>
               </div>
 
