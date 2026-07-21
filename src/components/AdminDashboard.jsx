@@ -26,6 +26,18 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+import { 
+  ResponsiveContainer, 
+  AreaChart, 
+  Area, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend 
+} from 'recharts';
 
 const dashboardTranslations = {
   ar: {
@@ -64,7 +76,18 @@ const dashboardTranslations = {
     filterDateAll: "كل الأوقات",
     filterDateToday: "اليوم",
     filterDateWeek: "آخر 7 أيام",
-    filterDateMonth: "آخر 30 يوم"
+    filterDateMonth: "آخر 30 يوم",
+    analyticsTitle: "التحليلات والبيانات",
+    analyticsToggleShow: "عرض الرسوم البيانية",
+    analyticsToggleHide: "إخفاء الرسوم البيانية",
+    chartEvolutionTitle: "تطور الحجوزات اليومية",
+    chartServiceTitle: "أداء الخدمات ونسبة التأكيد",
+    chartLeadTotal: "إجمالي الحجوزات",
+    chartLeadConfirmed: "مؤكدة",
+    chartLeadCancelled: "ملغاة",
+    chartLeadPending: "في الانتظار",
+    conversionRateLabel: "نسبة التأكيد",
+    noDataChart: "لا توجد بيانات كافية لعرض الرسوم البيانية"
   },
   fr: {
     title: "Tableau de Bord - Ssadik Thérapie",
@@ -102,7 +125,18 @@ const dashboardTranslations = {
     filterDateAll: "Tous les temps",
     filterDateToday: "Aujourd'hui",
     filterDateWeek: "7 derniers jours",
-    filterDateMonth: "30 derniers jours"
+    filterDateMonth: "30 derniers jours",
+    analyticsTitle: "Analyses & Statistiques",
+    analyticsToggleShow: "Afficher les analyses",
+    analyticsToggleHide: "Masquer les analyses",
+    chartEvolutionTitle: "Évolution Quotidienne des Réservations",
+    chartServiceTitle: "Répartition & Taux de Confirmation par Service",
+    chartLeadTotal: "Total Réservations",
+    chartLeadConfirmed: "Confirmés",
+    chartLeadCancelled: "Annulés",
+    chartLeadPending: "En attente",
+    conversionRateLabel: "Taux de Confirmation",
+    noDataChart: "Pas assez de données pour afficher les graphiques"
   }
 };
 
@@ -122,6 +156,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [dateFilter, setDateFilter] = useState('all');
+  const [showAnalytics, setShowAnalytics] = useState(true);
 
   const dt = dashboardTranslations[lang] || dashboardTranslations['fr'];
   const isRtl = lang === 'ar';
@@ -243,6 +278,123 @@ export default function AdminDashboard({ lang, setLang, t }) {
     
     return matchesStatus && matchesSearch;
   });
+
+  // 1. Group leads by day for the daily trend chart
+  const getEvolutionData = () => {
+    const dailyMap = {};
+    
+    // Sort leads chronologically
+    const sortedLeads = [...dateFilteredLeads].sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    sortedLeads.forEach(lead => {
+      if (!lead.date) return;
+      const dateStr = lead.date.substring(0, 10);
+      
+      if (!dailyMap[dateStr]) {
+        dailyMap[dateStr] = { 
+          date: dateStr, 
+          [dt.chartLeadTotal]: 0, 
+          [dt.chartLeadConfirmed]: 0, 
+          [dt.chartLeadCancelled]: 0 
+        };
+      }
+      
+      dailyMap[dateStr][dt.chartLeadTotal] += 1;
+      if (lead.status === 'Confirmed') {
+        dailyMap[dateStr][dt.chartLeadConfirmed] += 1;
+      } else if (lead.status === 'Cancelled') {
+        dailyMap[dateStr][dt.chartLeadCancelled] += 1;
+      }
+    });
+
+    return Object.values(dailyMap).map(day => {
+      let label = day.date;
+      try {
+        const d = new Date(day.date);
+        label = d.toLocaleDateString(lang === 'ar' ? 'ar-MA' : 'fr-MA', {
+          day: 'numeric',
+          month: 'short'
+        });
+      } catch (e) {}
+      
+      return {
+        ...day,
+        label
+      };
+    });
+  };
+
+  // 2. Group leads by service for popularity & conversion rates
+  const getServiceData = () => {
+    const serviceMap = {};
+    
+    dateFilteredLeads.forEach(lead => {
+      const serviceName = lead.service || 'Autre';
+      if (!serviceMap[serviceName]) {
+        serviceMap[serviceName] = { 
+          service: serviceName, 
+          [dt.chartLeadTotal]: 0, 
+          [dt.chartLeadConfirmed]: 0 
+        };
+      }
+      
+      serviceMap[serviceName][dt.chartLeadTotal] += 1;
+      if (lead.status === 'Confirmed') {
+        serviceMap[serviceName][dt.chartLeadConfirmed] += 1;
+      }
+    });
+
+    return Object.values(serviceMap).map(item => {
+      const total = item[dt.chartLeadTotal];
+      const confirmed = item[dt.chartLeadConfirmed];
+      const cr = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+      return {
+        ...item,
+        [dt.conversionRateLabel]: cr
+      };
+    });
+  };
+
+  // Custom tooltips
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white/95 backdrop-blur-md p-3 border border-sand-200 shadow-lg rounded-xl text-start">
+          <p className="text-xs font-black text-therapy-900 mb-1.5">{label}</p>
+          <div className="space-y-1">
+            {payload.map((entry, index) => (
+              <p key={index} className="text-xs font-bold flex items-center gap-1.5" style={{ color: entry.color }}>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }}></span>
+                <span>{entry.name}: {entry.value}</span>
+              </p>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const ServiceTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white/95 backdrop-blur-md p-3 border border-sand-200 shadow-lg rounded-xl text-start space-y-1">
+          <p className="text-xs font-black text-therapy-900 mb-1.5">{label}</p>
+          <p className="text-xs font-bold text-therapy-800">
+            {dt.chartLeadTotal}: {data[dt.chartLeadTotal]}
+          </p>
+          <p className="text-xs font-bold text-green-600">
+            {dt.chartLeadConfirmed}: {data[dt.chartLeadConfirmed]}
+          </p>
+          <p className="text-xs font-bold text-medical-600">
+            {dt.conversionRateLabel}: {data[dt.conversionRateLabel]}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   if (loadingAuth) {
     return (
@@ -475,6 +627,171 @@ export default function AdminDashboard({ lang, setLang, t }) {
               <XCircle className="w-6 h-6" />
             </div>
           </div>
+        </section>
+
+        {/* ANALYTICS SECTION */}
+        <section className="bg-white rounded-3xl border border-sand-200 shadow-md overflow-hidden text-start">
+          {/* Header */}
+          <div className="p-4 md:p-6 border-b border-sand-200/60 flex justify-between items-center bg-sand-50/50">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <h2 className="text-base md:text-lg font-black text-therapy-900 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-medical-500" />
+                <span>{dt.analyticsTitle}</span>
+              </h2>
+              {totalCount > 0 && (
+                <span className="inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-bold bg-medical-50 text-medical-600 border border-medical-200">
+                  {dt.conversionRateLabel}: {Math.round((confirmedCount / (totalCount || 1)) * 100)}%
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              className="text-xs font-extrabold text-medical-600 hover:text-medical-700 hover:underline flex items-center gap-1.5"
+            >
+              {showAnalytics ? dt.analyticsToggleHide : dt.analyticsToggleShow}
+            </button>
+          </div>
+          
+          {/* Charts Content */}
+          {showAnalytics && (
+            <div className="p-4 md:p-6">
+              {totalCount === 0 ? (
+                <div className="py-12 text-center text-sand-900/50 font-bold">
+                  <TrendingUp className="w-12 h-12 mx-auto text-sand-300 mb-3" />
+                  <p>{dt.noDataChart}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Daily Evolution Chart */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-therapy-900 px-1">
+                      {dt.chartEvolutionTitle}
+                    </h3>
+                    <div className="h-[300px] w-full" dir="ltr">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                          data={getEvolutionData()}
+                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                        >
+                          <defs>
+                            <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.2}/>
+                              <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorConfirmed" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorCancelled" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.2}/>
+                              <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                          <XAxis 
+                            dataKey="label" 
+                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
+                            stroke="#e2e8f0"
+                          />
+                          <YAxis 
+                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                            stroke="#e2e8f0" 
+                            allowDecimals={false}
+                          />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Legend tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                          <Area 
+                            type="monotone" 
+                            dataKey={dt.chartLeadTotal} 
+                            stroke="#0ea5e9" 
+                            strokeWidth={2}
+                            fillOpacity={1} 
+                            fill="url(#colorTotal)" 
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey={dt.chartLeadConfirmed} 
+                            stroke="#10b981" 
+                            strokeWidth={2}
+                            fillOpacity={1} 
+                            fill="url(#colorConfirmed)" 
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey={dt.chartLeadCancelled} 
+                            stroke="#f43f5e" 
+                            strokeWidth={2}
+                            fillOpacity={1} 
+                            fill="url(#colorCancelled)" 
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Service Performance Chart */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-therapy-900 px-1">
+                      {dt.chartServiceTitle}
+                    </h3>
+                    <div className="h-[300px] w-full" dir="ltr">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={getServiceData()}
+                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                          <XAxis 
+                            dataKey="service" 
+                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }} 
+                            stroke="#e2e8f0"
+                          />
+                          <YAxis 
+                            yAxisId="left"
+                            orientation="left"
+                            tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                            stroke="#e2e8f0"
+                            allowDecimals={false}
+                          />
+                          <YAxis 
+                            yAxisId="right"
+                            orientation="right"
+                            domain={[0, 100]}
+                            tick={{ fontSize: 10, fill: '#0ea5e9', fontWeight: 'bold' }}
+                            stroke="#e2e8f0"
+                            unit="%"
+                          />
+                          <Tooltip content={<ServiceTooltip />} />
+                          <Legend tick={{ fontSize: 11, fontWeight: 'bold' }} />
+                          <Bar 
+                            yAxisId="left"
+                            dataKey={dt.chartLeadTotal} 
+                            fill="#cbd5e1" 
+                            radius={[4, 4, 0, 0]}
+                            maxBarSize={30}
+                          />
+                          <Bar 
+                            yAxisId="left"
+                            dataKey={dt.chartLeadConfirmed} 
+                            fill="#10b981" 
+                            radius={[4, 4, 0, 0]}
+maxBarSize={30}
+                          />
+                          <Bar 
+                            yAxisId="right"
+                            dataKey={dt.conversionRateLabel} 
+                            fill="#0ea5e9" 
+                            radius={[4, 4, 0, 0]}
+                            maxBarSize={20}
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* SEARCH AND FILTERS CONTROLS */}
