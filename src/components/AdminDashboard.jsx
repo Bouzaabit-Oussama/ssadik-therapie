@@ -60,7 +60,11 @@ const dashboardTranslations = {
     statusPendingLabel: "قيد الانتظار",
     statusConfirmedLabel: "مؤكد",
     statusCancelledLabel: "ملغي",
-    backToSite: "العودة للموقع الرئيسي"
+    backToSite: "العودة للموقع الرئيسي",
+    filterDateAll: "كل الأوقات",
+    filterDateToday: "اليوم",
+    filterDateWeek: "آخر 7 أيام",
+    filterDateMonth: "آخر 30 يوم"
   },
   fr: {
     title: "Tableau de Bord - Ssadik Thérapie",
@@ -94,7 +98,11 @@ const dashboardTranslations = {
     statusPendingLabel: "En attente",
     statusConfirmedLabel: "Confirmé",
     statusCancelledLabel: "Annulé",
-    backToSite: "Retour au site public"
+    backToSite: "Retour au site public",
+    filterDateAll: "Tous les temps",
+    filterDateToday: "Aujourd'hui",
+    filterDateWeek: "7 derniers jours",
+    filterDateMonth: "30 derniers jours"
   }
 };
 
@@ -113,6 +121,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [leads, setLeads] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [dateFilter, setDateFilter] = useState('all');
 
   const dt = dashboardTranslations[lang] || dashboardTranslations['fr'];
   const isRtl = lang === 'ar';
@@ -198,14 +207,33 @@ export default function AdminDashboard({ lang, setLang, t }) {
     return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   };
 
-  // Compute stats
-  const totalCount = leads.length;
-  const pendingCount = leads.filter(l => l.status === 'Pending').length;
-  const confirmedCount = leads.filter(l => l.status === 'Confirmed').length;
-  const cancelledCount = leads.filter(l => l.status === 'Cancelled').length;
+  // Filter by date first to compute stats for the active time period
+  const dateFilteredLeads = leads.filter(lead => {
+    if (dateFilter === 'all') return true;
+    if (!lead.date) return false;
+    const leadDate = new Date(lead.date);
+    const now = new Date();
+    if (dateFilter === 'today') {
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      return leadDate >= startOfToday;
+    } else if (dateFilter === 'week') {
+      const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return leadDate >= startOfWeek;
+    } else if (dateFilter === 'month') {
+      const startOfMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return leadDate >= startOfMonth;
+    }
+    return true;
+  });
 
-  // Filter & search logic
-  const filteredLeads = leads.filter(lead => {
+  // Compute stats based on the selected date filter
+  const totalCount = dateFilteredLeads.length;
+  const pendingCount = dateFilteredLeads.filter(l => l.status === 'Pending').length;
+  const confirmedCount = dateFilteredLeads.filter(l => l.status === 'Confirmed').length;
+  const cancelledCount = dateFilteredLeads.filter(l => l.status === 'Cancelled').length;
+
+  // Then apply status filter and search query to get the final list
+  const filteredLeads = dateFilteredLeads.filter(lead => {
     const matchesStatus = statusFilter === 'All' || lead.status === statusFilter;
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = 
@@ -450,9 +478,9 @@ export default function AdminDashboard({ lang, setLang, t }) {
         </section>
 
         {/* SEARCH AND FILTERS CONTROLS */}
-        <section className="bg-white rounded-3xl p-4 md:p-6 border border-sand-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <section className="bg-white rounded-3xl p-4 md:p-6 border border-sand-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Search box */}
-          <div className="relative w-full md:w-96">
+          <div className="relative w-full lg:w-80">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
               <Search className="w-4 h-4" />
             </div>
@@ -465,26 +493,51 @@ export default function AdminDashboard({ lang, setLang, t }) {
             />
           </div>
 
-          {/* Filter tabs */}
-          <div className="flex bg-sand-100 p-1 rounded-xl gap-1 self-start md:self-auto overflow-x-auto max-w-full">
-            {[
-              { key: 'All', label: dt.filterAll },
-              { key: 'Pending', label: dt.filterPending },
-              { key: 'Confirmed', label: dt.filterConfirmed },
-              { key: 'Cancelled', label: dt.filterCancelled }
-            ].map(tab => (
-              <button
-                key={tab.key}
-                onClick={() => setStatusFilter(tab.key)}
-                className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                  statusFilter === tab.key 
-                    ? 'bg-white text-therapy-900 shadow-sm' 
-                    : 'text-sand-900/60 hover:text-therapy-900'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* Filter tabs groups */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+            {/* Status Filter */}
+            <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
+              {[
+                { key: 'All', label: dt.filterAll },
+                { key: 'Pending', label: dt.filterPending },
+                { key: 'Confirmed', label: dt.filterConfirmed },
+                { key: 'Cancelled', label: dt.filterCancelled }
+              ].map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setStatusFilter(tab.key)}
+                  className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
+                    statusFilter === tab.key 
+                      ? 'bg-white text-therapy-900 shadow-sm' 
+                      : 'text-sand-900/60 hover:text-therapy-900'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Date Filter */}
+            <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
+              {[
+                { key: 'all', label: dt.filterDateAll },
+                { key: 'today', label: dt.filterDateToday },
+                { key: 'week', label: dt.filterDateWeek },
+                { key: 'month', label: dt.filterDateMonth }
+              ].map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setDateFilter(tab.key)}
+                  className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
+                    dateFilter === tab.key 
+                      ? 'bg-white text-therapy-900 shadow-sm' 
+                      : 'text-sand-900/60 hover:text-therapy-900'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </section>
 
