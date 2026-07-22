@@ -505,10 +505,10 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
     }
   };
 
-  const handleDeleteAssistant = async (assistantId) => {
+  const handleDeleteAssistant = async (assistant) => {
     if (window.confirm(dt.confirmDeleteAccount)) {
       try {
-        await deleteAssistantUser(assistantId);
+        await deleteAssistantUser(assistant);
         showToast(dt.toastAccountDeleted);
       } catch (err) {
         alert("Error deleting assistant account: " + err.message);
@@ -1854,7 +1854,7 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
                                   <Pencil className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleDeleteAssistant(assistant.id)}
+                                  onClick={() => handleDeleteAssistant(assistant)}
                                   title={dt.btnDeleteAccount}
                                   className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors"
                                 >

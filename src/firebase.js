@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, deleteUser } from "firebase/auth";
 import { 
   getFirestore, 
   collection, 
@@ -187,12 +187,28 @@ export async function updateAssistantAccount(userId, data) {
 }
 
 /**
- * Deletes an assistant account from Firestore
- * @param {string} userId 
+ * Deletes an assistant account from Firebase Auth AND Firestore
+ * @param {string|Object} assistantObj 
  */
-export async function deleteAssistantUser(userId) {
+export async function deleteAssistantUser(assistantObj) {
+  const assistantId = typeof assistantObj === 'object' ? assistantObj.id : assistantObj;
+  const assistantEmail = typeof assistantObj === 'object' ? assistantObj.email : null;
+  const assistantPassword = typeof assistantObj === 'object' ? assistantObj.password : null;
+
   try {
-    const userRef = doc(db, "users", userId);
+    // 1. Delete from Firebase Authentication Console if email and password are available
+    if (assistantEmail && assistantPassword) {
+      try {
+        const userCred = await signInWithEmailAndPassword(secondaryAuth, assistantEmail.trim(), assistantPassword);
+        await deleteUser(userCred.user);
+        await signOut(secondaryAuth);
+      } catch (authDeleteErr) {
+        console.warn("Notice: Could not delete user directly from Firebase Auth console:", authDeleteErr.message);
+      }
+    }
+
+    // 2. Delete Firestore document
+    const userRef = doc(db, "users", assistantId);
     await deleteDoc(userRef);
   } catch (error) {
     console.error("Error deleting assistant user:", error);
