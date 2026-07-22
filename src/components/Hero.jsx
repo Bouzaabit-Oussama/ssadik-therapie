@@ -5,8 +5,8 @@ export default function Hero({ t, onOpenModal }) {
   return (
     <section id="home" className="relative overflow-hidden bg-gradient-to-b from-sand-100/40 via-sand-50 to-white pt-6 pb-16 md:py-24">
       {/* Background Decor Elements */}
-      <div className="absolute top-0 start-0 w-72 h-72 bg-medical-100/30 rounded-full filter blur-3xl opacity-60 -z-10 translate-x-[-20%] translate-y-[-20%]"></div>
-      <div className="absolute bottom-0 end-0 w-96 h-96 bg-therapy-200/30 rounded-full filter blur-3xl opacity-50 -z-10 translate-x-[20%] translate-y-[20%]"></div>
+      <div className="absolute top-0 start-0 w-72 h-72 bg-medical-100/30 rounded-full filter blur-3xl opacity-60 -z-10 translate-x-[-20%] translate-y-[-20%] animate-float-slow"></div>
+      <div className="absolute bottom-0 end-0 w-96 h-96 bg-therapy-200/30 rounded-full filter blur-3xl opacity-50 -z-10 translate-x-[20%] translate-y-[20%] animate-float-delayed"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">

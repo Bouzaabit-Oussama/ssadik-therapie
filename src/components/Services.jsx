@@ -34,8 +34,12 @@ export default function Services({ t, onOpenModal }) {
   ];
 
   return (
-    <section id="services" className="py-20 bg-therapy-50/50 scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="relative py-20 bg-therapy-50/50 scroll-mt-20 overflow-hidden">
+      {/* Dynamic Background Glow Orbs */}
+      <div className="absolute top-10 start-0 w-80 h-80 bg-medical-100/40 rounded-full filter blur-3xl opacity-60 animate-float-slow pointer-events-none"></div>
+      <div className="absolute bottom-10 end-0 w-96 h-96 bg-sand-200/50 rounded-full filter blur-3xl opacity-60 animate-float-delayed pointer-events-none"></div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <h2 className="text-3xl md:text-4xl font-extrabold text-therapy-900 tracking-tight">

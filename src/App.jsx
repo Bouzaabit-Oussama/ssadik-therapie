@@ -3,6 +3,7 @@ import { translations } from './i18n/translations';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Services from './components/Services';
+import ParallaxSection from './components/ParallaxSection';
 import PromoCountdown from './components/PromoCountdown';
 import Expertise from './components/Expertise';
 import Contact from './components/Contact';
@@ -77,6 +78,9 @@ export default function App() {
 
         {/* 4 Services grid */}
         <Services t={t} onOpenModal={handleOpenModal} />
+
+        {/* Parallax ambient section with glassmorphism statistics */}
+        <ParallaxSection t={t} onOpenModal={handleOpenModal} />
 
         {/* Countdown promo pack */}
         <PromoCountdown t={t} onOpenModal={handleOpenModal} />
