@@ -18,16 +18,16 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
 
   return (
     <header className="w-full sticky top-0 z-50 shadow-md">
-      {/* Top Promotional Bar with hero_bg background & dark overlay */}
-      <div className="relative w-full overflow-hidden shadow-md bg-therapy-950 border-b border-white/10">
-        {/* Background Image Layer */}
+      {/* Top Promotional Bar with Opaque Dark hero_bg background */}
+      <div className="relative w-full overflow-hidden shadow-md bg-slate-950 border-b border-white/10">
+        {/* Background Image Layer (Texture) */}
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
+          className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{ backgroundImage: "url('/assets/hero_bg.png')" }}
         ></div>
 
-        {/* Darkening Gradient Overlay for optimal contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-therapy-950/90 via-slate-950/85 to-therapy-950/90"></div>
+        {/* Solid Darkening Overlay (Eliminates scroll bleed-through & maximizes contrast) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-therapy-950/95 to-slate-950/95"></div>
 
         {/* Text & Button Content */}
         <div className="relative z-10 py-2.5 px-4 text-center text-xs md:text-sm font-bold text-white flex items-center justify-center flex-wrap gap-2.5">
