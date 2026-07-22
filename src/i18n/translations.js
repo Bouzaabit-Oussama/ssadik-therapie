@@ -101,6 +101,66 @@ export const translations = {
     },
     footer: {
       rights: 'جميع الحقوق محفوظة. صادق للعلاج الطبيعي - طنجة، المغرب'
+    },
+    trustBar: {
+      item1Title: 'أخصائيون معتمدون',
+      item1Sub: 'خبرة مهنية عالية بمدينة طنجة',
+      item2Title: 'معدات 100% معقمة',
+      item2Sub: 'أدوات الحجامة ذات استعمال واحد',
+      item3Title: 'سهولة الوصول والموقف',
+      item3Sub: 'مقر العيادة بالجيراري 2 طنجة',
+      item4Title: 'مواعيد دقيقة',
+      item4Sub: 'استقبال منظم بدون انتظار طويل'
+    },
+    testimonials: {
+      title: 'آراء وانطباعات مرضانة في طنجة',
+      subtitle: 'شهادات حقيقية من مرضى وثقوا بخدماتنا واستعادوا عافيتهم وصحتهم.',
+      reviews: [
+        {
+          name: 'ياسين المودن',
+          role: 'مريض طنجة - الحجامة العلاجية',
+          comment: 'تجربة ممتازة جداً. الحجامة تمت بأعلى معايير التعقيم واختفت آلام الظهر المزمنة من الجلسة الأولى. أنصح بها بشدة.',
+          rating: 5
+        },
+        {
+          name: 'فاطمة الزهراء البقالي',
+          role: 'مريضة طنجة - التدليك العلاجي',
+          comment: 'الاحترافية والمعاملة الطيبة. جلسات التلذيك والتقويم أحدثت فارقاً كبيراً في راحتي اليومية والتخلص من التوتر.',
+          rating: 5
+        },
+        {
+          name: 'كريم التازي',
+          role: 'مريض طنجة - الوخز بالإبر والتقويم',
+          comment: 'فريق متخصص، عيادة ناتجة ونظيفة جداً بالجيراري 2. الشفاء بفضل الله ثم ببروتوكول العلاج الطبيعي الممتاز.',
+          rating: 5
+        }
+      ]
+    },
+    faq: {
+      title: 'الأسئلة الشائعة واستفسارات المرضى',
+      subtitle: 'إجابات واضحة على أبرز الأسئلة المتعلقة بجلسات العلاج والخدمات.',
+      items: [
+        {
+          q: 'هل الحجامة مؤلمة؟ وهل تترك آثاراً دائمية؟',
+          a: 'الحجامة الطبية غير مؤلمة إطلاقاً، حيث نستخدم تشريطاً سطحياً دقيقاً جداً وأدوات معقمة ذات استعمال واحد. الآثار السطحية تختفي تلقائياً خلال 3 إلى 7 أيام.'
+        },
+        {
+          q: 'كم عدد الجلسات التي أحتاجها في العلاج الطبيعي؟',
+          a: 'يختلف عدد الجلسات بحسب حالة المريض ونوع المشكلة (آلام الظهر، التشنجات، أو التشخيص المفصلي). يقوم الأخصائي بتقييم حالتك في الاستشارة الأولى وتحديد البرتوكول المناسب.'
+        },
+        {
+          q: 'أين تقع العيادة وكيف يمكنني حجز موعد؟',
+          a: 'تقع عيادتنا في طنجة، شارع عائشة المسافر رقم 6، الجيراري 2. يمكنك حجز موعد عبر الموقع أو الاتصال بنا مباشرة على الواتساب.'
+        },
+        {
+          q: 'ما هي مواعيد العمل في العيادة؟',
+          a: 'نستقبلكم يومياً من الإثنين إلى السبت من الساعة 9:00 صباحاً حتى 8:00 مساءً بحجز مسبق لضمان راحتكم وعدم الانتظار.'
+        }
+      ]
+    },
+    floatingWhatsapp: {
+      tooltip: 'تواصل معنا مباشرة عبر الواتساب',
+      badgeText: 'رد سريع خلال دقائق'
     }
   },
   fr: {
@@ -205,6 +265,66 @@ export const translations = {
     },
     footer: {
       rights: 'Tous droits réservés. © Ssadik Thérapie - Tanger, Maroc'
+    },
+    trustBar: {
+      item1Title: 'Praticiens Diplômés',
+      item1Sub: 'Expertise médicale à Tanger',
+      item2Title: 'Matériel 100% Stérile',
+      item2Sub: 'Kits à usage unique garanti',
+      item3Title: 'Accès & Parking Facile',
+      item3Sub: 'Localisation Jirari 2, Tanger',
+      item4Title: 'RDV Sans Attente',
+      item4Sub: 'Accompagnement personnalisé'
+    },
+    testimonials: {
+      title: 'Témoignages & Avis de Nos Patients',
+      subtitle: 'Découvrez les retours d\'expérience de nos patients soignés à Tanger.',
+      reviews: [
+        {
+          name: 'Yassine El Amrani',
+          role: 'Patient à Tanger - Hijama',
+          comment: 'Une expérience formidable. Hygiène irréprochable et disparition complète de mes douleurs lombaires dès la première séance. Je recommande sans hésiter.',
+          rating: 5
+        },
+        {
+          name: 'Fatima-Zohra Bakkali',
+          role: 'Patiente à Tanger - Massothérapie',
+          comment: 'Accueil chaleureux et soins très professionnels. Les séances de massage thérapeutique et de chiropraxie ont totalement débloqué mon dos.',
+          rating: 5
+        },
+        {
+          name: 'Karim Tazi',
+          role: 'Patient à Tanger - Acupuncture & GOT',
+          comment: 'Cabinet propre, moderne et idéalement situé à Jirari 2. Le praticien est à l\'écoute et le suivi est remarquable.',
+          rating: 5
+        }
+      ]
+    },
+    faq: {
+      title: 'Foire Aux Questions (FAQ)',
+      subtitle: 'Retrouvez les réponses aux questions les plus fréquentes posées par nos patients.',
+      items: [
+        {
+          q: 'La Hijama est-elle douloureuse ou laisse-t-elle des marques ?',
+          a: 'La Hijama médicale est indolore. Nous utilisons un matériel stérile à usage unique avec des micro-incisions très superficielles. Les légères marques s\'estompent naturellement en 3 à 7 jours.'
+        },
+        {
+          q: 'Combien de séances sont nécessaires pour un soin efficace ?',
+          a: 'Le nombre de séances dépend du diagnostic initial (douleurs chroniques, sciatique, tensions). Un bilan personnalisé est réalisé lors de votre premier rendez-vous.'
+        },
+        {
+          q: 'Où se situe exactement le cabinet à Tanger ?',
+          a: 'Le cabinet est situé rue Aïcha Moussafir N°6, quartier Jirari 2 à Tanger. Un accès facile et des places de stationnement sont disponibles.'
+        },
+        {
+          q: 'Quels sont les horaires d\'ouverture et les modalités de RDV ?',
+          a: 'Nous vous accueillons du Lundi au Samedi de 09h00 à 20h00 uniquement sur rendez-vous pour vous garantir zéro attente.'
+        }
+      ]
+    },
+    floatingWhatsapp: {
+      tooltip: 'Contactez-nous directement sur WhatsApp',
+      badgeText: 'Réponse rapide < 5 min'
     }
   }
 };

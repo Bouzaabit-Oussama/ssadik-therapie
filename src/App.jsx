@@ -2,13 +2,17 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { translations } from './i18n/translations';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import TrustBar from './components/TrustBar';
 import Services from './components/Services';
 import ParallaxSection from './components/ParallaxSection';
 import PromoCountdown from './components/PromoCountdown';
+import Testimonials from './components/Testimonials';
 import Expertise from './components/Expertise';
+import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import LeadModal from './components/LeadModal';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 
@@ -72,9 +76,13 @@ export default function App() {
       {/* Navbar + Top promo bar */}
       <Header lang={lang} setLang={setLang} t={t} onOpenModal={handleOpenModal} />
 
-      {/* Hero Section */}
+      {/* Main Page Content */}
       <main>
+        {/* Hero Section */}
         <Hero t={t} onOpenModal={handleOpenModal} />
+
+        {/* Medical Trust & Reassurance Bar */}
+        <TrustBar t={t} />
 
         {/* 4 Services grid */}
         <Services t={t} onOpenModal={handleOpenModal} />
@@ -85,8 +93,14 @@ export default function App() {
         {/* Countdown promo pack */}
         <PromoCountdown t={t} onOpenModal={handleOpenModal} />
 
+        {/* Patient Testimonials & Social Proof */}
+        <Testimonials t={t} />
+
         {/* Presentation and clinic expertise */}
         <Expertise t={t} />
+
+        {/* Interactive FAQ Accordion */}
+        <FAQ t={t} />
 
         {/* Contact details, form and map location */}
         <Contact t={t} onOpenModal={handleOpenModal} />
@@ -102,6 +116,9 @@ export default function App() {
         defaultService={modalService}
         t={t}
       />
+
+      {/* Floating WhatsApp Action Widget */}
+      <FloatingWhatsApp t={t} />
     </div>
   );
 }
