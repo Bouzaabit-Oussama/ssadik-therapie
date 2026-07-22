@@ -187,7 +187,7 @@ export async function updateAssistantAccount(userId, data) {
 }
 
 /**
- * Deletes an assistant account from Firebase Auth AND Firestore
+ * Deletes an assistant account from Firebase Auth AND Firestore (cleans up any duplicate docs by email)
  * @param {string|Object} assistantObj 
  */
 export async function deleteAssistantUser(assistantObj) {
@@ -207,9 +207,23 @@ export async function deleteAssistantUser(assistantObj) {
       }
     }
 
-    // 2. Delete Firestore document
-    const userRef = doc(db, "users", assistantId);
-    await deleteDoc(userRef);
+    // 2. Delete all matching Firestore documents by email to remove duplicate entries
+    if (assistantEmail) {
+      try {
+        const usersCol = collection(db, "users");
+        const snapshot = await getDocs(usersCol);
+        const matchingDocs = snapshot.docs.filter(d => (d.data().email || "").toLowerCase().trim() === assistantEmail.toLowerCase().trim());
+        for (const d of matchingDocs) {
+          await deleteDoc(doc(db, "users", d.id));
+        }
+      } catch (e) {
+        const userRef = doc(db, "users", assistantId);
+        await deleteDoc(userRef);
+      }
+    } else {
+      const userRef = doc(db, "users", assistantId);
+      await deleteDoc(userRef);
+    }
   } catch (error) {
     console.error("Error deleting assistant user:", error);
     throw error;

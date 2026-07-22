@@ -243,6 +243,25 @@ const dashboardTranslations = {
   }
 };
 
+// Helper to deduplicate accounts by lowercased email address (one row per email)
+function deduplicateUsersByEmail(usersArray) {
+  const map = new Map();
+  usersArray.forEach(u => {
+    const cleanEmail = (u.email || "").toLowerCase().trim();
+    if (!cleanEmail) return;
+
+    if (!map.has(cleanEmail)) {
+      map.set(cleanEmail, u);
+    } else {
+      const existing = map.get(cleanEmail);
+      if ((u.role === 'admin' && existing.role !== 'admin') || (u.password && !existing.password)) {
+        map.set(cleanEmail, u);
+      }
+    }
+  });
+  return Array.from(map.values());
+}
+
 const DEFAULT_ACCOUNTS_FALLBACK = [
   {
     id: "admin_fallback_id",
@@ -363,17 +382,16 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
     syncDefaultAccounts();
 
     const unsubscribe = getUsersRealtime((fetchedUsers) => {
-      if (!fetchedUsers || fetchedUsers.length === 0) {
-        setAssistantsList(DEFAULT_ACCOUNTS_FALLBACK);
-      } else {
-        let merged = [...fetchedUsers];
-        DEFAULT_ACCOUNTS_FALLBACK.forEach(def => {
-          if (!merged.some(u => (u.email || "").toLowerCase() === def.email.toLowerCase())) {
-            merged.push(def);
-          }
-        });
-        setAssistantsList(merged);
-      }
+      let combined = fetchedUsers && fetchedUsers.length > 0 ? fetchedUsers : DEFAULT_ACCOUNTS_FALLBACK;
+      
+      DEFAULT_ACCOUNTS_FALLBACK.forEach(def => {
+        if (!combined.some(u => (u.email || "").toLowerCase().trim() === def.email.toLowerCase().trim())) {
+          combined.push(def);
+        }
+      });
+
+      const deduplicated = deduplicateUsersByEmail(combined);
+      setAssistantsList(deduplicated);
     });
     return () => unsubscribe();
   }, [user, userProfile]);
