@@ -12,6 +12,7 @@ import {
   createAssistantUser,
   updateAssistantAccount,
   deleteAssistantUser,
+  syncDefaultAccounts,
   auth 
 } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -47,7 +48,8 @@ import {
   UserCog,
   UserPlus,
   Trash2,
-  Key
+  Key,
+  RefreshCw
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -320,12 +322,58 @@ export default function AdminDashboard({ lang, setLang, t }) {
     return () => unsubscribe();
   }, [user]);
 
+  const DEFAULT_ACCOUNTS_FALLBACK = [
+    {
+      id: "admin_fallback_id",
+      email: "admin@cabinet.com",
+      password: "admin@cabinet.com",
+      role: "admin",
+      canEdit: true,
+      maxDaysView: 3650
+    },
+    {
+      id: "assistant_fallback_id",
+      email: "assistante@cabinet.com",
+      password: "assistante@cabinet.com",
+      role: "assistant",
+      canEdit: true,
+      maxDaysView: 7
+    }
+  ];
+
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    try {
+      await syncDefaultAccounts();
+      showToast(lang === 'ar' ? 'تمت مزامنة الحسابات بنجاح!' : 'Comptes synchronisés avec succès !');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   // Listen to Users/Assistants list if logged in as Admin
   useEffect(() => {
     if (!user || userProfile?.role !== 'admin') return;
 
+    // Trigger background sync of default accounts
+    syncDefaultAccounts();
+
     const unsubscribe = getUsersRealtime((fetchedUsers) => {
-      setAssistantsList(fetchedUsers);
+      if (!fetchedUsers || fetchedUsers.length === 0) {
+        setAssistantsList(DEFAULT_ACCOUNTS_FALLBACK);
+      } else {
+        let merged = [...fetchedUsers];
+        DEFAULT_ACCOUNTS_FALLBACK.forEach(def => {
+          if (!merged.some(u => (u.email || "").toLowerCase() === def.email.toLowerCase())) {
+            merged.push(def);
+          }
+        });
+        setAssistantsList(merged);
+      }
     });
     return () => unsubscribe();
   }, [user, userProfile]);
@@ -1589,16 +1637,28 @@ export default function AdminDashboard({ lang, setLang, t }) {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => {
-                    setAssistantError('');
-                    setIsAddModalOpen(true);
-                  }}
-                  className="px-4 py-2.5 bg-medical-500 hover:bg-medical-600 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-2 self-start sm:self-auto"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  <span>{lang === 'ar' ? 'إضافة مساعد جديد +' : 'Ajouter un Assistant +'}</span>
-                </button>
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  <button
+                    onClick={handleManualSync}
+                    disabled={isSyncing}
+                    title={lang === 'ar' ? 'مزامنة الحسابات مع قواعد البيانات' : 'Synchroniser les comptes'}
+                    className="px-3.5 py-2.5 bg-sand-100 hover:bg-sand-200 text-therapy-900 font-bold rounded-2xl text-xs transition-all flex items-center gap-1.5 border border-sand-200"
+                  >
+                    <RefreshCw className={`w-4 h-4 text-medical-600 ${isSyncing ? 'animate-spin' : ''}`} />
+                    <span>{lang === 'ar' ? 'مزامنة' : 'Synchroniser'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setAssistantError('');
+                      setIsAddModalOpen(true);
+                    }}
+                    className="px-4 py-2.5 bg-medical-500 hover:bg-medical-600 text-white font-extrabold rounded-2xl text-xs shadow-md transition-all flex items-center gap-2"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    <span>{lang === 'ar' ? 'إضافة مساعد جديد +' : 'Ajouter un Assistant +'}</span>
+                  </button>
+                </div>
               </div>
 
             {assistantsList.length === 0 ? (

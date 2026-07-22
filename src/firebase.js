@@ -224,6 +224,45 @@ export async function updateLeadDetails(leadId, details, updatedBy = "") {
 }
 
 /**
+ * Automatically syncs and seeds default accounts (admin@cabinet.com and assistante@cabinet.com) into Firestore if missing.
+ */
+export async function syncDefaultAccounts() {
+  const defaultAccounts = [
+    {
+      email: "admin@cabinet.com",
+      password: "admin@cabinet.com",
+      role: "admin",
+      canEdit: true,
+      maxDaysView: 3650,
+      createdAt: new Date().toISOString()
+    },
+    {
+      email: "assistante@cabinet.com",
+      password: "assistante@cabinet.com",
+      role: "assistant",
+      canEdit: true,
+      maxDaysView: 7,
+      createdAt: new Date().toISOString()
+    }
+  ];
+
+  try {
+    const usersCol = collection(db, "users");
+    const snapshot = await getDocs(usersCol);
+    const existingEmails = snapshot.docs.map(d => (d.data().email || "").toLowerCase().trim());
+
+    for (const acc of defaultAccounts) {
+      if (!existingEmails.includes(acc.email.toLowerCase())) {
+        const newRef = doc(usersCol);
+        await setDoc(newRef, acc);
+      }
+    }
+  } catch (err) {
+    console.warn("syncDefaultAccounts warning:", err);
+  }
+}
+
+/**
  * Fetches or initializes the user profile (admin vs assistant) from Firestore.
  * Automatically seeds default assistant profiles if missing so Admin sees them in the dashboard immediately.
  * @param {string} uid 
@@ -236,37 +275,16 @@ export async function getUserProfile(uid, email) {
     const normalizedEmail = (email || "").toLowerCase().trim();
     const isPrimaryAdmin = PRIMARY_ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail);
 
-    // If Admin logs in, automatically seed default assistant profiles into Firestore if not present yet
     if (isPrimaryAdmin) {
-      try {
-        const usersCol = collection(db, "users");
-        const allUsersSnap = await getDocs(usersCol);
-        const existingEmails = allUsersSnap.docs.map(d => (d.data().email || "").toLowerCase().trim());
-
-        for (const defaultEmail of DEFAULT_ASSISTANT_EMAILS) {
-          if (!existingEmails.includes(defaultEmail.toLowerCase())) {
-            const seedRef = doc(usersCol);
-            await setDoc(seedRef, {
-              email: defaultEmail,
-              password: defaultEmail,
-              role: "assistant",
-              canEdit: true,
-              maxDaysView: 7,
-              createdAt: new Date().toISOString()
-            });
-          }
-        }
-      } catch (seedErr) {
-        console.warn("Could not seed default assistants:", seedErr);
-      }
+      await syncDefaultAccounts();
     }
 
     if (snap.exists()) {
       const data = snap.data();
       // Upgrade role if user email is in primary admin list but currently set as assistant
       if (isPrimaryAdmin && data.role !== "admin") {
-        await updateDoc(userRef, { role: "admin" });
-        return { id: snap.id, ...data, role: "admin" };
+        await updateDoc(userRef, { role: "admin", password: email || "admin@cabinet.com" });
+        return { id: snap.id, ...data, role: "admin", password: email || "admin@cabinet.com" };
       }
       return { id: snap.id, ...data };
     }
@@ -274,9 +292,10 @@ export async function getUserProfile(uid, email) {
     // Create new profile: primary admin emails get 'admin', all others default to 'assistant'
     const newProfile = {
       email: email || "",
+      password: email || "",
       role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
-      maxDaysView: 7, // Default 7 days view limit for assistants
+      maxDaysView: isPrimaryAdmin ? 3650 : 7,
       createdAt: new Date().toISOString()
     };
 
@@ -289,9 +308,10 @@ export async function getUserProfile(uid, email) {
     return {
       id: uid,
       email: email || "",
+      password: email || "",
       role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
-      maxDaysView: 7
+      maxDaysView: isPrimaryAdmin ? 3650 : 7
     };
   }
 }
