@@ -391,12 +391,14 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
 
     const authUnsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setActiveTab('reservations');
       if (currentUser) {
         profileUnsubscribe = getUserProfileRealtime(currentUser.uid, currentUser.email, (liveProfile) => {
           if (!liveProfile && currentUser.email !== 'admin@cabinet.com') {
             signOutUser();
             setUser(null);
             setUserProfile(null);
+            setActiveTab('reservations');
             alert(lang === 'ar' ? 'تم إلغاء صلاحية هذا الحساب أو حذفه من طرف المسؤول.' : 'Ce compte a été désactivé ou supprimé par l\'administrateur.');
           } else {
             setUserProfile(liveProfile);
@@ -406,6 +408,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
       } else {
         if (profileUnsubscribe) profileUnsubscribe();
         setUserProfile(null);
+        setActiveTab('reservations');
         setLoadingAuth(false);
       }
     });
@@ -470,6 +473,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
 
     try {
       await signInUser(email, password);
+      setActiveTab('reservations');
     } catch (err) {
       console.error("Login error:", err);
       setLoginError(dt.authError);
@@ -484,6 +488,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
       setUser(null);
       setUserProfile(null);
       setLeads([]);
+      setActiveTab('reservations');
     } catch (err) {
       console.error("Logout error:", err);
     }
