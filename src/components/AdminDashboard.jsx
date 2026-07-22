@@ -2074,7 +2074,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="px-3 py-1 rounded-full bg-sand-100 border border-sand-200 font-black text-therapy-900 text-2xs shadow-2xs">
-            {lang === 'ar' ? `إصدار الموقع: ${APP_VERSION}` : `Version du site: ${APP_VERSION}`}
+            {APP_VERSION}
           </span>
         </div>
       </div>
