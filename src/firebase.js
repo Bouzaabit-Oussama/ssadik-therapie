@@ -370,6 +370,56 @@ export async function getUserProfile(uid, email) {
 }
 
 /**
+ * Real-time listener for current user's profile permissions.
+ * Updates permissions (canEdit, maxDaysView, role) live across all open assistant sessions.
+ * @param {string} uid 
+ * @param {string} email 
+ * @param {Function} callback 
+ * @returns {Function} Unsubscribe function
+ */
+export function getUserProfileRealtime(uid, email, callback) {
+  const normalizedEmail = (email || "").toLowerCase().trim();
+  const isPrimaryAdmin = PRIMARY_ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail);
+
+  // Initial lookup
+  getUserProfile(uid, email).then((initialProfile) => {
+    if (initialProfile) callback(initialProfile);
+  }).catch(console.error);
+
+  // Real-time snapshot on UID user doc
+  const userRef = doc(db, "users", uid);
+  return onSnapshot(userRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const profile = {
+        id: docSnap.id,
+        ...data,
+        role: isPrimaryAdmin ? "admin" : (data.role || "assistant")
+      };
+      callback(profile);
+    } else {
+      // Fallback check by email if UID doc doesn't exist yet or was modified
+      const usersCol = collection(db, "users");
+      getDocs(usersCol).then(qSnap => {
+        const emailDoc = qSnap.docs.find(d => (d.data().email || "").toLowerCase().trim() === normalizedEmail);
+        if (emailDoc) {
+          const data = emailDoc.data();
+          callback({
+            id: emailDoc.id,
+            ...data,
+            role: isPrimaryAdmin ? "admin" : (data.role || "assistant")
+          });
+        } else if (!isPrimaryAdmin) {
+          callback(null); // Account deleted or disabled
+        }
+      }).catch(() => {});
+    }
+  }, (error) => {
+    console.warn("Real-time profile snapshot listener error:", error);
+  });
+}
+
+/**
  * Updates role of a user (admin <-> assistant)
  * @param {string} userId 
  * @param {string} newRole 

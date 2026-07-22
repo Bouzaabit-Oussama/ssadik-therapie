@@ -6,6 +6,7 @@ import {
   updateLeadStatus, 
   updateLeadDetails,
   getUserProfile,
+  getUserProfileRealtime,
   getUsersRealtime,
   updateAssistantPermissions,
   updateUserRole,
@@ -336,20 +337,36 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
     setTimeout(() => setToastMessage(''), 3500);
   };
 
-  // Monitor auth state & load user profile (Admin / Assistant)
+  // Monitor auth state & listen to real-time profile permissions (Admin / Assistant)
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    let profileUnsubscribe = null;
+
+    const authUnsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        const profile = await getUserProfile(currentUser.uid, currentUser.email);
-        setUserProfile(profile);
+        profileUnsubscribe = getUserProfileRealtime(currentUser.uid, currentUser.email, (liveProfile) => {
+          if (!liveProfile && currentUser.email !== 'admin@cabinet.com') {
+            signOutUser();
+            setUser(null);
+            setUserProfile(null);
+            alert(lang === 'ar' ? 'تم إلغاء صلاحية هذا الحساب أو حذفه من طرف المسؤول.' : 'Ce compte a été désactivé ou supprimé par l\'administrateur.');
+          } else {
+            setUserProfile(liveProfile);
+          }
+          setLoadingAuth(false);
+        });
       } else {
+        if (profileUnsubscribe) profileUnsubscribe();
         setUserProfile(null);
+        setLoadingAuth(false);
       }
-      setLoadingAuth(false);
     });
-    return () => unsubscribe();
-  }, []);
+
+    return () => {
+      authUnsubscribe();
+      if (profileUnsubscribe) profileUnsubscribe();
+    };
+  }, [lang]);
 
   // Listen to Firestore leads
   useEffect(() => {
