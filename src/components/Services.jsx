@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronRight, Droplet, Sparkles, Activity, ShieldCheck } from 'lucide-react';
 
 export default function Services({ t, onOpenModal }) {
   const servicesList = [
@@ -8,7 +8,6 @@ export default function Services({ t, onOpenModal }) {
       title: t.services.hijama.title,
       desc: t.services.hijama.desc,
       image: '/assets/hijama.png',
-      badgeIcon: '🩸',
       serviceKey: 'Hijama'
     },
     {
@@ -16,7 +15,6 @@ export default function Services({ t, onOpenModal }) {
       title: t.services.massage.title,
       desc: t.services.massage.desc,
       image: '/assets/massage.png',
-      badgeIcon: '💆',
       serviceKey: 'Massage'
     },
     {
@@ -24,7 +22,6 @@ export default function Services({ t, onOpenModal }) {
       title: t.services.acupuncture.title,
       desc: t.services.acupuncture.desc,
       image: '/assets/acupuncture.png',
-      badgeIcon: '🪡',
       serviceKey: 'Acupuncture'
     },
     {
@@ -32,7 +29,6 @@ export default function Services({ t, onOpenModal }) {
       title: t.services.chiro.title,
       desc: t.services.chiro.desc,
       image: '/assets/chiropraxie.png',
-      badgeIcon: '🦴',
       serviceKey: 'Chiropraxie'
     }
   ];
@@ -45,7 +41,7 @@ export default function Services({ t, onOpenModal }) {
           <h2 className="text-3xl md:text-4xl font-extrabold text-therapy-900 tracking-tight">
             {t.services.title}
           </h2>
-          <p className="text-base md:text-lg text-sand-900/60 font-medium">
+          <p className="text-base md:text-lg text-sand-900/85 font-medium">
             {t.services.subtitle}
           </p>
           <div className="w-16 h-1 bg-medical-500 mx-auto rounded-full mt-4"></div>
@@ -68,8 +64,11 @@ export default function Services({ t, onOpenModal }) {
                   />
                 </div>
                 {/* Overlapping Mini-Badge Icon */}
-                <div className="absolute bottom-0 end-0 bg-white border border-sand-200 shadow-md w-10 h-10 rounded-full flex items-center justify-center text-lg">
-                  {service.badgeIcon}
+                <div className="absolute bottom-0 end-0 bg-white/95 backdrop-blur-md border border-medical-200 text-medical-600 shadow-md w-10 h-10 rounded-full flex items-center justify-center">
+                  {service.id === 'hijama' && <Droplet className="w-5 h-5 fill-medical-500 text-medical-600" />}
+                  {service.id === 'massage' && <Sparkles className="w-5 h-5 text-medical-600" />}
+                  {service.id === 'acupuncture' && <Activity className="w-5 h-5 text-medical-600" />}
+                  {service.id === 'chiropraxie' && <ShieldCheck className="w-5 h-5 text-medical-600" />}
                 </div>
               </div>
 
@@ -79,7 +78,7 @@ export default function Services({ t, onOpenModal }) {
               </h3>
 
               {/* Service Description */}
-              <p className="text-sm text-sand-900/65 leading-relaxed mb-6 flex-grow font-medium">
+              <p className="text-sm text-sand-900/80 leading-relaxed mb-6 flex-grow font-medium">
                 {service.desc}
               </p>
 

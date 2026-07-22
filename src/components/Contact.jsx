@@ -99,7 +99,7 @@ export default function Contact({ t, onOpenModal }) {
           <h2 className="text-3xl md:text-4xl font-extrabold text-therapy-900 tracking-tight">
             {t.contact.title}
           </h2>
-          <p className="text-base md:text-lg text-sand-900/60 font-medium">
+          <p className="text-base md:text-lg text-sand-900/85 font-medium">
             {t.contact.subtitle}
           </p>
           <div className="w-16 h-1 bg-medical-500 mx-auto rounded-full mt-4"></div>

@@ -24,7 +24,7 @@ export default function Hero({ t, onOpenModal }) {
             </h1>
 
             {/* Sub-headline / Description */}
-            <p className="text-base sm:text-lg text-sand-900/70 leading-relaxed font-medium max-w-xl">
+            <p className="text-base sm:text-lg text-sand-900/85 leading-relaxed font-medium max-w-xl">
               {t.hero.subtitle}
             </p>
 

@@ -60,7 +60,7 @@ export default function PromoCountdown({ t, onOpenModal }) {
   return (
     <section className="my-12 max-w-5xl mx-auto px-4">
       {/* Banner Container */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-therapy-100 to-sand-200 border border-therapy-200/60 rounded-3xl p-8 md:p-12 shadow-md flex flex-col items-center text-center space-y-6 md:space-y-8 animate-pulse-soft">
+      <div className="relative overflow-hidden bg-gradient-to-r from-therapy-100 to-sand-200 border border-therapy-200/60 rounded-3xl p-8 md:p-12 shadow-md flex flex-col items-center text-center space-y-6 md:space-y-8">
         
         {/* Decorative Circles */}
         <div className="absolute top-0 start-0 w-24 h-24 bg-white/20 rounded-full translate-x-[-30%] translate-y-[-30%]"></div>
@@ -105,7 +105,7 @@ export default function PromoCountdown({ t, onOpenModal }) {
         <div>
           <button
             onClick={() => onOpenModal('Pack complet (180 Dh)')}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-base"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-base animate-pulse-soft"
           >
             <Percent className="w-5 h-5" />
             <span>{t.promo.cta}</span>
