@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Allow public creation of leads (patient bookings)
+    // Allow read, update, delete for authenticated admin/assistant users
+    match /leads/{leadId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+    
+    // Allow access to users collection for profiles and permission management
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+  }
+}
