@@ -18,12 +18,12 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
 
   return (
     <header className="w-full sticky top-0 z-50 shadow-md">
-      {/* Top Promotional Bar */}
-      <div className="w-full bg-gradient-to-r from-therapy-950 via-therapy-900 to-therapy-950 text-sand-50 py-2 px-4 text-center text-xs md:text-sm font-medium transition-all duration-300">
-        <span>{t.topbar.text}</span>
+      {/* Top Promotional Bar with Animated Linear Gradient & Glassmorphism */}
+      <div className="w-full bg-gradient-to-r from-therapy-950 via-medical-700 via-therapy-900 to-therapy-950 backdrop-blur-md text-white py-2.5 px-4 text-center text-xs md:text-sm font-bold animate-gradient-flow border-b border-white/10 shadow-md relative overflow-hidden flex items-center justify-center flex-wrap gap-2">
+        <span className="drop-shadow-xs">{t.topbar.text}</span>
         <button 
           onClick={() => onOpenModal(t.promo.title)}
-          className="underline hover:text-sand-200 transition-colors focus:outline-none focus:ring-1 focus:ring-sand-200 font-semibold"
+          className="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-3 py-0.5 rounded-full border border-white/30 transition-all font-extrabold text-xs shadow-xs hover:scale-105"
         >
           {t.topbar.linkText}
         </button>
