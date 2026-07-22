@@ -351,7 +351,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   const [statusFilter, setStatusFilter] = useState('All');
   const [tableDateFilter, setTableDateFilter] = useState('all');
   const [statsDateFilter, setStatsDateFilter] = useState('all');
-  const [showAnalytics, setShowAnalytics] = useState(true);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Inline edit state
   const [editingLeadId, setEditingLeadId] = useState(null);
@@ -1082,88 +1082,55 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
         {/* TAB 1: RESERVATIONS VIEW */}
         {activeTab === 'reservations' && (
           <>
-            {/* STATS OVERVIEW CARDS & DEDICATED STATS FILTER - VISIBLE FOR ADMIN ONLY */}
+            {/* STATS OVERVIEW CARDS - VISIBLE FOR ADMIN ONLY */}
             {userProfile?.role === 'admin' && (
-              <div className="space-y-4">
-                {/* Dedicated Statistics Date Filter Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-sand-200 shadow-xs text-start">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-medical-500" />
-                    <h2 className="text-sm md:text-base font-black text-therapy-900">
-                      {lang === 'ar' ? 'فلتر إحصائيات وحصيلة البيانات' : 'Filtre des Statistiques & Bilan'}
-                    </h2>
+              <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsTotal}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-therapy-900 mt-1">{totalCount}</h3>
                   </div>
-
-                  <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full">
-                    {[
-                      { key: 'all', label: dt.filterDateAll },
-                      { key: 'today', label: dt.filterDateToday },
-                      { key: 'week', label: dt.filterDateWeek },
-                      { key: 'month', label: dt.filterDateMonth }
-                    ].map(tab => (
-                      <button
-                        key={`stats-${tab.key}`}
-                        onClick={() => setStatsDateFilter(tab.key)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all whitespace-nowrap ${
-                          statsDateFilter === tab.key 
-                            ? 'bg-white text-therapy-900 shadow-xs' 
-                            : 'text-sand-900/60 hover:text-therapy-900'
-                        }`}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
+                  <div className="bg-sand-100 text-therapy-800 p-2.5 rounded-xl hidden sm:block">
+                    <Calendar className="w-6 h-6" />
                   </div>
                 </div>
 
-                <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                    <div>
-                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsTotal}</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-therapy-900 mt-1">{totalCount}</h3>
-                    </div>
-                    <div className="bg-sand-100 text-therapy-800 p-2.5 rounded-xl hidden sm:block">
-                      <Calendar className="w-6 h-6" />
-                    </div>
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsPending}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-amber-600 mt-1">{pendingCount}</h3>
                   </div>
+                  <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl hidden sm:block">
+                    <Clock className="w-6 h-6" />
+                  </div>
+                </div>
 
-                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                    <div>
-                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsPending}</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-amber-600 mt-1">{pendingCount}</h3>
-                    </div>
-                    <div className="bg-amber-50 text-amber-600 p-2.5 rounded-xl hidden sm:block">
-                      <Clock className="w-6 h-6" />
-                    </div>
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsConfirmed}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-green-600 mt-1">{confirmedCount}</h3>
                   </div>
+                  <div className="bg-green-50 text-green-600 p-2.5 rounded-xl hidden sm:block">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                </div>
 
-                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                    <div>
-                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsConfirmed}</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-green-600 mt-1">{confirmedCount}</h3>
-                    </div>
-                    <div className="bg-green-50 text-green-600 p-2.5 rounded-xl hidden sm:block">
-                      <CheckCircle2 className="w-6 h-6" />
-                    </div>
+                <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsCancelled}</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-red-600 mt-1">{cancelledCount}</h3>
                   </div>
-
-                  <div className="bg-white p-4 md:p-6 rounded-2xl border border-sand-200 shadow-sm text-start flex items-center justify-between">
-                    <div>
-                      <p className="text-xs md:text-sm font-bold text-sand-400">{dt.statsCancelled}</p>
-                      <h3 className="text-2xl md:text-3xl font-black text-red-600 mt-1">{cancelledCount}</h3>
-                    </div>
-                    <div className="bg-red-50 text-red-600 p-2.5 rounded-xl hidden sm:block">
-                      <XCircle className="w-6 h-6" />
-                    </div>
+                  <div className="bg-red-50 text-red-600 p-2.5 rounded-xl hidden sm:block">
+                    <XCircle className="w-6 h-6" />
                   </div>
-                </section>
-              </div>
+                </div>
+              </section>
             )}
 
             {/* ANALYTICS SECTION - VISIBLE FOR ADMIN ONLY */}
             {userProfile?.role === 'admin' && (
               <section className="bg-white rounded-3xl border border-sand-200 shadow-md overflow-hidden text-start">
-                <div className="p-4 md:p-6 border-b border-sand-200/60 flex justify-between items-center bg-sand-50/50">
+                <div className="p-4 md:p-6 border-b border-sand-200/60 flex flex-col sm:flex-row justify-between items-center gap-4 bg-sand-50/50">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                     <h2 className="text-base md:text-lg font-black text-therapy-900 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-medical-500" />
@@ -1175,12 +1142,37 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                       </span>
                     )}
                   </div>
-                  <button
-                    onClick={() => setShowAnalytics(!showAnalytics)}
-                    className="text-xs font-extrabold text-medical-600 hover:text-medical-700 hover:underline flex items-center gap-1.5"
-                  >
-                    {showAnalytics ? dt.analyticsToggleHide : dt.analyticsToggleShow}
-                  </button>
+
+                  <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    {/* Stats Date Filter Tabs (Next to toggle button) */}
+                    <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto">
+                      {[
+                        { key: 'all', label: dt.filterDateAll },
+                        { key: 'today', label: dt.filterDateToday },
+                        { key: 'week', label: dt.filterDateWeek },
+                        { key: 'month', label: dt.filterDateMonth }
+                      ].map(tab => (
+                        <button
+                          key={`stats-${tab.key}`}
+                          onClick={() => setStatsDateFilter(tab.key)}
+                          className={`px-2.5 py-1 rounded-lg text-2xs md:text-xs font-extrabold transition-all whitespace-nowrap ${
+                            statsDateFilter === tab.key 
+                              ? 'bg-white text-therapy-900 shadow-xs' 
+                              : 'text-sand-900/60 hover:text-therapy-900'
+                          }`}
+                        >
+                          {tab.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => setShowAnalytics(!showAnalytics)}
+                      className="px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-xs font-extrabold text-medical-600 hover:text-medical-700 hover:bg-sand-100 transition-all shadow-2xs flex items-center gap-1.5"
+                    >
+                      {showAnalytics ? dt.analyticsToggleHide : dt.analyticsToggleShow}
+                    </button>
+                  </div>
                 </div>
                 
                 {showAnalytics && (
@@ -1325,9 +1317,9 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
               </section>
             )}
 
-            {/* SEARCH AND FILTERS CONTROLS */}
-            <section className="bg-white rounded-3xl p-4 md:p-6 border border-sand-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-              <div className="relative w-full lg:w-80">
+            {/* SEARCH AND QUICK RESET CONTROLS */}
+            <section className="bg-white rounded-3xl p-4 md:p-6 border border-sand-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="relative w-full sm:w-80">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-sand-400">
                   <Search className="w-4 h-4" />
                 </div>
@@ -1340,48 +1332,26 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-                <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
-                  {[
-                    { key: 'All', label: dt.filterAll },
-                    { key: 'Pending', label: dt.filterPending },
-                    { key: 'Confirmed', label: dt.filterConfirmed },
-                    { key: 'Cancelled', label: dt.filterCancelled }
-                  ].map(tab => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setStatusFilter(tab.key)}
-                      className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                        statusFilter === tab.key 
-                          ? 'bg-white text-therapy-900 shadow-sm' 
-                          : 'text-sand-900/60 hover:text-therapy-900'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+              {/* Active Filters / Results Count & Reset Button */}
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                <span className="text-xs font-bold text-sand-500 bg-sand-100 px-3 py-1.5 rounded-xl border border-sand-200">
+                  {filteredLeads.length} {lang === 'ar' ? 'حجز' : 'réservation(s)'}
+                </span>
 
-                <div className="flex bg-sand-100 p-1 rounded-xl gap-1 overflow-x-auto max-w-full flex-1 sm:flex-initial">
-                  {[
-                    { key: 'all', label: dt.filterDateAll },
-                    { key: 'today', label: dt.filterDateToday },
-                    { key: 'week', label: dt.filterDateWeek },
-                    { key: 'month', label: dt.filterDateMonth }
-                  ].map(tab => (
-                    <button
-                      key={`table-date-${tab.key}`}
-                      onClick={() => setTableDateFilter(tab.key)}
-                      className={`flex-1 sm:flex-initial px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                        tableDateFilter === tab.key 
-                          ? 'bg-white text-therapy-900 shadow-sm' 
-                          : 'text-sand-900/60 hover:text-therapy-900'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+                {/* Reset button if any filter is applied */}
+                {(statusFilter !== 'All' || tableDateFilter !== 'all' || searchQuery !== '') && (
+                  <button
+                    onClick={() => {
+                      setStatusFilter('All');
+                      setTableDateFilter('all');
+                      setSearchQuery('');
+                    }}
+                    className="text-xs font-extrabold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>{lang === 'ar' ? 'إعادة تعيين' : 'Réinitialiser'}</span>
+                  </button>
+                )}
               </div>
             </section>
 
@@ -1401,8 +1371,49 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                         <th className="px-6 py-4 text-start font-bold">{dt.colName}</th>
                         <th className="px-6 py-4 text-start font-bold">{dt.colPhone}</th>
                         <th className="px-6 py-4 text-start font-bold">{dt.colService}</th>
-                        <th className="px-6 py-4 text-start font-bold">{dt.colDate}</th>
-                        <th className="px-6 py-4 text-start font-bold">{dt.colStatus}</th>
+                        
+                        {/* Date Column + Filter Icon (Admin Only) */}
+                        <th className="px-6 py-4 text-start font-bold">
+                          <div className="inline-flex items-center gap-1.5 bg-sand-200/50 hover:bg-sand-200 px-2.5 py-1 rounded-xl transition-all cursor-pointer group relative">
+                            <span className="text-xs font-extrabold text-therapy-900">{dt.colDate}</span>
+                            {userProfile?.role === 'admin' && (
+                              <>
+                                <Sliders className={`w-3.5 h-3.5 ${tableDateFilter !== 'all' ? 'text-medical-600 fill-medical-500 font-bold' : 'text-sand-500 group-hover:text-therapy-900'}`} />
+                                <select
+                                  value={tableDateFilter}
+                                  onChange={(e) => setTableDateFilter(e.target.value)}
+                                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                  title={lang === 'ar' ? 'تصفية حسب التاريخ' : 'Filtrer par date'}
+                                >
+                                  <option value="all">{dt.filterDateAll}</option>
+                                  <option value="today">{dt.filterDateToday}</option>
+                                  <option value="week">{dt.filterDateWeek}</option>
+                                  <option value="month">{dt.filterDateMonth}</option>
+                                </select>
+                              </>
+                            )}
+                          </div>
+                        </th>
+
+                        {/* Status Column + Filter Icon (Admin & Assistant) */}
+                        <th className="px-6 py-4 text-start font-bold">
+                          <div className="inline-flex items-center gap-1.5 bg-sand-200/50 hover:bg-sand-200 px-2.5 py-1 rounded-xl transition-all cursor-pointer group relative">
+                            <span className="text-xs font-extrabold text-therapy-900">{dt.colStatus}</span>
+                            <Sliders className={`w-3.5 h-3.5 ${statusFilter !== 'All' ? 'text-medical-600 fill-medical-500 font-bold' : 'text-sand-500 group-hover:text-therapy-900'}`} />
+                            <select
+                              value={statusFilter}
+                              onChange={(e) => setStatusFilter(e.target.value)}
+                              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                              title={lang === 'ar' ? 'تصفية حسب الحالة' : 'Filtrer par statut'}
+                            >
+                              <option value="All">{dt.filterAll}</option>
+                              <option value="Pending">{dt.filterPending}</option>
+                              <option value="Confirmed">{dt.filterConfirmed}</option>
+                              <option value="Cancelled">{dt.filterCancelled}</option>
+                            </select>
+                          </div>
+                        </th>
+
                         <th className="px-6 py-4 text-center font-bold">{dt.colActions}</th>
                       </tr>
                     </thead>
@@ -1591,8 +1602,51 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                     </tbody>
                   </table>
 
-                  {/* MOBILE CARDS VIEW */}
-                  <div className="grid grid-cols-1 divide-y divide-sand-200 md:hidden">
+                  {/* MOBILE CARDS VIEW & FILTER BAR */}
+                  <div className="md:hidden">
+                    {/* Mobile Icon Filter Bar */}
+                    <div className="flex items-center justify-between p-3 bg-sand-100/70 border-b border-sand-200 gap-2 text-start">
+                      <span className="text-2xs font-extrabold text-sand-600 uppercase tracking-wider">
+                        {lang === 'ar' ? 'فلاتر الجدول:' : 'Filtres de table :'}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {/* Admin Date Filter Icon */}
+                        {userProfile?.role === 'admin' && (
+                          <div className="relative inline-flex items-center gap-1.5 bg-white border border-sand-200 px-2.5 py-1 rounded-xl text-xs font-bold text-therapy-900 shadow-2xs">
+                            <span>{dt.colDate}</span>
+                            <Sliders className={`w-3.5 h-3.5 ${tableDateFilter !== 'all' ? 'text-medical-600 fill-medical-500' : 'text-sand-400'}`} />
+                            <select
+                              value={tableDateFilter}
+                              onChange={(e) => setTableDateFilter(e.target.value)}
+                              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                            >
+                              <option value="all">{dt.filterDateAll}</option>
+                              <option value="today">{dt.filterDateToday}</option>
+                              <option value="week">{dt.filterDateWeek}</option>
+                              <option value="month">{dt.filterDateMonth}</option>
+                            </select>
+                          </div>
+                        )}
+
+                        {/* Status Filter Icon */}
+                        <div className="relative inline-flex items-center gap-1.5 bg-white border border-sand-200 px-2.5 py-1 rounded-xl text-xs font-bold text-therapy-900 shadow-2xs">
+                          <span>{dt.colStatus}</span>
+                          <Sliders className={`w-3.5 h-3.5 ${statusFilter !== 'All' ? 'text-medical-600 fill-medical-500' : 'text-sand-400'}`} />
+                          <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                          >
+                            <option value="All">{dt.filterAll}</option>
+                            <option value="Pending">{dt.filterPending}</option>
+                            <option value="Confirmed">{dt.filterConfirmed}</option>
+                            <option value="Cancelled">{dt.filterCancelled}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 divide-y divide-sand-200">
                     {filteredLeads.map((lead) => {
                       const statusColors = {
                         Pending: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -1740,6 +1794,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                       );
                     })}
                   </div>
+                </div>
                 </div>
               )}
             </section>
