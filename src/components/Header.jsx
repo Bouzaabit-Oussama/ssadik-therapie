@@ -18,21 +18,15 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
 
   return (
     <header className="w-full sticky top-0 z-50 shadow-md">
-      {/* Top Promotional Bar with Dual Layer (Vibrant Animated Gradient Layer + Glassmorphism Overlay) */}
-      <div className="relative w-full overflow-hidden shadow-md">
-        {/* Layer 1: Vibrant Animated Multi-Color Linear Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-therapy-950 via-medical-600 via-emerald-600 via-therapy-900 to-therapy-950 animate-gradient-flow opacity-95"></div>
-
-        {/* Layer 2: Glassmorphism Frost Overlay with Crisp Text Content */}
-        <div className="relative z-10 bg-therapy-950/40 backdrop-blur-md text-white py-2.5 px-4 text-center text-xs md:text-sm font-bold border-b border-white/15 flex items-center justify-center flex-wrap gap-2">
-          <span className="drop-shadow-sm">{t.topbar.text}</span>
-          <button 
-            onClick={() => onOpenModal(t.promo.title)}
-            className="inline-flex items-center gap-1 bg-white/20 hover:bg-white/35 backdrop-blur-sm text-white px-3 py-0.5 rounded-full border border-white/40 transition-all font-extrabold text-xs shadow-xs hover:scale-105"
-          >
-            {t.topbar.linkText}
-          </button>
-        </div>
+      {/* Top Promotional Bar with Deep Dark Animated Linear Gradient */}
+      <div className="w-full bg-gradient-to-r from-therapy-950 via-slate-900 via-therapy-900 to-therapy-950 text-white py-2.5 px-4 text-center text-xs md:text-sm font-bold animate-gradient-flow border-b border-white/10 shadow-md flex items-center justify-center flex-wrap gap-2.5">
+        <span className="text-white font-extrabold tracking-wide drop-shadow-md">{t.topbar.text}</span>
+        <button 
+          onClick={() => onOpenModal(t.promo.title)}
+          className="inline-flex items-center gap-1 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white px-3.5 py-1 rounded-full shadow-sm hover:shadow-md transition-all font-extrabold text-xs hover:scale-105"
+        >
+          {t.topbar.linkText}
+        </button>
       </div>
 
       {/* Main Navbar with Glassmorphism Transparency & Blur */}
