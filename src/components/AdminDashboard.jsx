@@ -281,7 +281,7 @@ const DEFAULT_ACCOUNTS_FALLBACK = [
   }
 ];
 
-export default function AdminDashboard({ lang = 'ar', onNavigate }) {
+export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -963,7 +963,7 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
 
             {/* Language switch */}
             <button 
-              onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
+              onClick={() => setLang && setLang(lang === 'ar' ? 'fr' : 'ar')}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-sand-100 hover:bg-sand-200 text-xs font-bold text-therapy-900 transition-colors"
             >
               <Globe className="w-4 h-4 text-medical-500" />
