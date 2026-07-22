@@ -6,7 +6,7 @@ export default function FloatingWhatsApp({ t }) {
 
   const whatsappNumber = "212712500809";
   const message = encodeURIComponent(
-    t?.langName === 'Français'
+    t?.dir === 'rtl'
       ? 'السلام عليكم، أرغب في الاستفسار وحجز موعد في عيادة صادق للعلاج الطبيعي بطنجة.'
       : 'Bonjour, je souhaite réserver une consultation ou avoir des informations chez Ssadik Thérapie Tanger.'
   );

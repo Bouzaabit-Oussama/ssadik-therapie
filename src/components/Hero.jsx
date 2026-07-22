@@ -9,7 +9,7 @@ export default function Hero({ t, onOpenModal }) {
       style={{ backgroundImage: `url('/assets/hero_bg.png')` }}
     >
       {/* Light Glassmorphism / Contrast Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-sand-50/95 via-sand-50/85 to-sand-100/75 backdrop-blur-[2px]"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-sand-50/95 via-sand-50/80 to-sand-100/50 backdrop-blur-[1px]"></div>
 
       {/* Background Decor Elements */}
       <div className="absolute top-0 start-0 w-80 h-80 bg-medical-200/40 rounded-full filter blur-3xl opacity-60 translate-x-[-20%] translate-y-[-20%] animate-float-slow pointer-events-none"></div>
@@ -18,11 +18,11 @@ export default function Hero({ t, onOpenModal }) {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
           
-          {/* Hero Content Column in Glassmorphism Card */}
-          <div className="md:col-span-7 bg-white/85 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/80 shadow-2xl flex flex-col items-start text-start space-y-6 md:space-y-8">
+          {/* Hero Content Column (Without white card background) */}
+          <div className="md:col-span-7 flex flex-col items-start text-start space-y-6 md:space-y-8">
             
             {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-medical-50 border border-medical-200 text-medical-700 font-extrabold text-xs md:text-sm animate-pulse-soft">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-medical-200 text-medical-700 font-extrabold text-xs md:text-sm shadow-sm animate-pulse-soft">
               <Sparkles className="w-4 h-4 text-medical-600" />
               <span className="flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-medical-500" />
@@ -31,7 +31,7 @@ export default function Hero({ t, onOpenModal }) {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-therapy-900 leading-tight tracking-tight drop-shadow-xs">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-therapy-900 leading-tight tracking-tight">
               {t.hero.title}
             </h1>
 
