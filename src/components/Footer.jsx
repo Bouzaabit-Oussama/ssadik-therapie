@@ -60,7 +60,7 @@ export default function Footer({ t, onOpenModal }) {
         </div>
 
         {/* Bottom Contact Details & Socials Layout */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6 pr-20 md:pr-24">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
           
           {/* Contacts Data Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:flex-row md:flex-wrap items-center gap-6 text-xs font-semibold text-sand-900/70">
