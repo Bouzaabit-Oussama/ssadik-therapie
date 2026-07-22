@@ -475,6 +475,12 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
       return;
     }
 
+    const cleanEmail = newEmail.trim().toLowerCase();
+    if (assistantsList.some(u => (u.email || "").toLowerCase().trim() === cleanEmail)) {
+      setAssistantError(lang === 'ar' ? 'هذا البريد الإلكتروني مستخدم بالفعل بحساب آخر!' : 'Un compte existe déjà avec cette adresse email !');
+      return;
+    }
+
     setIsCreatingAssistant(true);
     setAssistantError('');
 
@@ -489,7 +495,11 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
       showToast(dt.toastAssistantCreated);
     } catch (err) {
       console.error("Error creating assistant:", err);
-      setAssistantError(err.message);
+      if (err.code === 'auth/email-already-in-use' || err.message === 'EMAIL_EXISTS') {
+        setAssistantError(lang === 'ar' ? 'هذا البريد الإلكتروني مستخدم بالفعل بحساب آخر!' : 'Un compte existe déjà avec cette adresse email !');
+      } else {
+        setAssistantError(err.message);
+      }
     } finally {
       setIsCreatingAssistant(false);
     }

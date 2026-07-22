@@ -104,51 +104,30 @@ const DEFAULT_ASSISTANT_EMAILS = [
 ];
 
 /**
- * Creates a new assistant user in Firebase Auth and Firestore without logging out the current Admin.
- * Handles auth/email-already-in-use gracefully by syncing the Firestore user document.
+ * Creates a new assistant user in Firebase Auth and Firestore.
+ * Rejects creation if an account with the same email already exists.
  * @param {string} email 
  * @param {string} password 
  * @param {Object} permissions 
  */
 export async function createAssistantUser(email, password, permissions = {}) {
-  const cleanEmail = email.trim();
+  const cleanEmail = email.trim().toLowerCase();
   try {
-    let newUid = null;
-    try {
-      const userCredential = await createUserWithEmailAndPassword(secondaryAuth, cleanEmail, password);
-      newUid = userCredential.user.uid;
-      await signOut(secondaryAuth);
-    } catch (authErr) {
-      if (authErr.code === 'auth/email-already-in-use') {
-        const usersCol = collection(db, "users");
-        const snapshot = await getDocs(usersCol);
-        const existingDoc = snapshot.docs.find(d => (d.data().email || "").toLowerCase() === cleanEmail.toLowerCase());
-        
-        if (existingDoc) {
-          await updateDoc(doc(db, "users", existingDoc.id), {
-            role: "assistant",
-            password: password || existingDoc.data().password || "",
-            canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
-            maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7
-          });
-          return { id: existingDoc.id, ...existingDoc.data() };
-        } else {
-          const newDocRef = doc(usersCol);
-          const newProfile = {
-            email: cleanEmail,
-            password: password || "",
-            role: "assistant",
-            canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
-            maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
-            createdAt: new Date().toISOString()
-          };
-          await setDoc(newDocRef, newProfile);
-          return { id: newDocRef.id, ...newProfile };
-        }
-      } else {
-        throw authErr;
-      }
+    // 1. Check if profile already exists in Firestore
+    const usersCol = collection(db, "users");
+    const snapshot = await getDocs(usersCol);
+    const existingDoc = snapshot.docs.find(d => (d.data().email || "").toLowerCase().trim() === cleanEmail);
+    
+    if (existingDoc) {
+      const err = new Error("EMAIL_EXISTS");
+      err.code = "auth/email-already-in-use";
+      throw err;
     }
+
+    // 2. Create user in Firebase Auth via secondaryAuth
+    const userCredential = await createUserWithEmailAndPassword(secondaryAuth, cleanEmail, password);
+    const newUid = userCredential.user.uid;
+    await signOut(secondaryAuth);
 
     const newProfile = {
       email: cleanEmail,
