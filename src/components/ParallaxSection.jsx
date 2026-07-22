@@ -30,7 +30,7 @@ export default function ParallaxSection({ t }) {
   ];
 
   return (
-    <section className="w-full bg-therapy-900 border-y border-therapy-800 py-6 my-6 shadow-md relative overflow-hidden">
+    <section className="w-full bg-gradient-to-r from-therapy-950 via-therapy-900 to-therapy-950 border-y border-therapy-800/80 py-6 my-6 shadow-lg relative overflow-hidden">
       {/* Soft Ambient Glow Effect */}
       <div className="absolute top-0 start-1/4 w-96 h-full bg-medical-500/10 blur-2xl pointer-events-none"></div>
 
@@ -41,9 +41,9 @@ export default function ParallaxSection({ t }) {
             return (
               <div
                 key={stat.id}
-                className="flex items-center justify-center gap-3 py-1.5 px-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                className="flex items-center justify-center gap-3 py-2 px-3 rounded-xl bg-gradient-to-r from-white/10 via-white/5 to-white/10 border border-white/15 backdrop-blur-sm hover:from-white/15 hover:to-white/10 transition-all shadow-sm"
               >
-                <div className="w-9 h-9 rounded-lg bg-medical-500/20 border border-medical-400/40 text-medical-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-medical-500/30 to-medical-600/20 border border-medical-400/40 text-medical-300 flex items-center justify-center flex-shrink-0">
                   <Icon className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col text-start">

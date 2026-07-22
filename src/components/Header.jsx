@@ -19,7 +19,7 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
   return (
     <header className="w-full sticky top-0 z-50 shadow-md">
       {/* Top Promotional Bar */}
-      <div className="w-full bg-therapy-900 text-sand-50 py-2 px-4 text-center text-xs md:text-sm font-medium transition-all duration-300">
+      <div className="w-full bg-gradient-to-r from-therapy-950 via-therapy-900 to-therapy-950 text-sand-50 py-2 px-4 text-center text-xs md:text-sm font-medium transition-all duration-300">
         <span>{t.topbar.text}</span>
         <button 
           onClick={() => onOpenModal(t.promo.title)}
@@ -30,7 +30,7 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
       </div>
 
       {/* Main Navbar */}
-      <nav className="w-full bg-white/95 backdrop-blur-md border-b border-sand-200/50 transition-all duration-300">
+      <nav className="w-full bg-gradient-to-r from-white/95 via-sand-50/90 to-white/95 backdrop-blur-md border-b border-sand-200/50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo Section */}

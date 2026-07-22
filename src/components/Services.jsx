@@ -56,7 +56,7 @@ export default function Services({ t, onOpenModal }) {
           {servicesList.map((service, index) => (
             <div
               key={service.id}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-sand-200/40 p-6 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1.5 group"
+              className="bg-gradient-to-b from-white to-sand-50/80 rounded-2xl shadow-md hover:shadow-xl border border-sand-200/60 p-6 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1.5 group"
             >
               {/* Image Circle Container */}
               <div className="relative w-32 h-32 mb-6">
