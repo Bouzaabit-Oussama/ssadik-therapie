@@ -416,6 +416,9 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   const handleLogout = async () => {
     try {
       await signOutUser();
+      setUser(null);
+      setUserProfile(null);
+      setLeads([]);
     } catch (err) {
       console.error("Logout error:", err);
     }

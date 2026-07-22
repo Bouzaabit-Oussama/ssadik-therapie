@@ -303,13 +303,33 @@ export async function syncDefaultAccounts() {
  */
 export async function getUserProfile(uid, email) {
   try {
-    const userRef = doc(db, "users", uid);
-    const snap = await getDoc(userRef);
     const normalizedEmail = (email || "").toLowerCase().trim();
     const isPrimaryAdmin = PRIMARY_ADMIN_EMAILS.some(e => e.toLowerCase() === normalizedEmail);
 
     if (isPrimaryAdmin) {
       await syncDefaultAccounts();
+    }
+
+    const userRef = doc(db, "users", uid);
+    let snap = await getDoc(userRef);
+
+    // If document by UID doesn't exist yet, check if a profile document exists by email in Firestore
+    if (!snap.exists() && normalizedEmail) {
+      const usersCol = collection(db, "users");
+      const qSnap = await getDocs(usersCol);
+      const emailDoc = qSnap.docs.find(d => (d.data().email || "").toLowerCase().trim() === normalizedEmail);
+      
+      if (emailDoc) {
+        const emailData = emailDoc.data();
+        const profileData = {
+          ...emailData,
+          email: normalizedEmail,
+          role: isPrimaryAdmin ? "admin" : (emailData.role || "assistant"),
+          updatedAt: new Date().toISOString()
+        };
+        await setDoc(userRef, profileData, { merge: true });
+        return { id: uid, ...profileData };
+      }
     }
 
     if (snap.exists()) {
@@ -383,14 +403,31 @@ export function getUsersRealtime(callback) {
 }
 
 /**
- * Updates permissions of an assistant user profile
+ * Updates permissions of an assistant user profile across Firestore
  * @param {string} userId 
  * @param {Object} permissions 
  */
 export async function updateAssistantPermissions(userId, permissions) {
   try {
     const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, permissions);
+    const snap = await getDoc(userRef);
+    let targetEmail = null;
+    if (snap.exists()) {
+      targetEmail = snap.data().email;
+      await updateDoc(userRef, permissions);
+    }
+
+    if (targetEmail) {
+      const cleanEmail = targetEmail.toLowerCase().trim();
+      const usersCol = collection(db, "users");
+      const qSnap = await getDocs(usersCol);
+      const matchingDocs = qSnap.docs.filter(d => (d.data().email || "").toLowerCase().trim() === cleanEmail);
+      for (const d of matchingDocs) {
+        await updateDoc(doc(db, "users", d.id), permissions);
+      }
+    } else {
+      await updateDoc(userRef, permissions);
+    }
   } catch (error) {
     console.error("Error updating assistant permissions:", error);
     throw error;
