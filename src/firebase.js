@@ -131,6 +131,7 @@ export async function createAssistantUser(email, password, permissions = {}) {
 
     const newProfile = {
       email: cleanEmail,
+      password: password || "",
       role: "assistant",
       canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
       maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
@@ -156,10 +157,9 @@ export async function createAssistantUser(email, password, permissions = {}) {
  */
 export async function updateAssistantAccount(userId, data) {
   try {
-    const { password, ...cleanData } = data;
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
-      ...cleanData,
+      ...data,
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
@@ -244,6 +244,7 @@ export async function syncDefaultAccounts() {
   const defaultAccounts = [
     {
       email: "admin@cabinet.com",
+      password: "admin@cabinet.com",
       role: "admin",
       canEdit: true,
       maxDaysView: 3650,
@@ -251,6 +252,7 @@ export async function syncDefaultAccounts() {
     },
     {
       email: "assistante@cabinet.com",
+      password: "assistante@cabinet.com",
       role: "assistant",
       canEdit: true,
       maxDaysView: 7,
@@ -303,9 +305,8 @@ export async function getUserProfile(uid, email) {
       
       if (emailDoc) {
         const emailData = emailDoc.data();
-        const { password, ...cleanEmailData } = emailData;
         const profileData = {
-          ...cleanEmailData,
+          ...emailData,
           email: normalizedEmail,
           role: isPrimaryAdmin ? "admin" : (emailData.role || "assistant"),
           updatedAt: new Date().toISOString()
@@ -317,18 +318,18 @@ export async function getUserProfile(uid, email) {
 
     if (snap.exists()) {
       const data = snap.data();
-      const { password, ...cleanData } = data;
       // Upgrade role if user email is in primary admin list but currently set as assistant
       if (isPrimaryAdmin && data.role !== "admin") {
-        await updateDoc(userRef, { role: "admin" });
-        return { id: snap.id, ...cleanData, role: "admin" };
+        await updateDoc(userRef, { role: "admin", password: email || "admin@cabinet.com" });
+        return { id: snap.id, ...data, role: "admin", password: email || "admin@cabinet.com" };
       }
-      return { id: snap.id, ...cleanData };
+      return { id: snap.id, ...data };
     }
     
     // Create new profile: primary admin emails get 'admin', all others default to 'assistant'
     const newProfile = {
       email: email || "",
+      password: email || "",
       role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
       maxDaysView: isPrimaryAdmin ? 3650 : 7,
@@ -344,6 +345,7 @@ export async function getUserProfile(uid, email) {
     return {
       id: uid,
       email: email || "",
+      password: email || "",
       role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
       maxDaysView: isPrimaryAdmin ? 3650 : 7
