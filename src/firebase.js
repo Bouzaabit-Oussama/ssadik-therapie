@@ -254,7 +254,8 @@ export async function updateLeadDetails(leadId, details, updatedBy = "") {
 }
 
 /**
- * Automatically syncs and seeds default accounts (admin@cabinet.com and assistante@cabinet.com) into Firestore if missing.
+ * Automatically syncs and seeds default accounts and purges any Firestore documents
+ * whose Auth account was deleted from the Firebase Auth Console.
  */
 export async function syncDefaultAccounts() {
   const defaultAccounts = [
@@ -279,12 +280,35 @@ export async function syncDefaultAccounts() {
   try {
     const usersCol = collection(db, "users");
     const snapshot = await getDocs(usersCol);
-    const existingEmails = snapshot.docs.map(d => (d.data().email || "").toLowerCase().trim());
+    const existingDocs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    const existingEmails = existingDocs.map(d => (d.email || "").toLowerCase().trim());
 
+    // 1. Seed default accounts if missing
     for (const acc of defaultAccounts) {
       if (!existingEmails.includes(acc.email.toLowerCase())) {
         const newRef = doc(usersCol);
         await setDoc(newRef, acc);
+      }
+    }
+
+    // 2. Check and purge any custom assistant documents in Firestore that no longer exist in Firebase Auth Console
+    for (const userDoc of existingDocs) {
+      const cleanEmail = (userDoc.email || "").toLowerCase().trim();
+      // Skip default primary accounts
+      if (cleanEmail === "admin@cabinet.com" || cleanEmail === "assistante@cabinet.com" || !cleanEmail) {
+        continue;
+      }
+
+      if (userDoc.email && userDoc.password) {
+        try {
+          const userCred = await signInWithEmailAndPassword(secondaryAuth, userDoc.email.trim(), userDoc.password);
+          await signOut(secondaryAuth);
+        } catch (authErr) {
+          if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/invalid-credential') {
+            console.log(`Purging orphaned Firestore entry for deleted Auth account: ${userDoc.email}`);
+            await deleteDoc(doc(db, "users", userDoc.id));
+          }
+        }
       }
     }
   } catch (err) {

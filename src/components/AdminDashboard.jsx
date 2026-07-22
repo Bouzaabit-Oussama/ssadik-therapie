@@ -366,7 +366,7 @@ export default function AdminDashboard({ lang = 'ar', onNavigate }) {
     setIsSyncing(true);
     try {
       await syncDefaultAccounts();
-      showToast(lang === 'ar' ? 'تمت مزامنة الحسابات بنجاح!' : 'Comptes synchronisés avec succès !');
+      showToast(lang === 'ar' ? 'تمت مزامنة وتنظيف الحسابات بنجاح!' : 'Comptes synchronisés et nettoyés avec succès !');
     } catch (err) {
       console.error(err);
     } finally {
