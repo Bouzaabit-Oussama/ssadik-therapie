@@ -2,16 +2,36 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Allow public creation of leads (patient bookings)
-    // Allow read, update, delete for authenticated admin/assistant users
+    // Helper: Vérifier si l'utilisateur est administrateur principal
+    function isAdmin() {
+      return request.auth != null && 
+        (request.auth.token.email == 'admin@cabinet.com' || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    // Helper: Vérifier si l'assistant a le droit de modification
+    function canAssistantEdit() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.canEdit == true;
+    }
+
+    // Collection des réservations (leads)
     match /leads/{leadId} {
+      // Formulaire public : création autorisée
       allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      // Lecture : tout utilisateur authentifié (Admin ou Assistant)
+      allow read: if request.auth != null;
+      // Modification / Suppression : Admin OU Assistant autorisé
+      allow update: if isAdmin() || canAssistantEdit();
+      allow delete: if isAdmin();
     }
     
-    // Allow access to users collection for profiles and permission management
+    // Collection des utilisateurs (users)
     match /users/{userId} {
-      allow read, write: if true;
+      // Un utilisateur peut lire son propre profil ou l'Admin peut tout lire
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin() || resource.data.email == request.auth.token.email);
+      // Seul l'Admin peut créer/modifier/supprimer des comptes d'utilisateurs
+      allow write: if isAdmin() || (request.auth != null && request.auth.uid == userId);
     }
 
   }

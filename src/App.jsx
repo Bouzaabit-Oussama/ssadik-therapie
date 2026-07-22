@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { translations } from './i18n/translations';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -8,7 +8,8 @@ import Expertise from './components/Expertise';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import LeadModal from './components/LeadModal';
-import AdminDashboard from './components/AdminDashboard';
+
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 
 
 // Configurable Webhook URL for Google Sheets.
@@ -54,7 +55,15 @@ export default function App() {
 
   // Render Admin Dashboard if visiting /admin route
   if (window.location.pathname === '/admin') {
-    return <AdminDashboard lang={lang} setLang={setLang} t={t} />;
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen bg-sand-50 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-medical-600"></div>
+        </div>
+      }>
+        <AdminDashboard lang={lang} setLang={setLang} t={t} />
+      </Suspense>
+    );
   }
 
   return (

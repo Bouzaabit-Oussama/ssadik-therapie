@@ -12,7 +12,8 @@ import {
   setDoc,
   getDocs,
   updateDoc,
-  deleteDoc
+  deleteDoc,
+  where
 } from "firebase/firestore";
 
 // Firebase configuration using Vite environment variables
@@ -113,12 +114,12 @@ const DEFAULT_ASSISTANT_EMAILS = [
 export async function createAssistantUser(email, password, permissions = {}) {
   const cleanEmail = email.trim().toLowerCase();
   try {
-    // 1. Check if profile already exists in Firestore
+    // 1. Check if profile already exists in Firestore using a filtered query
     const usersCol = collection(db, "users");
-    const snapshot = await getDocs(usersCol);
-    const existingDoc = snapshot.docs.find(d => (d.data().email || "").toLowerCase().trim() === cleanEmail);
+    const q = query(usersCol, where("email", "==", cleanEmail));
+    const snapshot = await getDocs(q);
     
-    if (existingDoc) {
+    if (!snapshot.empty) {
       const err = new Error("EMAIL_EXISTS");
       err.code = "auth/email-already-in-use";
       throw err;
@@ -127,11 +128,9 @@ export async function createAssistantUser(email, password, permissions = {}) {
     // 2. Create user in Firebase Auth via secondaryAuth
     const userCredential = await createUserWithEmailAndPassword(secondaryAuth, cleanEmail, password);
     const newUid = userCredential.user.uid;
-    await signOut(secondaryAuth);
 
     const newProfile = {
       email: cleanEmail,
-      password: password || "",
       role: "assistant",
       canEdit: permissions.canEdit !== undefined ? permissions.canEdit : true,
       maxDaysView: permissions.maxDaysView !== undefined ? permissions.maxDaysView : 7,
@@ -144,6 +143,9 @@ export async function createAssistantUser(email, password, permissions = {}) {
   } catch (error) {
     console.error("Error creating assistant user:", error);
     throw error;
+  } finally {
+    // Always sign out secondaryAuth to prevent auth state pollution
+    await signOut(secondaryAuth).catch(() => {});
   }
 }
 
@@ -154,9 +156,10 @@ export async function createAssistantUser(email, password, permissions = {}) {
  */
 export async function updateAssistantAccount(userId, data) {
   try {
+    const { password, ...cleanData } = data;
     const userRef = doc(db, "users", userId);
     await updateDoc(userRef, {
-      ...data,
+      ...cleanData,
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
@@ -180,9 +183,10 @@ export async function deleteAssistantUser(assistantObj) {
       try {
         const userCred = await signInWithEmailAndPassword(secondaryAuth, assistantEmail.trim(), assistantPassword);
         await deleteUser(userCred.user);
-        await signOut(secondaryAuth);
       } catch (authDeleteErr) {
         console.warn("Notice: Could not delete user directly from Firebase Auth console:", authDeleteErr.message);
+      } finally {
+        await signOut(secondaryAuth).catch(() => {});
       }
     }
 
@@ -190,9 +194,9 @@ export async function deleteAssistantUser(assistantObj) {
     if (assistantEmail) {
       try {
         const usersCol = collection(db, "users");
-        const snapshot = await getDocs(usersCol);
-        const matchingDocs = snapshot.docs.filter(d => (d.data().email || "").toLowerCase().trim() === assistantEmail.toLowerCase().trim());
-        for (const d of matchingDocs) {
+        const q = query(usersCol, where("email", "==", assistantEmail.trim().toLowerCase()));
+        const snapshot = await getDocs(q);
+        for (const d of snapshot.docs) {
           await deleteDoc(doc(db, "users", d.id));
         }
       } catch (e) {
@@ -240,7 +244,6 @@ export async function syncDefaultAccounts() {
   const defaultAccounts = [
     {
       email: "admin@cabinet.com",
-      password: "admin@cabinet.com",
       role: "admin",
       canEdit: true,
       maxDaysView: 3650,
@@ -248,7 +251,6 @@ export async function syncDefaultAccounts() {
     },
     {
       email: "assistante@cabinet.com",
-      password: "assistante@cabinet.com",
       role: "assistant",
       canEdit: true,
       maxDaysView: 7,
@@ -267,27 +269,6 @@ export async function syncDefaultAccounts() {
       if (!existingEmails.includes(acc.email.toLowerCase())) {
         const newRef = doc(usersCol);
         await setDoc(newRef, acc);
-      }
-    }
-
-    // 2. Check and purge any custom assistant documents in Firestore that no longer exist in Firebase Auth Console
-    for (const userDoc of existingDocs) {
-      const cleanEmail = (userDoc.email || "").toLowerCase().trim();
-      // Skip default primary accounts
-      if (cleanEmail === "admin@cabinet.com" || cleanEmail === "assistante@cabinet.com" || !cleanEmail) {
-        continue;
-      }
-
-      if (userDoc.email && userDoc.password) {
-        try {
-          const userCred = await signInWithEmailAndPassword(secondaryAuth, userDoc.email.trim(), userDoc.password);
-          await signOut(secondaryAuth);
-        } catch (authErr) {
-          if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/invalid-credential') {
-            console.log(`Purging orphaned Firestore entry for deleted Auth account: ${userDoc.email}`);
-            await deleteDoc(doc(db, "users", userDoc.id));
-          }
-        }
       }
     }
   } catch (err) {
@@ -316,13 +297,15 @@ export async function getUserProfile(uid, email) {
     // If document by UID doesn't exist yet, check if a profile document exists by email in Firestore
     if (!snap.exists() && normalizedEmail) {
       const usersCol = collection(db, "users");
-      const qSnap = await getDocs(usersCol);
-      const emailDoc = qSnap.docs.find(d => (d.data().email || "").toLowerCase().trim() === normalizedEmail);
+      const q = query(usersCol, where("email", "==", normalizedEmail));
+      const qSnap = await getDocs(q);
+      const emailDoc = qSnap.docs[0];
       
       if (emailDoc) {
         const emailData = emailDoc.data();
+        const { password, ...cleanEmailData } = emailData;
         const profileData = {
-          ...emailData,
+          ...cleanEmailData,
           email: normalizedEmail,
           role: isPrimaryAdmin ? "admin" : (emailData.role || "assistant"),
           updatedAt: new Date().toISOString()
@@ -334,18 +317,18 @@ export async function getUserProfile(uid, email) {
 
     if (snap.exists()) {
       const data = snap.data();
+      const { password, ...cleanData } = data;
       // Upgrade role if user email is in primary admin list but currently set as assistant
       if (isPrimaryAdmin && data.role !== "admin") {
-        await updateDoc(userRef, { role: "admin", password: email || "admin@cabinet.com" });
-        return { id: snap.id, ...data, role: "admin", password: email || "admin@cabinet.com" };
+        await updateDoc(userRef, { role: "admin" });
+        return { id: snap.id, ...cleanData, role: "admin" };
       }
-      return { id: snap.id, ...data };
+      return { id: snap.id, ...cleanData };
     }
     
     // Create new profile: primary admin emails get 'admin', all others default to 'assistant'
     const newProfile = {
       email: email || "",
-      password: email || "",
       role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
       maxDaysView: isPrimaryAdmin ? 3650 : 7,
@@ -361,7 +344,6 @@ export async function getUserProfile(uid, email) {
     return {
       id: uid,
       email: email || "",
-      password: email || "",
       role: isPrimaryAdmin ? "admin" : "assistant",
       canEdit: true,
       maxDaysView: isPrimaryAdmin ? 3650 : 7
@@ -400,8 +382,9 @@ export function getUserProfileRealtime(uid, email, callback) {
     } else {
       // Fallback check by email if UID doc doesn't exist yet or was modified
       const usersCol = collection(db, "users");
-      getDocs(usersCol).then(qSnap => {
-        const emailDoc = qSnap.docs.find(d => (d.data().email || "").toLowerCase().trim() === normalizedEmail);
+      const q = query(usersCol, where("email", "==", normalizedEmail));
+      getDocs(q).then(qSnap => {
+        const emailDoc = qSnap.docs[0];
         if (emailDoc) {
           const data = emailDoc.data();
           callback({

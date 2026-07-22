@@ -591,8 +591,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
     if (!editingAssistantEmail.trim()) return;
     try {
       await updateAssistantAccount(assistantId, {
-        email: editingAssistantEmail.trim(),
-        password: editingAssistantPassword
+        email: editingAssistantEmail.trim()
       });
       setEditingAssistantId(null);
       showToast(dt.toastAccountUpdated);
@@ -832,7 +831,7 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
   if (!user) {
     return (
       <div className="min-h-screen bg-sand-50 flex flex-col justify-center items-center p-4" dir={isRtl ? 'rtl' : 'ltr'}>
-        <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+        <div className="absolute top-4 end-4 flex items-center gap-2 z-10">
           <button 
             onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-sand-200 text-xs font-bold text-therapy-900 shadow-sm hover:bg-sand-100 transition-all"
@@ -1885,10 +1884,9 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
                             <td className="px-6 py-4 text-start font-bold text-therapy-900">
                               <input
                                 type="text"
-                                placeholder="Nouveau mot de passe"
-                                value={editingAssistantPassword}
-                                onChange={(e) => setEditingAssistantPassword(e.target.value)}
-                                className="w-full px-3 py-1.5 rounded-lg border border-medical-300 focus:ring-2 focus:ring-medical-500 text-xs font-bold bg-white"
+                                disabled
+                                placeholder={lang === 'ar' ? 'غير قابل للتعديل' : 'Non modifiable'}
+                                className="w-full px-3 py-1.5 rounded-lg border border-sand-200 text-xs font-bold bg-sand-50 text-sand-400 cursor-not-allowed"
                               />
                             </td>
 

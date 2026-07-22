@@ -50,7 +50,10 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
     }
 
     // 2. Validation for WhatsApp (Moroccan numbers: 06, 07, +2126, +2127)
-    const whatsappClean = whatsapp.trim().replace(/\s+/g, '');
+    let whatsappClean = whatsapp.trim().replace(/\s+/g, '');
+    if (whatsappClean.startsWith('00212')) {
+      whatsappClean = '+212' + whatsappClean.slice(5);
+    }
     const moroccanPhoneRegex = /^(?:\+212|0)[67]\d{8}$/;
     
     if (!moroccanPhoneRegex.test(whatsappClean)) {
