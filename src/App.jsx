@@ -68,7 +68,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-sand-50 text-sand-900 overflow-x-hidden">
+    <div className="min-h-screen bg-sand-50 text-sand-900 overflow-x-clip">
       {/* Navbar + Top promo bar */}
       <Header lang={lang} setLang={setLang} t={t} onOpenModal={handleOpenModal} />
 
