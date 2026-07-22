@@ -18,15 +18,27 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
 
   return (
     <header className="w-full sticky top-0 z-50 shadow-md">
-      {/* Top Promotional Bar with Deep Dark Animated Linear Gradient */}
-      <div className="w-full bg-gradient-to-r from-therapy-950 via-slate-900 via-therapy-900 to-therapy-950 text-white py-2.5 px-4 text-center text-xs md:text-sm font-bold animate-gradient-flow border-b border-white/10 shadow-md flex items-center justify-center flex-wrap gap-2.5">
-        <span className="text-white font-extrabold tracking-wide drop-shadow-md">{t.topbar.text}</span>
-        <button 
-          onClick={() => onOpenModal(t.promo.title)}
-          className="inline-flex items-center gap-1 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white px-3.5 py-1 rounded-full shadow-sm hover:shadow-md transition-all font-extrabold text-xs hover:scale-105"
-        >
-          {t.topbar.linkText}
-        </button>
+      {/* Top Promotional Bar with hero_bg background & dark overlay */}
+      <div className="relative w-full overflow-hidden shadow-md bg-therapy-950 border-b border-white/10">
+        {/* Background Image Layer */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay"
+          style={{ backgroundImage: "url('/assets/hero_bg.png')" }}
+        ></div>
+
+        {/* Darkening Gradient Overlay for optimal contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-therapy-950/90 via-slate-950/85 to-therapy-950/90"></div>
+
+        {/* Text & Button Content */}
+        <div className="relative z-10 py-2.5 px-4 text-center text-xs md:text-sm font-bold text-white flex items-center justify-center flex-wrap gap-2.5">
+          <span className="text-white font-extrabold tracking-wide drop-shadow-md">{t.topbar.text}</span>
+          <button 
+            onClick={() => onOpenModal(t.promo.title)}
+            className="inline-flex items-center gap-1 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white px-3.5 py-1 rounded-full shadow-sm hover:shadow-md transition-all font-extrabold text-xs hover:scale-105"
+          >
+            {t.topbar.linkText}
+          </button>
+        </div>
       </div>
 
       {/* Main Navbar with Glassmorphism Transparency & Blur */}
