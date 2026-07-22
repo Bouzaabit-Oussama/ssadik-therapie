@@ -344,7 +344,8 @@ export function getUsersRealtime(callback) {
     }));
     callback(users);
   }, (error) => {
-    console.error("Firestore getUsersRealtime error:", error);
+    console.warn("Firestore getUsersRealtime error (invoking fallback):", error);
+    callback([]);
   });
 }
 

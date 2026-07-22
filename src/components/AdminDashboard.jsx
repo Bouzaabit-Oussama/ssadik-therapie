@@ -243,7 +243,26 @@ const dashboardTranslations = {
   }
 };
 
-export default function AdminDashboard({ lang, setLang, t }) {
+const DEFAULT_ACCOUNTS_FALLBACK = [
+  {
+    id: "admin_fallback_id",
+    email: "admin@cabinet.com",
+    password: "admin@cabinet.com",
+    role: "admin",
+    canEdit: true,
+    maxDaysView: 3650
+  },
+  {
+    id: "assistant_fallback_id",
+    email: "assistante@cabinet.com",
+    password: "assistante@cabinet.com",
+    role: "assistant",
+    canEdit: true,
+    maxDaysView: 7
+  }
+];
+
+export default function AdminDashboard({ lang = 'ar', onNavigate }) {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -257,7 +276,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
 
   // Navigation tab state: 'reservations' | 'assistants'
   const [activeTab, setActiveTab] = useState('reservations');
-  const [assistantsList, setAssistantsList] = useState([]);
+  const [assistantsList, setAssistantsList] = useState(DEFAULT_ACCOUNTS_FALLBACK);
 
   // Leads and filter states
   const [leads, setLeads] = useState([]);
@@ -285,6 +304,7 @@ export default function AdminDashboard({ lang, setLang, t }) {
   const [editingAssistantEmail, setEditingAssistantEmail] = useState('');
   const [editingAssistantPassword, setEditingAssistantPassword] = useState('');
   const [visiblePasswords, setVisiblePasswords] = useState({});
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState('');
@@ -322,26 +342,6 @@ export default function AdminDashboard({ lang, setLang, t }) {
     return () => unsubscribe();
   }, [user]);
 
-  const DEFAULT_ACCOUNTS_FALLBACK = [
-    {
-      id: "admin_fallback_id",
-      email: "admin@cabinet.com",
-      password: "admin@cabinet.com",
-      role: "admin",
-      canEdit: true,
-      maxDaysView: 3650
-    },
-    {
-      id: "assistant_fallback_id",
-      email: "assistante@cabinet.com",
-      password: "assistante@cabinet.com",
-      role: "assistant",
-      canEdit: true,
-      maxDaysView: 7
-    }
-  ];
-
-  const [isSyncing, setIsSyncing] = useState(false);
 
   const handleManualSync = async () => {
     setIsSyncing(true);
