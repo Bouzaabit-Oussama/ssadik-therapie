@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Phone, Instagram, Facebook, Calendar, MessageSquare } from 'lucide-react';
+import { APP_VERSION } from '../version';
 
 export default function Footer({ t, onOpenModal }) {
   const footerLinks = [
@@ -129,8 +130,11 @@ export default function Footer({ t, onOpenModal }) {
         </div>
 
         {/* Copyright notice */}
-        <div className="mt-8 pt-8 border-t border-sand-100/50 text-center text-xs text-sand-900/40 font-semibold">
+        <div className="mt-8 pt-8 border-t border-sand-100/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sand-900/50 font-semibold">
           <p>{t.footer.rights}</p>
+          <span className="px-2.5 py-0.5 rounded-full bg-sand-100 border border-sand-200 text-2xs font-extrabold text-therapy-900">
+            {APP_VERSION}
+          </span>
         </div>
 
       </div>

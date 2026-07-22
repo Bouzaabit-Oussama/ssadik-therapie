@@ -17,6 +17,7 @@ import {
   auth 
 } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { APP_VERSION } from '../version';
 import { 
   Search, 
   LogOut, 
@@ -805,7 +806,12 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
         </div>
 
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 flex flex-col items-center">
+            <img 
+              src="/assets/logo.png" 
+              alt="Ssadik Logo" 
+              className="h-16 w-16 object-contain mb-3 rounded-full shadow-md bg-white p-1"
+            />
             <h1 className="text-2xl md:text-3xl font-black text-therapy-900 tracking-tight">
               {lang === 'ar' ? 'صادق للعلاج الطبيعي' : 'Ssadik Thérapie'}
             </h1>
@@ -925,9 +931,13 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
           
           {/* Title, Brand & User Role Badge */}
           <div className="flex items-center gap-3">
-            <div className="bg-medical-500 text-white p-2.5 rounded-2xl shadow-sm">
-              <TrendingUp className="w-6 h-6" />
-            </div>
+            <a href="/" title="Ssadik Thérapie" className="flex-shrink-0 transition-transform hover:scale-105">
+              <img 
+                src="/assets/logo.png" 
+                alt="Ssadik Thérapie Logo" 
+                className="h-12 w-12 object-contain rounded-2xl shadow-sm border border-sand-200 bg-white p-0.5"
+              />
+            </a>
             <div className="text-start">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-lg md:text-xl font-black text-therapy-900 leading-tight">
@@ -2050,6 +2060,25 @@ export default function AdminDashboard({ lang = 'ar', setLang, onNavigate }) {
           </div>
         )}
     </main>
+
+    {/* Footer with Copyright and Version Info */}
+    <footer className="mt-auto bg-white border-t border-sand-200/60 py-4 px-4 sm:px-6 lg:px-8 text-center z-10">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sand-500 font-semibold">
+        <div className="flex items-center gap-2">
+          <img src="/assets/logo.png" alt="Ssadik Logo" className="w-5 h-5 object-contain" />
+          <span>
+            {lang === 'ar' 
+              ? 'جميع الحقوق محفوظة. © صادق للعلاج الطبيعي - طنجة، المغرب' 
+              : 'Tous droits réservés. © Ssadik Thérapie - Tanger, Maroc'}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1 rounded-full bg-sand-100 border border-sand-200 font-black text-therapy-900 text-2xs shadow-2xs">
+            {lang === 'ar' ? `إصدار الموقع: ${APP_VERSION}` : `Version du site: ${APP_VERSION}`}
+          </span>
+        </div>
+      </div>
+    </footer>
   </div>
 );
 }
