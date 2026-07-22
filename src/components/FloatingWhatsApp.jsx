@@ -14,10 +14,10 @@ export default function FloatingWhatsApp({ t }) {
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end group select-none dir-ltr">
+    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end rtl:items-start group select-none">
       {/* Tooltip Notification */}
       {showTooltip && (
-        <div className="mb-2 mr-1 bg-white border border-sand-200 text-therapy-900 text-xs font-extrabold px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce">
+        <div className="mb-2 bg-white border border-sand-200 text-therapy-900 text-xs font-extrabold px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
           <span>{t?.floatingWhatsapp?.badgeText || 'Réponse rapide < 5 min'}</span>
           <button
