@@ -47,6 +47,30 @@ export default function App() {
     }
   }, []);
 
+  // Smooth Scroll Reveal Observer for fluid page animations
+  useEffect(() => {
+    const observerCallback = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const observerOptions = {
+      threshold: 0.05,
+      rootMargin: '0px 0px -30px 0px',
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    const targets = document.querySelectorAll('.reveal-on-scroll');
+
+    targets.forEach((target) => observer.observe(target));
+
+    return () => observer.disconnect();
+  }, [lang]);
+
   const handleOpenModal = (serviceName = 'General') => {
     setModalService(serviceName);
     setIsModalOpen(true);
@@ -82,28 +106,44 @@ export default function App() {
         <Hero t={t} onOpenModal={handleOpenModal} />
 
         {/* Medical Trust & Reassurance Bar */}
-        <TrustBar t={t} />
+        <div className="reveal-on-scroll">
+          <TrustBar t={t} />
+        </div>
 
         {/* 4 Services grid */}
-        <Services t={t} onOpenModal={handleOpenModal} />
+        <div className="reveal-on-scroll">
+          <Services t={t} onOpenModal={handleOpenModal} />
+        </div>
 
         {/* Parallax ambient section with glassmorphism statistics */}
-        <ParallaxSection t={t} onOpenModal={handleOpenModal} />
+        <div className="reveal-on-scroll">
+          <ParallaxSection t={t} onOpenModal={handleOpenModal} />
+        </div>
 
         {/* Countdown promo pack */}
-        <PromoCountdown t={t} onOpenModal={handleOpenModal} />
+        <div className="reveal-on-scroll">
+          <PromoCountdown t={t} onOpenModal={handleOpenModal} />
+        </div>
 
         {/* Patient Testimonials & Social Proof */}
-        <Testimonials t={t} />
+        <div className="reveal-on-scroll">
+          <Testimonials t={t} />
+        </div>
 
         {/* Presentation and clinic expertise */}
-        <Expertise t={t} />
+        <div className="reveal-on-scroll">
+          <Expertise t={t} />
+        </div>
 
         {/* Interactive FAQ Accordion */}
-        <FAQ t={t} />
+        <div className="reveal-on-scroll">
+          <FAQ t={t} />
+        </div>
 
         {/* Contact details, form and map location */}
-        <Contact t={t} onOpenModal={handleOpenModal} />
+        <div className="reveal-on-scroll">
+          <Contact t={t} onOpenModal={handleOpenModal} />
+        </div>
       </main>
 
       {/* Footer info & socials */}
