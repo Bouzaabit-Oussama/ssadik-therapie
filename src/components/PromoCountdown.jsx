@@ -59,25 +59,25 @@ export default function PromoCountdown({ t, onOpenModal }) {
 
   return (
     <section className="my-12 max-w-5xl mx-auto px-4">
-      {/* Banner Container */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-therapy-100 to-sand-200 border border-therapy-200/60 rounded-3xl p-8 md:p-12 shadow-md flex flex-col items-center text-center space-y-6 md:space-y-8">
+      {/* Banner Container with Marble & Gold styling */}
+      <div className="relative overflow-hidden bg-marble-card border-2 border-amber-400/60 rounded-3xl p-8 md:p-12 shadow-2xl flex flex-col items-center text-center space-y-6 md:space-y-8">
         
-        {/* Decorative Circles */}
-        <div className="absolute top-0 start-0 w-24 h-24 bg-white/20 rounded-full translate-x-[-30%] translate-y-[-30%]"></div>
-        <div className="absolute bottom-0 end-0 w-36 h-36 bg-therapy-800/5 rounded-full translate-x-[30%] translate-y-[30%]"></div>
+        {/* Decorative Ambient Gold Orbs */}
+        <div className="absolute top-0 start-0 w-32 h-32 bg-amber-300/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div className="absolute bottom-0 end-0 w-44 h-44 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
 
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-100 text-orange-700 font-bold text-xs md:text-sm tracking-wide">
-          <Flame className="w-4 h-4 fill-orange-500 text-orange-600 animate-bounce" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300/80 font-extrabold text-xs md:text-sm tracking-wide shadow-sm">
+          <Flame className="w-4 h-4 fill-amber-500 text-amber-600 animate-bounce" />
           <span>{t.promo.badge}</span>
         </div>
 
         {/* Offer Description */}
         <div className="space-y-3">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-therapy-900">
+          <h2 className="text-2xl md:text-3xl font-black text-therapy-900">
             {t.promo.title}
           </h2>
-          <p className="text-lg md:text-xl font-bold text-medical-600">
+          <p className="text-xl md:text-2xl font-black text-amber-700">
             {t.promo.subtitle} <span className="text-sand-900/40 text-sm font-normal line-through ms-2">{t.promo.priceOriginal}</span>
           </p>
         </div>
@@ -87,15 +87,15 @@ export default function PromoCountdown({ t, onOpenModal }) {
           {timerItems.map((item, idx) => (
             <React.Fragment key={item.label}>
               <div className="flex flex-col items-center">
-                <div className="bg-white text-therapy-900 border border-sand-200 font-sans font-black text-2xl md:text-3xl w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl shadow-sm">
+                <div className="bg-white/95 text-therapy-900 border-2 border-amber-400/50 font-sans font-black text-2xl md:text-3xl w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl shadow-md">
                   {item.value}
                 </div>
-                <span className="text-xs font-bold text-therapy-800/80 mt-2">
+                <span className="text-xs font-black text-amber-900 mt-2">
                   {item.label}
                 </span>
               </div>
               {idx < timerItems.length - 1 && (
-                <span className="text-therapy-800/60 font-black text-2xl mb-6">:</span>
+                <span className="text-amber-600 font-black text-2xl mb-6">:</span>
               )}
             </React.Fragment>
           ))}
@@ -105,9 +105,9 @@ export default function PromoCountdown({ t, onOpenModal }) {
         <div>
           <button
             onClick={() => onOpenModal('Pack complet (180 Dh)')}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-base animate-pulse-soft"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black px-9 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all text-base animate-pulse-soft border border-amber-300/40"
           >
-            <Percent className="w-5 h-5" />
+            <Percent className="w-5 h-5 text-amber-100" />
             <span>{t.promo.cta}</span>
           </button>
         </div>

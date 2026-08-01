@@ -138,12 +138,12 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
       ></div>
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-lg bg-white rounded-3xl border border-sand-200/50 shadow-2xl overflow-hidden p-6 md:p-8 animate-slide-up z-10">
+      <div className="relative w-full max-w-lg bg-marble-card rounded-3xl border-2 border-amber-400/50 shadow-2xl overflow-hidden p-6 md:p-8 animate-slide-up z-10">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 end-4 p-2 rounded-full text-sand-900/40 hover:text-sand-900 hover:bg-sand-100 transition-all focus:outline-none"
+          className="absolute top-4 end-4 p-2 rounded-full text-sand-900/50 hover:text-sand-900 hover:bg-amber-100/60 transition-all focus:outline-none"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
@@ -151,11 +151,15 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
 
         {/* Modal Header */}
         <div className="text-start space-y-2 mb-6 pe-6">
+          <div className="flex items-center gap-2 mb-1">
+            <img src="/assets/cabinet_ssadik_logo.jpg" alt="Logo" className="w-9 h-9 rounded-lg border border-amber-400/50 object-cover shadow-sm" />
+            <span className="text-xs font-black text-amber-700 uppercase tracking-widest">Cabinet SSADIK</span>
+          </div>
           <h3 className="text-xl md:text-2xl font-black text-therapy-900 flex items-center gap-2">
-            <PhoneCall className="w-5 h-5 text-medical-500" />
+            <PhoneCall className="w-5 h-5 text-amber-600" />
             <span>{t.modal.title}</span>
           </h3>
-          <p className="text-xs md:text-sm text-sand-900/60 leading-relaxed font-semibold">
+          <p className="text-xs md:text-sm text-sand-900/70 leading-relaxed font-semibold">
             {t.modal.subtitle}
           </p>
         </div>

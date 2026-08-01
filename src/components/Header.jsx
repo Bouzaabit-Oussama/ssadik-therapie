@@ -44,19 +44,15 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
       {/* Main Navbar with Glassmorphism Transparency & Blur */}
       <nav className="w-full bg-gradient-to-r from-white/80 via-sand-50/70 to-white/80 backdrop-blur-lg border-b border-white/60 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-24">
             {/* Logo Section */}
-            <div className="flex items-center gap-3">
-              <a href="#home" className="flex items-center gap-2">
+            <div className="flex items-center">
+              <a href="#home" className="flex items-center group">
                 <img 
-                  src="/assets/logo.png" 
-                  alt="Ssadik Thérapie Logo" 
-                  className="h-14 w-14 object-contain rounded-full shadow-sm hover:scale-105 transition-transform"
+                  src="/assets/logo_header.png" 
+                  alt="Cabinet SSADIK - Hijama, Thérapies, Bien-Être" 
+                  className="h-16 sm:h-20 md:h-22 w-auto object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md py-1"
                 />
-                <div className="flex flex-col text-start">
-                  <span className="font-sans font-extrabold text-xl leading-none text-therapy-900 tracking-tight">SSADIK</span>
-                  <span className="font-sans font-semibold text-xs tracking-wider text-medical-600">THÉRAPIE</span>
-                </div>
               </a>
             </div>
 

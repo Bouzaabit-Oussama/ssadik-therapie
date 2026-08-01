@@ -53,20 +53,26 @@ export default function Hero({ t, onOpenModal }) {
           </div>
 
           {/* Hero Visual Column */}
-          <div className="md:col-span-5 relative w-full h-[320px] sm:h-[400px] md:h-[450px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-sand-200 group">
-            {/* Hero Image */}
+          <div className="md:col-span-5 relative w-full h-[340px] sm:h-[420px] md:h-[470px] rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/40 bg-marble-card group">
+            {/* Real Hero Image: Dr. Sadik performing therapy */}
             <img
-              src="/assets/hero.png"
-              alt="Ssadik Thérapie Tanger - Consultation & Massage"
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              src="/assets/dr_sadik_acupuncture.jpg"
+              alt="Dr. Sadik - Consultation & Thérapie à Tanger"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               loading="eager"
             />
             {/* Gradient Overlay for Text Visibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-therapy-900/70 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/80 via-therapy-950/20 to-transparent"></div>
             
-            {/* Floating Serif text "TANGER" */}
+            {/* Authentic Clinic Badge */}
+            <div className="absolute top-4 start-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-amber-400/50 shadow-lg flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-xs font-black text-therapy-900">Cabinet Réel & Praticien Certifié</span>
+            </div>
+
+            {/* Floating text "TANGER" */}
             <div className="absolute bottom-6 inset-x-0 text-center select-none pointer-events-none">
-              <h2 className="font-serif text-5xl md:text-6xl text-white font-light tracking-[0.25em] uppercase drop-shadow-lg">
+              <h2 className="font-serif text-4xl md:text-5xl text-amber-200 font-light tracking-[0.25em] uppercase drop-shadow-lg">
                 Tanger
               </h2>
             </div>

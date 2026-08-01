@@ -60,44 +60,44 @@ export default function Expertise({ t }) {
 
           {/* Middle Column: Visual Assets Grid (col-span-3) */}
           <div className="lg:col-span-3 grid grid-cols-2 gap-4">
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-sm border border-sand-200">
+            <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40">
               <img
-                src="/assets/hero.png"
-                alt="Clinic Tanger View"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                src="/assets/dr_sadik_acupuncture.jpg"
+                alt="Dr. Sadik - Consultation Cabinet"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-sm border border-sand-200">
+            <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40">
               <img
-                src="/assets/acupuncture.png"
-                alt="Therapy session"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                src="/assets/female_therapist_room.jpg"
+                alt="Praticienne & Espace Thérapeutique Dédié"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-sm border border-sand-200 col-span-2">
+            <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40 col-span-2">
               <img
-                src="/assets/massage.png"
-                alt="Therapy treatment"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                src="/assets/hijama_equipment_room.jpg"
+                alt="Équipement Médical Stérile & Cabinet"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
           </div>
 
           {/* Right Column: Therapist Bio Profile (col-span-4) */}
-          <div className="lg:col-span-4 bg-sand-50 rounded-2xl p-6 border border-sand-200/60 flex flex-col space-y-6">
+          <div className="lg:col-span-4 bg-marble-card border-gold-shine rounded-3xl p-6 shadow-lg flex flex-col space-y-6">
             
             {/* Therapist Profile Header */}
             <div className="flex items-center gap-4 text-start">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-medical-500 shadow-md">
+              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-500 shadow-md">
                 <img
-                  src="/assets/therapist.png"
+                  src="/assets/dr_sadik_acupuncture.jpg"
                   alt={t.expertise.name}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div>
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-medical-600 bg-medical-50 px-2 py-1 rounded-md mb-1">
-                  <User className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-100/80 px-2.5 py-1 rounded-md mb-1 border border-amber-300">
+                  <User className="w-3.5 h-3.5 text-amber-600" />
                   <span>{t.expertise.physio}</span>
                 </span>
                 <h3 className="text-lg font-black text-therapy-900 leading-none">
@@ -107,23 +107,23 @@ export default function Expertise({ t }) {
             </div>
 
             {/* Bio Text */}
-            <p className="text-sm text-sand-900/75 leading-relaxed font-medium text-start">
+            <p className="text-sm text-sand-900/85 leading-relaxed font-medium text-start">
               {t.expertise.bio}
             </p>
 
             {/* Quality Badges */}
-            <div className="space-y-2 pt-4 border-t border-sand-200">
-              <div className="flex items-center gap-2 text-start text-xs font-bold text-therapy-900">
-                <CheckCircle2 className="w-4 h-4 text-medical-500 flex-shrink-0" />
-                <span>Certification Nationale & Expérience</span>
+            <div className="space-y-2.5 pt-4 border-t border-amber-200/60">
+              <div className="flex items-center gap-2 text-start text-xs font-extrabold text-therapy-900">
+                <CheckCircle2 className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                <span>Praticiens Hommes & Femmes Dédiés</span>
               </div>
-              <div className="flex items-center gap-2 text-start text-xs font-bold text-therapy-900">
-                <CheckCircle2 className="w-4 h-4 text-medical-500 flex-shrink-0" />
+              <div className="flex items-center gap-2 text-start text-xs font-extrabold text-therapy-900">
+                <CheckCircle2 className="w-4 h-4 text-medical-600 flex-shrink-0" />
+                <span>Certification Nationale & Expérience Médicale</span>
+              </div>
+              <div className="flex items-center gap-2 text-start text-xs font-extrabold text-therapy-900">
+                <CheckCircle2 className="w-4 h-4 text-medical-600 flex-shrink-0" />
                 <span>Matériel Stérile et à Usage Unique</span>
-              </div>
-              <div className="flex items-center gap-2 text-start text-xs font-bold text-therapy-900">
-                <CheckCircle2 className="w-4 h-4 text-medical-500 flex-shrink-0" />
-                <span>Protocoles Médicaux Personnalisés</span>
               </div>
             </div>
 

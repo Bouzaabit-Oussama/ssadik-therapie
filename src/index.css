@@ -154,3 +154,28 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #8c765c;
 }
+
+/* Marble & Gold Theme Utilities */
+.bg-marble-texture {
+  background-image: url('/assets/marble_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bg-marble-card {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.92), rgba(253, 252, 250, 0.96)), url('/assets/marble_bg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.border-gold-shine {
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  box-shadow: 0 0 15px rgba(217, 119, 6, 0.15);
+}
+
+.border-gold-shine:hover {
+  border-color: rgba(217, 119, 6, 0.8);
+  box-shadow: 0 0 25px rgba(217, 119, 6, 0.25);
+}
+
