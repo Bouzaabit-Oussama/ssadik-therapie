@@ -107,7 +107,7 @@ export default function PromoCountdown({ t, onOpenModal }) {
         {/* CTA Button */}
         <div>
           <button
-            onClick={() => onOpenModal('Pack complet (180 Dh)')}
+            onClick={() => onOpenModal('Pack VIP Massage + Hijama Complète + Chiro (500 DH)')}
             className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black px-9 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all text-base animate-pulse-soft border border-amber-300/40"
           >
             <Percent className="w-5 h-5 text-amber-100" />

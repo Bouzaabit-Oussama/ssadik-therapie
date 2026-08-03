@@ -16,11 +16,7 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
       if (defaultService === 'General') {
         setService('');
       } else {
-        // Map keys to match the dropdown value options
-        const mapped = ['Hijama', 'Massage', 'Acupuncture', 'Chiropraxie', 'Pack complet'].find(
-          (opt) => opt.toLowerCase().includes(defaultService.toLowerCase()) || defaultService.toLowerCase().includes(opt.toLowerCase())
-        );
-        setService(mapped || '');
+        setService(defaultService);
       }
     }
   }, [defaultService, isOpen]);
@@ -221,11 +217,47 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
                 className="w-full px-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-sm text-sand-900"
               >
                 <option value="">{t.contact.selectService}</option>
-                <option value="Hijama">{t.contact.service1}</option>
-                <option value="Massage">{t.contact.service2}</option>
-                <option value="Acupuncture">{t.contact.service3}</option>
-                <option value="Chiropraxie">{t.contact.service4}</option>
-                <option value="Pack complet">{t.contact.servicePack}</option>
+                {/* Dynamically render pre-selected service if not in default list */}
+                {service && ![
+                  'Massage + Hijama Dos (250 DH)', 'Massage + Hijama + Chiropraxie (400 DH)', 'Massage + Hijama Complète (400 DH)', 'Pack VIP Massage + Hijama Complète + Chiro (500 DH)',
+                  'Massage Relaxant (300 DH)', 'Massage Tonic (400 DH)', 'Massage aux Pierres Chaudes (300 DH)', 'Massage Crânien & Visage (300 DH)', 'Réflexologie (300 DH)', 'Massage Thaïlandais (500 DH)', 'Massage Sportif (500 DH)',
+                  'Hijama Thérapeutique (200 DH)', 'Hijama Sportive Dos (250 DH)', 'Hijama Complète (300 DH)', 'Séance Chiropraxie (300 DH)', 'Séance Ostéopathie (400 DH)', 'Acupuncture Chinoise (250 DH)',
+                  'Hammam de Sable avec Massage (800 DH)', 'Cure 3 Jours (1950 DH)', 'Cure 5 Jours (2950 DH)'
+                ].includes(service) && (
+                  <option value={service}>{service}</option>
+                )}
+
+                <optgroup label="💎 الباقات والعروض المدمجة / Packs">
+                  <option value="Massage + Hijama Dos (250 DH)">مساج + حجامة ظهر (250 DH)</option>
+                  <option value="Massage + Hijama + Chiropraxie (400 DH)">مساج + حجامة + كيروبراكتيك (400 DH)</option>
+                  <option value="Massage + Hijama Complète (400 DH)">مساج + حجامة كاملة (400 DH)</option>
+                  <option value="Pack VIP Massage + Hijama Complète + Chiro (500 DH)">Pack VIP: مساج + حجامة كاملة + كيروبراكتيك (500 DH)</option>
+                </optgroup>
+
+                <optgroup label="💆‍♂️ المساج والتدليك / Massages">
+                  <option value="Massage Relaxant (300 DH)">مساج استرخائي (300 DH)</option>
+                  <option value="Massage Tonic (400 DH)">مساج Tonic (400 DH)</option>
+                  <option value="Massage aux Pierres Chaudes (300 DH)">مساج بالأحجار الساخنة (300 DH)</option>
+                  <option value="Massage Crânien & Visage (300 DH)">مساج الوجه و الرأس (300 DH)</option>
+                  <option value="Réflexologie (300 DH)">ريفلوكسولوجي (300 DH)</option>
+                  <option value="Massage Thaïlandais (500 DH)">مساج تيلاندي (500 DH)</option>
+                  <option value="Massage Sportif (500 DH)">مساج رياضي (500 DH)</option>
+                </optgroup>
+
+                <optgroup label="🩺 الجلسات العلاجية / Séances">
+                  <option value="Hijama Thérapeutique (200 DH)">حجامة علاجية (200 DH)</option>
+                  <option value="Hijama Sportive Dos (250 DH)">حجامة رياضية للظهر (250 DH)</option>
+                  <option value="Hijama Complète (300 DH)">حجامة كاملة (300 DH)</option>
+                  <option value="Séance Chiropraxie (300 DH)">حصة كيروبراكتيك (300 DH)</option>
+                  <option value="Séance Ostéopathie (400 DH)">حصة أوستيوباتي (400 DH)</option>
+                  <option value="Acupuncture Chinoise (250 DH)">أبر صينية (250 DH)</option>
+                </optgroup>
+
+                <optgroup label="🏖️ العلاجات وحمام الرمل / Cures">
+                  <option value="Hammam de Sable avec Massage (800 DH)">حمام الرمل مع مساج (800 DH)</option>
+                  <option value="Cure 3 Jours (1950 DH)">ثلاث حصص يومية (1950 DH)</option>
+                  <option value="Cure 5 Jours (2950 DH)">خمس حصص يومية (2950 DH)</option>
+                </optgroup>
               </select>
             </div>
 

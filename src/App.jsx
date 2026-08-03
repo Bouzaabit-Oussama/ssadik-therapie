@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import TrustBar from './components/TrustBar';
 import Services from './components/Services';
+import PricingCatalog from './components/PricingCatalog';
 import ParallaxSection from './components/ParallaxSection';
 import PromoCountdown from './components/PromoCountdown';
 import Testimonials from './components/Testimonials';
@@ -113,6 +114,11 @@ export default function App() {
         {/* 4 Services grid */}
         <div className="reveal-on-scroll">
           <Services t={t} onOpenModal={handleOpenModal} />
+        </div>
+
+        {/* Pricing Catalog & Full Services Menu */}
+        <div className="reveal-on-scroll">
+          <PricingCatalog t={t} onOpenModal={handleOpenModal} />
         </div>
 
         {/* Parallax ambient section with glassmorphism statistics */}

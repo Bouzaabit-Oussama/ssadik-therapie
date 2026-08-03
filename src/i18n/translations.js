@@ -4,8 +4,8 @@ export const translations = {
     langName: 'FR',
     langCode: 'fr',
     topbar: {
-      text: 'اكتشف عرضنا الحصري: خصم 40% على باقة العافية! ',
-      linkText: '[اقرأ المزيد]'
+      text: 'اكتشف باقتنا الحصرية الملكية: باقة VIP الشاملة (مساج + حجامة كاملة + كيروبراكتيك) بـ 500 درهم! ',
+      linkText: '[احجز الآن]'
     },
     nav: {
       home: 'الرئيسية',
@@ -45,11 +45,11 @@ export const translations = {
       }
     },
     promo: {
-      badge: 'عرض حصري ومحدود',
-      title: 'باقة العافية الشاملة',
-      subtitle: 'حجامة + تدليك + وخز بالإبر بـ 180 درهم فقط',
-      priceOriginal: '(بدل 300 درهم)',
-      cta: 'استفد من العرض الآن',
+      badge: 'عرض حصري و ملكي محدود',
+      title: 'باقة الفخامة الملكية (Pack VIP Gold)',
+      subtitle: 'مساج + حجامة كاملة + كيروبراكتيك بـ 500 درهم فقط',
+      priceOriginal: '(بدل 700 درهم)',
+      cta: 'استفد من عرض VIP الآن',
       days: 'أيام',
       hours: 'ساعات',
       minutes: 'دقائق',
@@ -75,7 +75,7 @@ export const translations = {
       service2: 'العلاج بالتدليك',
       service3: 'الوخز بالإبر الطبية',
       service4: 'التقويم العظمي واليدوي',
-      servicePack: 'باقة العافية الشاملة (180 درهم)',
+      servicePack: 'Pack VIP الملكي (500 درهم)',
       submit: 'حجز واستشارة',
       addressTitle: 'عنوان العيادة',
       addressText: 'شارع عائشة المسافر رقم 6، الجيراري 2، طنجة، المغرب',
@@ -103,8 +103,8 @@ export const translations = {
       rights: 'جميع الحقوق محفوظة. صادق للعلاج الطبيعي - طنجة، المغرب'
     },
     trustBar: {
-      item1Title: 'أخصائيون معتمدون',
-      item1Sub: 'خبرة مهنية عالية بمدينة طنجة',
+      item1Title: 'أخصائيون معتمدون وخصوصية تامة',
+      item1Sub: 'طاقم رجالي للرجال وطاقم نسائي للنساء',
       item2Title: 'معدات 100% معقمة',
       item2Sub: 'أدوات الحجامة ذات استعمال واحد',
       item3Title: 'سهولة الوصول والموقف',
@@ -179,8 +179,8 @@ export const translations = {
     langName: 'عربي',
     langCode: 'ar',
     topbar: {
-      text: 'Découvrez notre offre exclusive : -40% sur le pack Bien-Être ! ',
-      linkText: '[Savoir Plus]'
+      text: 'Découvrez notre formule prestige : Pack VIP Gold (Massage + Hijama Complète + Chiropraxie) à 500 Dh ! ',
+      linkText: '[Réserver]'
     },
     nav: {
       home: 'Accueil',
@@ -220,11 +220,11 @@ export const translations = {
       }
     },
     promo: {
-      badge: 'OFFRE EXCLUSIVE & LIMITÉE',
-      title: 'Pack Bien-Être Absolu',
-      subtitle: 'Hijama + Massage + Acupuncture à 180 Dh',
-      priceOriginal: '(au lieu de 300 Dh)',
-      cta: 'Profiter de l\'Offre',
+      badge: 'OFFRE PRESTIGE VIP LIMITÉE',
+      title: 'Pack Prestige VIP Gold',
+      subtitle: 'Massage + Ventouses Complètes + Chiropraxie à 500 Dh',
+      priceOriginal: '(au lieu de 700 Dh)',
+      cta: 'Profiter du Pack VIP',
       days: 'Jours',
       hours: 'Heures',
       minutes: 'Min',
@@ -250,7 +250,7 @@ export const translations = {
       service2: 'Massothérapie',
       service3: 'Acupuncture Médicale',
       service4: 'Chiropraxie & GOT',
-      servicePack: 'Pack Bien-Être Complet (180 Dh)',
+      servicePack: 'Pack VIP Gold (500 Dh)',
       submit: 'Réserver ma place',
       addressTitle: 'Notre Adresse',
       addressText: 'rue Aicha Moussafir N°6, Jirari2, Tanger, Maroc',
@@ -278,10 +278,10 @@ export const translations = {
       rights: 'Tous droits réservés. © Ssadik Thérapie - Tanger, Maroc'
     },
     trustBar: {
-      item1Title: 'Praticiens Diplômés',
-      item1Sub: 'Expertise médicale à Tanger',
+      item1Title: 'Praticiens & Intimité Garantie',
+      item1Sub: 'Hommes pour Hommes & Femmes pour Femmes',
       item2Title: 'Matériel 100% Stérile',
-      item2Sub: 'Kits à usage unique garanti',
+      item2Sub: 'Matériel à usage unique garanti',
       item3Title: 'Accès & Parking Facile',
       item3Sub: 'Localisation Jirari 2, Tanger',
       item4Title: 'RDV Sans Attente',

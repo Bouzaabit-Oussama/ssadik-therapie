@@ -57,8 +57,8 @@ export default function Expertise({ t }) {
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40">
               <img
-                src="/assets/female_therapist_room.jpg"
-                alt="Praticienne & Espace Thérapeutique Dédié"
+                src="/assets/clinic_room.png"
+                alt="Espace Thérapeutique Dédié"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>

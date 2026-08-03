@@ -11,6 +11,7 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
   const navLinks = [
     { name: t.nav.home, href: '#home' },
     { name: t.nav.services, href: '#services' },
+    { name: t.dir === 'rtl' ? 'الأسعار والعروض' : 'Tarifs & Offres', href: '#pricing' },
     { name: t.nav.specialties, href: '#specialties' },
     { name: t.nav.about, href: '#about' },
     { name: t.nav.contact, href: '#contact' },

@@ -14,21 +14,21 @@ export default function Services({ t, onOpenModal }) {
       id: 'massage',
       title: t.services.massage.title,
       desc: t.services.massage.desc,
-      image: '/assets/female_therapist_room.jpg',
+      image: '/assets/massage.png',
       serviceKey: 'Massage'
     },
     {
       id: 'acupuncture',
       title: t.services.acupuncture.title,
       desc: t.services.acupuncture.desc,
-      image: '/assets/dr_sadik_acupuncture.jpg',
+      image: '/assets/acupuncture.png',
       serviceKey: 'Acupuncture'
     },
     {
       id: 'chiropraxie',
       title: t.services.chiro.title,
       desc: t.services.chiro.desc,
-      image: '/assets/dr_sadik_acupuncture.jpg',
+      image: '/assets/chiropraxie.png',
       serviceKey: 'Chiropraxie'
     }
   ];
