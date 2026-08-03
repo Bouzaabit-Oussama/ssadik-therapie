@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Instagram, Facebook, Calendar, MessageSquare } from 'lucide-react';
+import { Phone, Instagram, Facebook, MessageSquare } from 'lucide-react';
 import { APP_VERSION } from '../version';
 
 export default function Footer({ t, onOpenModal }) {
@@ -8,135 +8,97 @@ export default function Footer({ t, onOpenModal }) {
     { name: t.nav.services, href: '#services' },
     { name: t.nav.specialties, href: '#specialties' },
     { name: t.nav.about, href: '#about' },
-    { name: t.nav.contact, href: '#contact' },
   ];
 
   return (
-    <footer className="bg-white border-t border-sand-200 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="relative z-10 bg-marble-prominent border-t-2 border-amber-400/60 py-6 md:py-8 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
         
-        {/* Top Footer Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pb-8 border-b border-sand-100">
+        {/* Main Header / Nav Row */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
           
-          {/* Logo & Slogan (col-span-4) */}
-          <div className="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-start space-y-3">
-            <div className="flex items-center gap-2">
-              <img 
-                src="/assets/logo.png" 
-                alt="Ssadik Thérapie Logo" 
-                className="h-12 w-12 object-contain rounded-full shadow-sm"
-              />
-              <div className="flex flex-col text-start">
-                <span className="font-sans font-extrabold text-lg leading-none text-therapy-900 tracking-tight">SSADIK</span>
-                <span className="font-sans font-semibold text-[10px] tracking-wider text-medical-600">THÉRAPIE</span>
-              </div>
-            </div>
-          </div>
+          {/* Brand Logo */}
+          <a href="#home" className="flex items-center group">
+            <img 
+              src="/assets/logo_header.png" 
+              alt="Cabinet SSADIK Logo" 
+              className="h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-transform"
+            />
+          </a>
 
-          {/* Quick Links (col-span-5) */}
-          <div className="md:col-span-5 flex flex-wrap justify-center gap-6">
+          {/* Quick Navigation Links */}
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-7">
             {footerLinks.map((link) => (
               <a
                 key={`footer-${link.href}`}
                 href={link.href}
-                className="text-sm font-semibold text-sand-900/70 hover:text-medical-600 transition-colors"
+                className="text-xs md:text-sm font-extrabold text-sand-900/80 hover:text-medical-600 transition-colors"
               >
                 {link.name}
               </a>
             ))}
           </div>
 
-          {/* Action CTA Button (col-span-3) */}
-          <div className="md:col-span-3 flex justify-center md:justify-end">
-            <button
-              onClick={() => onOpenModal('General')}
-              className="flex items-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-bold px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all text-sm"
+          {/* Contact Actions & Social Icons */}
+          <div className="flex items-center gap-3">
+            {/* Phone badge */}
+            <a
+              href="tel:+212661508910"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sand-50 border border-sand-200 text-xs font-black text-therapy-900 hover:border-medical-400 transition-all"
             >
-              <Calendar className="w-4 h-4" />
-              <span>{t.nav.cta}</span>
-            </button>
-          </div>
+              <Phone className="w-3.5 h-3.5 text-medical-600" />
+              <span dir="ltr" className="inline-block [unicode-bidi:isolate]">+212 661-508910</span>
+            </a>
 
-        </div>
-
-        {/* Bottom Contact Details & Socials Layout */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          
-          {/* Contacts Data Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:flex-row md:flex-wrap items-center gap-6 text-xs font-semibold text-sand-900/70">
-            
-            {/* Address */}
-            <div className="flex items-center gap-2 justify-center md:justify-start">
-              <MapPin className="w-4 h-4 text-medical-600 flex-shrink-0" />
-              <span>{t.contact.addressText}</span>
+            {/* Social Media Link Icons */}
+            <div className="flex items-center gap-1.5">
+              <a
+                href="https://instagram.com/p.mohamedssadik"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full border border-sand-200 hover:border-pink-300 hover:bg-pink-50 hover:text-pink-600 text-sand-900/70 transition-all"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://wa.me/212661508910"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full border border-sand-200 hover:border-green-300 hover:bg-green-50 hover:text-green-600 text-sand-900/70 transition-all"
+                aria-label="WhatsApp"
+              >
+                <MessageSquare className="w-4 h-4" />
+              </a>
+              <a
+                href="https://facebook.com/ssadik.therapie"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full border border-sand-200 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-600 text-sand-900/70 transition-all"
+                aria-label="Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
             </div>
-
-            {/* Phone */}
-            <a
-              href="tel:+212712500809"
-              className="flex items-center gap-2 justify-center md:justify-start hover:text-medical-600 transition-colors"
-            >
-              <Phone className="w-4 h-4 text-medical-600 flex-shrink-0" />
-              <span className="dir-ltr">+212 7 12500809</span>
-            </a>
-
-            {/* Appointment link */}
-            <button
-              onClick={() => onOpenModal('General')}
-              className="flex items-center gap-2 justify-center md:justify-start hover:text-medical-600 transition-colors underline"
-            >
-              <Calendar className="w-4 h-4 text-medical-600 flex-shrink-0" />
-              <span>{t.contact.emailText}</span>
-            </button>
-
           </div>
-
-          {/* Social Media Link Icons */}
-          <div className="flex items-center gap-4">
-            {/* Instagram */}
-            <a
-              href="https://instagram.com/p.mohamedssadik"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-full border border-sand-200 hover:border-pink-300 hover:bg-pink-50 hover:text-pink-600 text-sand-900/60 transition-all"
-              aria-label="Instagram Profile"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
-
-            {/* WhatsApp */}
-            <a
-              href="https://wa.me/212712500809"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-full border border-sand-200 hover:border-green-300 hover:bg-green-50 hover:text-green-600 text-sand-900/60 transition-all"
-              aria-label="WhatsApp Chat"
-            >
-              <MessageSquare className="w-5 h-5" />
-            </a>
-
-            {/* Facebook */}
-            <a
-              href="https://facebook.com/ssadik.therapie"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-full border border-sand-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 text-sand-900/60 transition-all"
-              aria-label="Facebook Page"
-            >
-              <Facebook className="w-5 h-5" />
-            </a>
-          </div>
-
         </div>
 
-        {/* Copyright notice */}
-        <div className="mt-8 pt-8 border-t border-sand-100/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sand-900/50 font-semibold">
-          <p>{t.footer.rights}</p>
-          <span className="px-2.5 py-0.5 rounded-full bg-sand-100 border border-sand-200 text-2xs font-extrabold text-therapy-900">
-            {APP_VERSION}
-          </span>
-        </div>
+        {/* Bottom Strip Row */}
+        <div className="relative pt-4 border-t border-sand-100 flex items-center justify-center min-h-[36px]">
+          
+          {/* Version badge ALWAYS pinned to physical left side */}
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 dir-ltr">
+            <span className="px-2.5 py-0.5 rounded-full bg-sand-100 border border-sand-200 text-[10px] font-extrabold text-therapy-900 shadow-2xs">
+              {APP_VERSION}
+            </span>
+          </div>
 
+          {/* Centered Copyright Text */}
+          <p className="text-center text-xs font-semibold text-sand-900/70 px-14">
+            {t.footer.rights}
+          </p>
+
+        </div>
       </div>
     </footer>
   );

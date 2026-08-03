@@ -58,9 +58,9 @@ export default function PromoCountdown({ t, onOpenModal }) {
   ];
 
   return (
-    <section className="my-12 max-w-5xl mx-auto px-4">
-      {/* Banner Container with Marble & Gold styling */}
-      <div className="relative overflow-hidden bg-marble-card border-2 border-amber-400/60 rounded-3xl p-8 md:p-12 shadow-2xl flex flex-col items-center text-center space-y-6 md:space-y-8">
+    <section id="promo" className="my-12 max-w-5xl mx-auto px-4 scroll-mt-24">
+      {/* Banner Container with Prominent Marble styling */}
+      <div className="relative overflow-hidden bg-marble-prominent rounded-3xl p-8 md:p-12 shadow-omnidirectional shadow-omnidirectional-hover flex flex-col items-center text-center space-y-6 md:space-y-8">
         
         {/* Decorative Ambient Gold Orbs */}
         <div className="absolute top-0 start-0 w-32 h-32 bg-amber-300/20 rounded-full blur-2xl pointer-events-none"></div>
@@ -73,12 +73,15 @@ export default function PromoCountdown({ t, onOpenModal }) {
         </div>
 
         {/* Offer Description */}
-        <div className="space-y-3">
-          <h2 className="text-2xl md:text-3xl font-black text-therapy-900">
+        <div className="space-y-3 max-w-3xl">
+          <h2 className="text-2xl md:text-4xl font-black text-therapy-900 leading-tight">
             {t.promo.title}
           </h2>
-          <p className="text-xl md:text-2xl font-black text-amber-700">
-            {t.promo.subtitle} <span className="text-sand-900/40 text-sm font-normal line-through ms-2">{t.promo.priceOriginal}</span>
+          <p className="text-lg md:text-xl font-black text-amber-700">
+            {t.promo.subtitle}{' '}
+            <span className="text-sand-900/60 line-through text-sm md:text-base font-semibold ms-2">
+              {t.promo.priceOriginal}
+            </span>
           </p>
         </div>
 
@@ -87,7 +90,7 @@ export default function PromoCountdown({ t, onOpenModal }) {
           {timerItems.map((item, idx) => (
             <React.Fragment key={item.label}>
               <div className="flex flex-col items-center">
-                <div className="bg-white/95 text-therapy-900 border-2 border-amber-400/50 font-sans font-black text-2xl md:text-3xl w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl shadow-md">
+                <div className="bg-marble-card text-therapy-900 font-sans font-black text-2xl md:text-3xl w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl shadow-md">
                   {item.value}
                 </div>
                 <span className="text-xs font-black text-amber-900 mt-2">

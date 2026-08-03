@@ -1,15 +1,59 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { CalendarRange, Sparkles, MapPin } from 'lucide-react';
 
 export default function Hero({ t, onOpenModal }) {
+  const bgRef = useRef(null);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const updateZoom = () => {
+      if (bgRef.current) {
+        const scrollY = window.scrollY;
+        const zoomScale = 1 + Math.min(scrollY * 0.0008, 0.45);
+        bgRef.current.style.transform = `scale3d(${zoomScale}, ${zoomScale}, 1)`;
+      }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateZoom);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial sync
+    updateZoom();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section 
       id="home" 
-      className="relative w-full overflow-hidden bg-fixed bg-cover bg-center py-12 md:py-24"
-      style={{ backgroundImage: `url('/assets/hero_bg.png')` }}
+      className="relative w-full overflow-hidden py-12 md:py-24"
     >
-      {/* Light Glassmorphism / Contrast Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-sand-50/95 via-sand-50/80 to-sand-100/50 backdrop-blur-[1px]"></div>
+      {/* 🖼️ 60FPS GPU-ACCELERATED SCROLL-DRIVEN ZOOM-IN BACKGROUND (clinic_room.png) */}
+      <div 
+        ref={bgRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          willChange: 'transform',
+          transform: 'scale3d(1, 1, 1)',
+          transformOrigin: 'center center',
+        }}
+      >
+        <img
+          src="/assets/clinic_room.png"
+          alt="Clinic Room Background"
+          className="w-full h-full object-cover opacity-70 filter blur-[1.5px] contrast-105 brightness-105"
+        />
+      </div>
+
+      {/* Glassmorphism Gradient Overlay for High Readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-sand-50/40 via-transparent to-sand-50/50 pointer-events-none"></div>
 
       {/* Background Decor Elements */}
       <div className="absolute top-0 start-0 w-80 h-80 bg-medical-200/40 rounded-full filter blur-3xl opacity-60 translate-x-[-20%] translate-y-[-20%] animate-float-slow pointer-events-none"></div>
@@ -52,8 +96,8 @@ export default function Hero({ t, onOpenModal }) {
             </div>
           </div>
 
-          {/* Hero Visual Column */}
-          <div className="md:col-span-5 relative w-full h-[340px] sm:h-[420px] md:h-[470px] rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/40 bg-marble-card group">
+          {/* Hero Visual Column with Omnidirectional Dark Shadow */}
+          <div className="md:col-span-5 relative w-full h-[340px] sm:h-[420px] md:h-[470px] rounded-3xl overflow-hidden shadow-[0_0_35px_rgba(0,0,0,0.55)] md:shadow-[0_0_45px_rgba(0,0,0,0.65)] hover:shadow-[0_0_55px_rgba(0,0,0,0.75)] transition-shadow duration-500 bg-marble-card group">
             {/* Real Hero Image: Dr. Sadik performing therapy */}
             <img
               src="/assets/dr_sadik_acupuncture.jpg"
@@ -61,21 +105,8 @@ export default function Hero({ t, onOpenModal }) {
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               loading="eager"
             />
-            {/* Gradient Overlay for Text Visibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/80 via-therapy-950/20 to-transparent"></div>
-            
-            {/* Authentic Clinic Badge */}
-            <div className="absolute top-4 start-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-amber-400/50 shadow-lg flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-xs font-black text-therapy-900">Cabinet Réel & Praticien Certifié</span>
-            </div>
-
-            {/* Floating text "TANGER" */}
-            <div className="absolute bottom-6 inset-x-0 text-center select-none pointer-events-none">
-              <h2 className="font-serif text-4xl md:text-5xl text-amber-200 font-light tracking-[0.25em] uppercase drop-shadow-lg">
-                Tanger
-              </h2>
-            </div>
+            {/* Soft Ambient Inner Vignette Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none"></div>
           </div>
 
         </div>

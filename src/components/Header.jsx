@@ -18,31 +18,8 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
 
   return (
     <header className="w-full sticky top-0 z-50 shadow-md">
-      {/* Top Promotional Bar with Opaque Dark hero_bg background */}
-      <div className="relative w-full overflow-hidden shadow-md bg-slate-950 border-b border-white/10">
-        {/* Background Image Layer (Texture) */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: "url('/assets/hero_bg.png')" }}
-        ></div>
-
-        {/* Solid Darkening Overlay (Eliminates scroll bleed-through & maximizes contrast) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-therapy-950/95 to-slate-950/95"></div>
-
-        {/* Text & Button Content */}
-        <div className="relative z-10 py-2.5 px-4 text-center text-xs md:text-sm font-bold text-white flex items-center justify-center flex-wrap gap-2.5">
-          <span className="text-white font-extrabold tracking-wide drop-shadow-md">{t.topbar.text}</span>
-          <button 
-            onClick={() => onOpenModal(t.promo.title)}
-            className="inline-flex items-center gap-1 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white px-3.5 py-1 rounded-full shadow-sm hover:shadow-md transition-all font-extrabold text-xs hover:scale-105"
-          >
-            {t.topbar.linkText}
-          </button>
-        </div>
-      </div>
-
-      {/* Main Navbar with Glassmorphism Transparency & Blur */}
-      <nav className="w-full bg-gradient-to-r from-white/80 via-sand-50/70 to-white/80 backdrop-blur-lg border-b border-white/60 shadow-sm transition-all duration-300">
+      {/* Main Navbar with Prominent Calacatta Gold Marble Background */}
+      <nav className="w-full bg-marble-prominent border-b-2 border-amber-400/60 shadow-md transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-24">
             {/* Logo Section */}

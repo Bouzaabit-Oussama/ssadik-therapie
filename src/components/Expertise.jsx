@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Play, CheckCircle2, User } from 'lucide-react';
 
 export default function Expertise({ t }) {
-  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <section id="about" className="py-20 bg-white scroll-mt-20">
+    <section id="about" className="py-20 bg-marble-card scroll-mt-20 relative overflow-hidden">
+      {/* Subtle Top & Bottom Gold Glow Stripes */}
+      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+      <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -20,41 +23,26 @@ export default function Expertise({ t }) {
           
           {/* Left Column: Video Presentation (col-span-5) */}
           <div className="lg:col-span-5 w-full">
-            <div className="relative aspect-video lg:h-[400px] w-full rounded-2xl overflow-hidden shadow-lg border border-sand-200 bg-sand-900 group">
-              {!isPlaying ? (
-                <>
-                  {/* Video Thumbnail */}
-                  <img
-                    src="/assets/clinic_room.png"
-                    alt={t.expertise.videoLabel}
-                    className="w-full h-full object-cover opacity-80"
-                  />
-                  {/* Overlay play button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button
-                      onClick={() => setIsPlaying(true)}
-                      className="bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white rounded-full p-5 shadow-2xl transition-all hover:scale-110 focus:outline-none focus:ring-4 focus:ring-medical-200"
-                      aria-label="Play video"
-                    >
-                      <Play className="w-8 h-8 fill-current translate-x-0.5 rtl:-translate-x-0.5" />
-                    </button>
-                  </div>
-                  {/* Video Label */}
-                  <div className="absolute bottom-4 start-4 bg-black/60 text-white px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-sm">
-                    {t.expertise.videoLabel}
-                  </div>
-                </>
-              ) : (
-                /* Embed a friendly placeholder video loop or YouTube iframe */
-                <iframe
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-                  title="Ssadik Therapie Presentation"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              )}
+            <div className="relative aspect-video lg:h-[400px] w-full rounded-2xl overflow-hidden shadow-omnidirectional border border-sand-200/80 bg-sand-900 group">
+              {/* Video Thumbnail */}
+              <img
+                src="/assets/clinic_room.png"
+                alt={t.expertise.videoLabel}
+                className="w-full h-full object-cover opacity-85"
+              />
+              {/* Decorative Play Icon Badge (Non-clickable / Disabled) */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div
+                  className="bg-amber-600/90 text-white rounded-full p-5 shadow-2xl pointer-events-none select-none"
+                  aria-label="Video presentation coming soon"
+                >
+                  <Play className="w-8 h-8 fill-current translate-x-0.5 rtl:-translate-x-0.5" />
+                </div>
+              </div>
+              {/* Video Label */}
+              <div className="absolute bottom-4 start-4 bg-black/70 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold backdrop-blur-sm shadow-md">
+                {t.expertise.videoLabel}
+              </div>
             </div>
           </div>
 

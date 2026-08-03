@@ -35,6 +35,9 @@ export default function Services({ t, onOpenModal }) {
 
   return (
     <section id="services" className="relative py-20 bg-therapy-50/50 scroll-mt-20 overflow-hidden">
+      {/* Subtle Top Gold Glow Stripe */}
+      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+
       {/* Dynamic Background Glow Orbs */}
       <div className="absolute top-10 start-0 w-80 h-80 bg-medical-100/40 rounded-full filter blur-3xl opacity-60 animate-float-slow pointer-events-none"></div>
       <div className="absolute bottom-10 end-0 w-96 h-96 bg-sand-200/50 rounded-full filter blur-3xl opacity-60 animate-float-delayed pointer-events-none"></div>
@@ -56,11 +59,11 @@ export default function Services({ t, onOpenModal }) {
           {servicesList.map((service, index) => (
             <div
               key={service.id}
-              className="bg-marble-card border-gold-shine rounded-3xl p-6 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 group shadow-lg"
+              className="bg-marble-prominent rounded-3xl p-6 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 group shadow-omnidirectional shadow-omnidirectional-hover"
             >
               {/* Image Circle Container */}
               <div className="relative w-36 h-36 mb-6">
-                <div className="w-full h-full rounded-2xl overflow-hidden border-2 border-amber-400/50 shadow-md">
+                <div className="w-full h-full rounded-2xl overflow-hidden shadow-md">
                   <img
                     src={service.image}
                     alt={service.title}

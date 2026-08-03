@@ -161,6 +161,17 @@ export const translations = {
     floatingWhatsapp: {
       tooltip: 'تواصل معنا مباشرة عبر الواتساب',
       badgeText: 'رد سريع خلال دقائق'
+    },
+    parallax: {
+      badge: 'جولة داخل المركز',
+      title: 'بيئة علاجية فاخرة ومجهزة بأحدث التقنيات في طنجة',
+      slide1: 'استقبال فاخر وراحة تامة',
+      slide2: 'قاعة علاج فيزيو وحجامة حديثة',
+      slide3: 'أجنحة خاصة للرفاهية والاسترخاء',
+      stat1: 'مرضى تم علاجهم بنجاح',
+      stat2: 'معدات 100% معقمة',
+      stat3: 'تخصصات علاجية دقيقة',
+      stat4: 'نسبة رضا المرضى'
     }
   },
   fr: {
@@ -324,7 +335,18 @@ export const translations = {
     },
     floatingWhatsapp: {
       tooltip: 'Contactez-nous directement sur WhatsApp',
-      badgeText: 'Réponse rapide < 5 min'
+      badgeText: 'Réponse rapide en quelques minutes'
+    },
+    parallax: {
+      badge: 'Visite Virtuelle du Cabinet',
+      title: 'Un Environnement Médical d\'Exception à Tanger',
+      slide1: 'Espace Accueil & Riad Chaleureux',
+      slide2: 'Cabinet de Physiothérapie & Cupping High-Tech',
+      slide3: 'Suites Privées de Soins & Bien-Être',
+      stat1: 'Patients Soignés',
+      stat2: 'Matériel 100% Stérile',
+      stat3: 'Spécialités de Soins',
+      stat4: 'Satisfaction Client'
     }
   }
 };

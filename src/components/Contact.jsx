@@ -91,29 +91,32 @@ export default function Contact({ t, onOpenModal }) {
   };
 
   return (
-    <section id="contact" className="py-20 bg-therapy-50 scroll-mt-20">
+    <section id="contact" className="py-10 md:py-14 bg-therapy-50 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-therapy-900 tracking-tight">
+        <div className="text-center max-w-3xl mx-auto mb-8 md:mb-10 space-y-3">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-therapy-900 tracking-tight">
             {t.contact.title}
           </h2>
-          <p className="text-base md:text-lg text-sand-900/85 font-medium">
+          <p className="text-sm md:text-base text-sand-900/85 font-semibold">
             {t.contact.subtitle}
           </p>
-          <div className="w-16 h-1 bg-medical-500 mx-auto rounded-full mt-4"></div>
+          <div className="w-16 h-1 bg-medical-500 mx-auto rounded-full mt-2"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
-          {/* Left Column: Form & Info (col-span-7) */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-8">
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 border border-sand-200/50 shadow-md space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                
+        {/* 2-Column Balanced Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          {/* Left Column: Compact Reservation Form (col-span-7) */}
+          <div className="lg:col-span-7 flex flex-col">
+            <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 md:p-7 border border-sand-200/60 shadow-lg flex flex-col justify-between space-y-5 h-full">
+              
+              {/* Inputs Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Full Name */}
-                <div className="flex flex-col text-start space-y-2">
-                  <label htmlFor="contact-name" className="text-sm font-bold text-therapy-900">
+                <div className="flex flex-col text-start space-y-1.5">
+                  <label htmlFor="contact-name" className="text-xs font-bold text-therapy-900">
                     {t.contact.namePlaceholder} *
                   </label>
                   <input
@@ -123,13 +126,13 @@ export default function Contact({ t, onOpenModal }) {
                     placeholder={t.contact.namePlaceholder}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-sm"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-xs md:text-sm"
                   />
                 </div>
 
                 {/* WhatsApp */}
-                <div className="flex flex-col text-start space-y-2">
-                  <label htmlFor="contact-whatsapp" className="text-sm font-bold text-therapy-900">
+                <div className="flex flex-col text-start space-y-1.5">
+                  <label htmlFor="contact-whatsapp" className="text-xs font-bold text-therapy-900">
                     {t.contact.whatsappPlaceholder.split(' (')[0]} *
                   </label>
                   <input
@@ -139,15 +142,14 @@ export default function Contact({ t, onOpenModal }) {
                     placeholder="0612345678"
                     value={formData.whatsapp}
                     onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-sm dir-ltr text-start"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-xs md:text-sm dir-ltr text-start"
                   />
                 </div>
-
               </div>
 
               {/* Service Requested */}
-              <div className="flex flex-col text-start space-y-2">
-                <label htmlFor="contact-service" className="text-sm font-bold text-therapy-900">
+              <div className="flex flex-col text-start space-y-1.5">
+                <label htmlFor="contact-service" className="text-xs font-bold text-therapy-900">
                   {t.contact.servicePlaceholder} *
                 </label>
                 <select
@@ -155,7 +157,7 @@ export default function Contact({ t, onOpenModal }) {
                   required
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-sm"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-xs md:text-sm"
                 >
                   <option value="">{t.contact.selectService}</option>
                   <option value="Hijama">{t.contact.service1}</option>
@@ -167,32 +169,32 @@ export default function Contact({ t, onOpenModal }) {
               </div>
 
               {/* Message */}
-              <div className="flex flex-col text-start space-y-2">
-                <label htmlFor="contact-message" className="text-sm font-bold text-therapy-900">
+              <div className="flex flex-col text-start space-y-1.5">
+                <label htmlFor="contact-message" className="text-xs font-bold text-therapy-900">
                   {t.contact.messagePlaceholder.replace('...', '')}
                 </label>
                 <textarea
                   id="contact-message"
-                  rows="4"
+                  rows="2"
                   placeholder={t.contact.messagePlaceholder}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-sm resize-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-xs md:text-sm resize-none"
                 ></textarea>
               </div>
 
-              {/* Form Feedback & Actions */}
-              <div className="flex flex-col space-y-4">
+              {/* Feedback & Submit Button */}
+              <div className="space-y-3 pt-1">
                 {status === 'success' && (
-                  <div className="flex items-center gap-2 text-green-700 bg-green-50 border border-green-200 p-4 rounded-xl text-sm font-bold">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                  <div className="flex items-center gap-2 text-green-700 bg-green-50 border border-green-200 p-3 rounded-xl text-xs font-bold">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <span>{t.modal.success}</span>
                   </div>
                 )}
                 
                 {status === 'error' && (
-                  <div className="flex items-center gap-2 text-red-700 bg-red-50 border border-red-200 p-4 rounded-xl text-sm font-bold">
-                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <div className="flex items-center gap-2 text-red-700 bg-red-50 border border-red-200 p-4 rounded-xl text-xs font-bold">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     <span>{t.modal.error}</span>
                   </div>
                 )}
@@ -200,16 +202,16 @@ export default function Contact({ t, onOpenModal }) {
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="w-full flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 disabled:bg-medical-300 text-white font-extrabold py-4 rounded-xl shadow-md transition-all text-base"
+                  className="w-full flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 disabled:bg-medical-300 text-white font-extrabold py-3.5 rounded-xl shadow-md transition-all text-sm"
                 >
                   {status === 'loading' ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       <span>{t.modal.sending}</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5 rtl:rotate-180" />
+                      <Send className="w-4 h-4 rtl:rotate-180" />
                       <span>{t.contact.submit}</span>
                     </>
                   )}
@@ -218,13 +220,14 @@ export default function Contact({ t, onOpenModal }) {
             </form>
           </div>
 
-          {/* Right Column: Google Maps & Direct Contact Cards (col-span-5) */}
-          <div className="lg:col-span-5 flex flex-col justify-between gap-6">
-            {/* Google Maps Iframe */}
-            <div className="w-full h-[280px] rounded-3xl overflow-hidden shadow-md border border-sand-200 bg-sand-200">
+          {/* Right Column: Google Maps & 3 Clean Contact Cards (col-span-5) */}
+          <div className="lg:col-span-5 flex flex-col justify-between gap-3">
+            
+            {/* Google Maps Container */}
+            <div className="relative w-full h-[200px] md:h-[210px] rounded-3xl overflow-hidden shadow-md border border-sand-200 bg-sand-200">
               <iframe
-                title="Google Maps Location - Jirari 2, Tanger"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.544605988775!2d-5.8078996!3d35.7374092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQ0JzE0LjciTiA1wrA0OCcyOC40Ilc!5e0!3m2!1sfr!2sma!4v1650000000000!5m2!1sfr!2sma"
+                title="Google Maps Location - Cabinet SSADIK Tanger"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.5446!2d-5.807469!3d35.737400!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQ0JzE0LjYiTiA1wrA0OCcyNi45Ilc!5e0!3m2!1sfr!2sma!4v1700000000000!5m2!1sfr!2sma"
                 className="w-full h-full border-0"
                 allowFullScreen=""
                 loading="lazy"
@@ -232,45 +235,70 @@ export default function Contact({ t, onOpenModal }) {
               ></iframe>
             </div>
 
-            {/* Address Card */}
-            <div className="bg-white rounded-2xl p-5 border border-sand-200/50 shadow-sm flex items-start gap-4 text-start">
-              <div className="bg-medical-50 text-medical-600 p-3 rounded-xl border border-medical-100 flex-shrink-0">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="font-bold text-therapy-900 text-sm mb-1">{t.contact.addressTitle}</h4>
-                <p className="text-xs text-sand-900/70 font-semibold leading-relaxed">{t.contact.addressText}</p>
-              </div>
-            </div>
-
-            {/* Phone Card */}
+            {/* Card 1: Address (Clickable link to Google Maps) */}
             <a
-              href="tel:+212712500809"
-              className="bg-white rounded-2xl p-5 border border-sand-200/50 shadow-sm flex items-start gap-4 text-start hover:border-medical-300 transition-colors"
+              href="https://maps.app.goo.gl/b4ATaYBiUYhr4fVh6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white rounded-2xl p-3 border border-sand-200/60 shadow-xs flex items-center justify-between gap-3 text-start hover:border-medical-400 hover:shadow-sm transition-all group"
+              title="Google Maps"
             >
-              <div className="bg-medical-50 text-medical-600 p-3 rounded-xl border border-medical-100 flex-shrink-0">
-                <Phone className="w-6 h-6" />
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-medical-50 text-medical-600 p-2 rounded-xl border border-medical-100 flex-shrink-0 group-hover:bg-medical-500 group-hover:text-white transition-colors">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="font-bold text-therapy-900 text-xs mb-0.5">{t.contact.addressTitle}</h4>
+                  <p className="text-xs text-sand-900/75 font-semibold truncate">{t.contact.addressText}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-therapy-900 text-sm mb-1">{t.contact.phoneTitle}</h4>
-                <p className="text-xs text-sand-900/70 font-semibold dir-ltr text-start">+212 7 12500809</p>
-              </div>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-sand-50 text-sand-900/70 border border-sand-200 group-hover:bg-medical-50 group-hover:text-medical-700 transition-colors flex-shrink-0">
+                {t.dir === 'rtl' ? 'الخريطة ↗' : 'Itinéraire ↗'}
+              </span>
             </a>
 
-            {/* Email / Fast Booking Card */}
+            {/* Card 2: Phone / WhatsApp */}
+            <a
+              href="tel:+212661508910"
+              className="bg-white rounded-2xl p-3 border border-sand-200/60 shadow-xs flex items-center justify-between gap-3 text-start hover:border-medical-400 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-medical-50 text-medical-600 p-2 rounded-xl border border-medical-100 flex-shrink-0 group-hover:bg-medical-500 group-hover:text-white transition-colors">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-therapy-900 text-xs mb-0.5">{t.contact.phoneTitle}</h4>
+                  <p className="text-xs text-medical-700 font-extrabold text-start">
+                    <span dir="ltr" className="inline-block [unicode-bidi:isolate]">+212 661-508910</span>
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-sand-50 text-sand-900/70 border border-sand-200 group-hover:bg-medical-50 group-hover:text-medical-700 transition-colors flex-shrink-0">
+                {t.dir === 'rtl' ? 'اتصال مباشر' : 'Appeler'}
+              </span>
+            </a>
+
+            {/* Card 3: Online RDV */}
             <button
               onClick={() => onOpenModal('General')}
-              className="bg-white rounded-2xl p-5 border border-sand-200/50 shadow-sm flex items-start gap-4 text-start hover:border-medical-300 transition-colors focus:outline-none"
+              className="bg-white rounded-2xl p-3 border border-sand-200/60 shadow-xs flex items-center justify-between gap-3 text-start hover:border-medical-400 hover:shadow-sm transition-all group w-full"
             >
-              <div className="bg-medical-50 text-medical-600 p-3 rounded-xl border border-medical-100 flex-shrink-0">
-                <Mail className="w-6 h-6" />
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-medical-50 text-medical-600 p-2 rounded-xl border border-medical-100 flex-shrink-0 group-hover:bg-medical-500 group-hover:text-white transition-colors">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-therapy-900 text-xs mb-0.5">{t.contact.emailTitle}</h4>
+                  <p className="text-xs text-medical-600 font-bold">{t.contact.emailText}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-therapy-900 text-sm mb-1">{t.contact.emailTitle}</h4>
-                <p className="text-xs text-medical-600 font-bold underline">{t.contact.emailText}</p>
-              </div>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-medical-500 text-white shadow-2xs group-hover:bg-medical-600 transition-colors flex-shrink-0">
+                {t.dir === 'rtl' ? 'احجز الآن' : 'Réserver'}
+              </span>
             </button>
+
           </div>
+
         </div>
 
       </div>
