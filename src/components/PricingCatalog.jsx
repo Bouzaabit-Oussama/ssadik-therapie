@@ -32,7 +32,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Séance de massage décontractant du dos associée à une hijama stérile ciblée.'
       },
       price: 250,
-      image: '/assets/hijama_equipment_room.jpg',
+      image: '/assets/service_1_massage_hijama_dos.png',
       badge: { ar: 'الأكثر طلباً', fr: 'Très Populaire' },
       badgeColor: unifiedTagColor,
       popular: true,
@@ -51,7 +51,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Le trio thérapeutique complet : massage, cupping et ajustement vertébral.'
       },
       price: 400,
-      image: '/assets/chiropraxie.png',
+      image: '/assets/service_2_massage_hijama_chiro.png',
       badge: { ar: 'باقة متكاملة', fr: 'Pack Trio' },
       badgeColor: unifiedTagColor,
       popular: true,
@@ -70,7 +70,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Soin complet du corps alliant massothérapie et cupping thérapeutique intégral.'
       },
       price: 400,
-      image: '/assets/clinic_room.png',
+      image: '/assets/service_3_massage_hijama_complete.png',
       badge: { ar: 'عناية كاملة', fr: 'Soin Complet' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage + Hijama Complète (400 DH)'
@@ -88,7 +88,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Le pack prestige suprême pour une régénération physique et musculaire globale.'
       },
       price: 500,
-      image: '/assets/clinic_slide3.png',
+      image: '/assets/service_4_pack_vip_gold.png',
       badge: { ar: 'Pack VIP Premium', fr: 'Pack VIP Gold' },
       badgeColor: 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-therapy-950 border-2 border-yellow-200 font-black shadow-xl opacity-100',
       featured: true,
@@ -109,7 +109,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage doux et apaisant aux huiles essentielles pour éliminer le stress.'
       },
       price: 300,
-      image: '/assets/massage.png',
+      image: '/assets/service_5_massage_relaxant.png',
       badge: { ar: 'استرخاء عميق', fr: 'Relaxation' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Relaxant (300 DH)'
@@ -127,7 +127,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage dynamique et tonifiant pour réactiver la circulation et l’énergie.'
       },
       price: 400,
-      image: '/assets/clinic_slide2.png',
+      image: '/assets/service_6_massage_tonic.png',
       badge: { ar: 'تنشيط و حيوية', fr: 'Tonic & Vitalité' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Tonic (400 DH)'
@@ -145,7 +145,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Soin thermique aux pierres volcaniques chauffées pour dénouer les tensions.'
       },
       price: 300,
-      image: '/assets/hot_stone_massage.png',
+      image: '/assets/service_7_massage_pierres_chaudes.png',
       badge: { ar: 'حرارة علاجية', fr: 'Pierres Chaudes' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage aux Pierres Chaudes (300 DH)'
@@ -163,7 +163,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage ciblé de la tête, du cou et du visage contre les migraines.'
       },
       price: 300,
-      image: '/assets/massage_cranien.png',
+      image: '/assets/service_8_massage_cranien.png',
       badge: { ar: 'تخفيف الصداع', fr: 'Anti-Migraine' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Crânien & Visage (300 DH)'
@@ -181,7 +181,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Pression thérapeutique sur les zones réflexes des pieds et mains.'
       },
       price: 300,
-      image: '/assets/reflexologie_foot.png',
+      image: '/assets/service_9_reflexologie.png',
       badge: { ar: 'نقاط الضغط', fr: 'Reflexology' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Réflexologie (300 DH)'
@@ -199,7 +199,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Technique ancestrale thaïlandaise de pression et d’étirement corporel.'
       },
       price: 500,
-      image: '/assets/massage_thai.png',
+      image: '/assets/service_10_massage_thailandais.png',
       badge: { ar: 'مرونة وتمدد', fr: 'Etirement & Thaï' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Thaïlandais (500 DH)'
@@ -217,7 +217,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage en profondeur recommandé avant ou après l’effort physique.'
       },
       price: 500,
-      image: '/assets/massage_sportif.png',
+      image: '/assets/service_11_massage_sportif.png',
       badge: { ar: 'تفريغ العضلات', fr: 'Récupération Sport' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Sportif (500 DH)'
@@ -237,7 +237,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Hijama médicale stérile avec tasses à usage unique et désinfection totale.'
       },
       price: 200,
-      image: '/assets/hijama.png',
+      image: '/assets/service_12_cupping_therapeutique.png',
       badge: { ar: 'تخفيف الآلام', fr: 'Anti-Douleur' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Hijama Thérapeutique (200 DH)'
@@ -255,7 +255,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Ventouses dynamiques ciblées sur la chaîne musculaire dorsale.'
       },
       price: 250,
-      image: '/assets/hijama_sportive.png',
+      image: '/assets/service_13_cupping_sportif.png',
       badge: { ar: 'للرياضيين', fr: 'Pour Sportifs' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Hijama Sportive Dos (250 DH)'
@@ -273,7 +273,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Séance de ventouses intégrale sur les points réflexes du corps.'
       },
       price: 300,
-      image: '/assets/hijama_equipment_room.jpg',
+      image: '/assets/service_14_cupping_complet.png',
       badge: { ar: 'تطهير الجسم', fr: 'Détox Corps' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Hijama Complète (300 DH)'
@@ -291,7 +291,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Ajustement chiropratique précis des sous-luxations vertébrales.'
       },
       price: 300,
-      image: '/assets/chiropraxie.png',
+      image: '/assets/service_15_seance_chiropraxie.png',
       badge: { ar: 'محاذاة الفقرات', fr: 'Alignement Vertébral' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Séance Chiropraxie (300 DH)'
@@ -309,7 +309,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Manipulations ostéopathiques douces pour restituer la mobilité.'
       },
       price: 400,
-      image: '/assets/parallax_bg.png',
+      image: '/assets/service_16_seance_osteopathie.png',
       badge: { ar: 'إعادة التوازن', fr: 'Rééquilibrage' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Séance Ostéopathie (400 DH)'
@@ -327,7 +327,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Séance d’acupuncture médicale pour équilibrer le flux énergétique.'
       },
       price: 250,
-      image: '/assets/acupuncture.png',
+      image: '/assets/service_17_acupuncture_chinoise.png',
       badge: { ar: 'الوخز الطبي', fr: 'Acupuncture' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Acupuncture Chinoise (250 DH)'
@@ -347,7 +347,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Soin thermal au sable chaud contre les rhumatismes suivi d’un massage.'
       },
       price: 800,
-      image: '/assets/sand_bath_massage.png',
+      image: '/assets/service_18_bain_de_sable_massage.png',
       badge: { ar: 'علاج حراري فريد', fr: 'Soin Sable Thermal' },
       badgeColor: unifiedTagColor,
       popular: true,
@@ -366,7 +366,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Programme thérapeutique intensif sur 3 jours consécutifs.'
       },
       price: 1950,
-      image: '/assets/cure_3_jours.png',
+      image: '/assets/service_19_cure_3_jours.png',
       badge: { ar: 'برنامج 3 أيام', fr: 'Cure 3 Jours' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Cure 3 Jours (1950 DH)'
@@ -384,7 +384,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Cure de régénération totale sur 5 jours pour les cas chroniques.'
       },
       price: 2950,
-      image: '/assets/cure_5_jours.png',
+      image: '/assets/service_20_cure_5_jours.png',
       badge: { ar: 'برنامج التعافي VIP', fr: 'Cure 5 Jours VIP' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Cure 5 Jours (2950 DH)'
@@ -471,26 +471,35 @@ export default function PricingCatalog({ t, onOpenModal }) {
                 )}
 
                 <div>
-                  {/* Card Image Container */}
-                  <div className="relative w-full h-44 rounded-2xl overflow-hidden mb-4 shadow-inner">
-                    <img
-                      src={item.image}
-                      alt={title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/60 via-transparent to-transparent"></div>
-                    
-                    {/* Badge */}
-                    <div className="absolute top-3 start-3 z-10">
-                      <span className={`px-3 py-1 rounded-xl text-xs font-black shadow-md border ${item.badgeColor}`}>
-                        {badge}
-                      </span>
+                  {/* Card Image Container Wrapper (No overflow-hidden so 3D ribbon extends past boundary) */}
+                  <div className="relative w-full h-44 mb-4">
+                    {/* Rounded Image Frame */}
+                    <div className="w-full h-full rounded-2xl overflow-hidden shadow-inner relative">
+                      <img
+                        src={item.image}
+                        alt={title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/60 via-transparent to-transparent"></div>
+                      
+                      {/* Ultra-Premium Luxury Circular Price Tag Badge */}
+                      <div className="absolute bottom-3 end-3 w-16 h-16 rounded-full bg-gradient-to-b from-therapy-950 via-therapy-900 to-therapy-950 border-2 border-amber-400 ring-2 ring-amber-300/40 shadow-[0_4px_20px_rgba(0,0,0,0.5),0_0_15px_rgba(245,158,11,0.3)] flex flex-col items-center justify-center z-10 group-hover:scale-110 group-hover:border-amber-300 transition-all duration-300">
+                        {/* Top shimmer highlight */}
+                        <div className="absolute top-1 inset-x-3 h-1.5 bg-white/20 rounded-full blur-[1px] pointer-events-none"></div>
+                        <span className="text-base sm:text-lg font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-yellow-300 to-amber-400 leading-none drop-shadow-sm">
+                          {item.price}
+                        </span>
+                        <span className="text-[9px] font-black tracking-widest text-amber-300/90 uppercase border-t border-amber-400/30 mt-1 pt-0.5 px-1">
+                          {isAr ? 'درهم' : 'DH'}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Price Tag Overlay - Brand Aligned Deep Bronze & Gold */}
-                    <div className="absolute bottom-3 end-3 bg-therapy-900 border-2 border-amber-400 text-amber-300 px-3.5 py-1.5 rounded-xl font-black text-sm sm:text-base shadow-xl flex items-center gap-1 z-10">
-                      <span>{item.price}</span>
-                      <span className="text-xs font-bold text-amber-200">{isAr ? 'درهم' : 'DH'}</span>
+                    {/* 3D Ribbon Tag (Placed OUTSIDE overflow-hidden image frame) */}
+                    <div className="ribbon-3d-tag">
+                      <div className="ribbon-3d-text">
+                        {badge}
+                      </div>
                     </div>
                   </div>
 
