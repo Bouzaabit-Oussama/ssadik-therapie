@@ -1,4 +1,4 @@
-export const APP_VERSION = "v2.7.7";
+export const APP_VERSION = "v2.7.8";
 export const BUILD_DATE = new Date().toISOString().split('T')[0];
 
 
