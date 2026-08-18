@@ -26,8 +26,10 @@ export default function Expertise({ t }) {
             <div className="relative aspect-video lg:h-[400px] w-full rounded-2xl overflow-hidden shadow-omnidirectional border border-sand-200/80 bg-sand-900 group">
               {/* Video Thumbnail */}
               <img
-                src="/assets/clinic_room.png"
+                src="/assets/clinic_room.webp"
                 alt={t.expertise.videoLabel}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover opacity-85"
               />
               {/* Decorative Play Icon Badge (Non-clickable / Disabled) */}
@@ -50,22 +52,28 @@ export default function Expertise({ t }) {
           <div className="lg:col-span-3 grid grid-cols-2 gap-4">
             <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40">
               <img
-                src="/assets/dr_sadik_acupuncture.jpg"
+                src="/assets/dr_sadik_acupuncture.webp"
                 alt="Dr. Sadik - Consultation Cabinet"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40">
               <img
-                src="/assets/clinic_room.png"
+                src="/assets/clinic_room.webp"
                 alt="Espace Thérapeutique Dédié"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
             <div className="aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-amber-400/40 col-span-2">
               <img
-                src="/assets/hijama_equipment_room.jpg"
+                src="/assets/hijama_equipment_room.webp"
                 alt="Équipement Médical Stérile & Cabinet"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
@@ -78,8 +86,10 @@ export default function Expertise({ t }) {
             <div className="flex items-center gap-4 text-start">
               <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-500 shadow-md">
                 <img
-                  src="/assets/dr_sadik_acupuncture.jpg"
+                  src="/assets/dr_sadik_acupuncture.webp"
                   alt={t.expertise.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </div>

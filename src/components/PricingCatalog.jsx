@@ -32,7 +32,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Séance de massage décontractant du dos associée à une hijama stérile ciblée.'
       },
       price: 250,
-      image: '/assets/service_1_massage_hijama_dos.png',
+      image: '/assets/service_1_massage_hijama_dos.webp',
       badge: { ar: 'الأكثر طلباً', fr: 'Très Populaire' },
       badgeColor: unifiedTagColor,
       popular: true,
@@ -51,7 +51,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Le trio thérapeutique complet : massage, cupping et ajustement vertébral.'
       },
       price: 400,
-      image: '/assets/service_2_massage_hijama_chiro.png',
+      image: '/assets/service_2_massage_hijama_chiro.webp',
       badge: { ar: 'باقة متكاملة', fr: 'Pack Trio' },
       badgeColor: unifiedTagColor,
       popular: true,
@@ -70,7 +70,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Soin complet du corps alliant massothérapie et cupping thérapeutique intégral.'
       },
       price: 400,
-      image: '/assets/service_3_massage_hijama_complete.png',
+      image: '/assets/service_3_massage_hijama_complete.webp',
       badge: { ar: 'عناية كاملة', fr: 'Soin Complet' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage + Hijama Complète (400 DH)'
@@ -88,7 +88,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Le pack prestige suprême pour une régénération physique et musculaire globale.'
       },
       price: 500,
-      image: '/assets/service_4_pack_vip_gold.png',
+      image: '/assets/service_4_pack_vip_gold.webp',
       badge: { ar: 'Pack VIP Premium', fr: 'Pack VIP Gold' },
       badgeColor: 'bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-therapy-950 border-2 border-yellow-200 font-black shadow-xl opacity-100',
       featured: true,
@@ -109,7 +109,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage doux et apaisant aux huiles essentielles pour éliminer le stress.'
       },
       price: 300,
-      image: '/assets/service_5_massage_relaxant.png',
+      image: '/assets/service_5_massage_relaxant.webp',
       badge: { ar: 'استرخاء عميق', fr: 'Relaxation' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Relaxant (300 DH)'
@@ -127,7 +127,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage dynamique et tonifiant pour réactiver la circulation et l’énergie.'
       },
       price: 400,
-      image: '/assets/service_6_massage_tonic.png',
+      image: '/assets/service_6_massage_tonic.webp',
       badge: { ar: 'تنشيط و حيوية', fr: 'Tonic & Vitalité' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Tonic (400 DH)'
@@ -145,7 +145,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Soin thermique aux pierres volcaniques chauffées pour dénouer les tensions.'
       },
       price: 300,
-      image: '/assets/service_7_massage_pierres_chaudes.png',
+      image: '/assets/service_7_massage_pierres_chaudes.webp',
       badge: { ar: 'حرارة علاجية', fr: 'Pierres Chaudes' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage aux Pierres Chaudes (300 DH)'
@@ -163,7 +163,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage ciblé de la tête, du cou et du visage contre les migraines.'
       },
       price: 300,
-      image: '/assets/service_8_massage_cranien.png',
+      image: '/assets/service_8_massage_cranien.webp',
       badge: { ar: 'تخفيف الصداع', fr: 'Anti-Migraine' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Crânien & Visage (300 DH)'
@@ -181,7 +181,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Pression thérapeutique sur les zones réflexes des pieds et mains.'
       },
       price: 300,
-      image: '/assets/service_9_reflexologie.png',
+      image: '/assets/service_9_reflexologie.webp',
       badge: { ar: 'نقاط الضغط', fr: 'Reflexology' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Réflexologie (300 DH)'
@@ -199,7 +199,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Technique ancestrale thaïlandaise de pression et d’étirement corporel.'
       },
       price: 500,
-      image: '/assets/service_10_massage_thailandais.png',
+      image: '/assets/service_10_massage_thailandais.webp',
       badge: { ar: 'مرونة وتمدد', fr: 'Etirement & Thaï' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Thaïlandais (500 DH)'
@@ -217,7 +217,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Massage en profondeur recommandé avant ou après l’effort physique.'
       },
       price: 500,
-      image: '/assets/service_11_massage_sportif.png',
+      image: '/assets/service_11_massage_sportif.webp',
       badge: { ar: 'تفريغ العضلات', fr: 'Récupération Sport' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Massage Sportif (500 DH)'
@@ -237,7 +237,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Hijama médicale stérile avec tasses à usage unique et désinfection totale.'
       },
       price: 200,
-      image: '/assets/service_12_cupping_therapeutique.png',
+      image: '/assets/service_12_cupping_therapeutique.webp',
       badge: { ar: 'تخفيف الآلام', fr: 'Anti-Douleur' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Hijama Thérapeutique (200 DH)'
@@ -255,7 +255,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Ventouses dynamiques ciblées sur la chaîne musculaire dorsale.'
       },
       price: 250,
-      image: '/assets/service_13_cupping_sportif.png',
+      image: '/assets/service_13_cupping_sportif.webp',
       badge: { ar: 'للرياضيين', fr: 'Pour Sportifs' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Hijama Sportive Dos (250 DH)'
@@ -273,7 +273,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Séance de ventouses intégrale sur les points réflexes du corps.'
       },
       price: 300,
-      image: '/assets/service_14_cupping_complet.png',
+      image: '/assets/service_14_cupping_complet.webp',
       badge: { ar: 'تطهير الجسم', fr: 'Détox Corps' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Hijama Complète (300 DH)'
@@ -291,7 +291,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Ajustement chiropratique précis des sous-luxations vertébrales.'
       },
       price: 300,
-      image: '/assets/service_15_seance_chiropraxie.png',
+      image: '/assets/service_15_seance_chiropraxie.webp',
       badge: { ar: 'محاذاة الفقرات', fr: 'Alignement Vertébral' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Séance Chiropraxie (300 DH)'
@@ -309,7 +309,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Manipulations ostéopathiques douces pour restituer la mobilité.'
       },
       price: 400,
-      image: '/assets/service_16_seance_osteopathie.png',
+      image: '/assets/service_16_seance_osteopathie.webp',
       badge: { ar: 'إعادة التوازن', fr: 'Rééquilibrage' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Séance Ostéopathie (400 DH)'
@@ -327,7 +327,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Séance d’acupuncture médicale pour équilibrer le flux énergétique.'
       },
       price: 250,
-      image: '/assets/service_17_acupuncture_chinoise.png',
+      image: '/assets/service_17_acupuncture_chinoise.webp',
       badge: { ar: 'الوخز الطبي', fr: 'Acupuncture' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Acupuncture Chinoise (250 DH)'
@@ -347,7 +347,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Soin thermal au sable chaud contre les rhumatismes suivi d’un massage.'
       },
       price: 800,
-      image: '/assets/service_18_bain_de_sable_massage.png',
+      image: '/assets/service_18_bain_de_sable_massage.webp',
       badge: { ar: 'علاج حراري فريد', fr: 'Soin Sable Thermal' },
       badgeColor: unifiedTagColor,
       popular: true,
@@ -366,7 +366,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Programme thérapeutique intensif sur 3 jours consécutifs.'
       },
       price: 1950,
-      image: '/assets/service_19_cure_3_jours.png',
+      image: '/assets/service_19_cure_3_jours.webp',
       badge: { ar: 'برنامج 3 أيام', fr: 'Cure 3 Jours' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Cure 3 Jours (1950 DH)'
@@ -384,7 +384,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
         fr: 'Cure de régénération totale sur 5 jours pour les cas chroniques.'
       },
       price: 2950,
-      image: '/assets/service_20_cure_5_jours.png',
+      image: '/assets/service_20_cure_5_jours.webp',
       badge: { ar: 'برنامج التعافي VIP', fr: 'Cure 5 Jours VIP' },
       badgeColor: unifiedTagColor,
       serviceKey: 'Cure 5 Jours (2950 DH)'
@@ -478,6 +478,8 @@ export default function PricingCatalog({ t, onOpenModal }) {
                       <img
                         src={item.image}
                         alt={title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/60 via-transparent to-transparent"></div>

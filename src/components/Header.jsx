@@ -27,7 +27,7 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
             <div className="flex items-center">
               <a href="#home" className="flex items-center group">
                 <img 
-                  src="/assets/logo centre ssadik-No background.png" 
+                  src="/assets/logo centre ssadik-No background.webp" 
                   alt="Cabinet SSADIK - Hijama, Thérapies, Bien-Être" 
                   className="h-16 sm:h-20 md:h-22 w-auto object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md py-1"
                 />

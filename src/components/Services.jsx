@@ -7,28 +7,28 @@ export default function Services({ t, onOpenModal }) {
       id: 'hijama',
       title: t.services.hijama.title,
       desc: t.services.hijama.desc,
-      image: '/assets/service_12_cupping_therapeutique.png',
+      image: '/assets/service_12_cupping_therapeutique.webp',
       serviceKey: 'Hijama'
     },
     {
       id: 'massage',
       title: t.services.massage.title,
       desc: t.services.massage.desc,
-      image: '/assets/service_5_massage_relaxant.png',
+      image: '/assets/service_5_massage_relaxant.webp',
       serviceKey: 'Massage'
     },
     {
       id: 'acupuncture',
       title: t.services.acupuncture.title,
       desc: t.services.acupuncture.desc,
-      image: '/assets/service_17_acupuncture_chinoise.png',
+      image: '/assets/service_17_acupuncture_chinoise.webp',
       serviceKey: 'Acupuncture'
     },
     {
       id: 'chiropraxie',
       title: t.services.chiro.title,
       desc: t.services.chiro.desc,
-      image: '/assets/service_15_seance_chiropraxie.png',
+      image: '/assets/service_15_seance_chiropraxie.webp',
       serviceKey: 'Chiropraxie'
     }
   ];
@@ -67,6 +67,8 @@ export default function Services({ t, onOpenModal }) {
                   <img
                     src={service.image}
                     alt={service.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>

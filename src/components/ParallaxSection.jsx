@@ -142,8 +142,10 @@ export default function ParallaxSection({ t }) {
         }}
       >
         <img
-          src="/assets/clinic_room.png"
+          src="/assets/clinic_room.webp"
           alt="Cabinet Sadik Room"
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover opacity-50 filter blur-[3px] contrast-105 brightness-105"
         />
       </div>

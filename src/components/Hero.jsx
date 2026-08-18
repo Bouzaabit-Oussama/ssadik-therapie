@@ -46,7 +46,7 @@ export default function Hero({ t, onOpenModal }) {
         }}
       >
         <img
-          src="/assets/clinic_room.png"
+          src="/assets/clinic_room.webp"
           alt="Clinic Room Background"
           className="w-full h-full object-cover opacity-70 filter blur-[1.5px] contrast-105 brightness-105"
         />
@@ -103,10 +103,11 @@ export default function Hero({ t, onOpenModal }) {
           <div className="md:col-span-5 relative w-full h-[340px] sm:h-[420px] md:h-[470px] rounded-3xl overflow-hidden shadow-[0_0_35px_rgba(0,0,0,0.55)] md:shadow-[0_0_45px_rgba(0,0,0,0.65)] hover:shadow-[0_0_55px_rgba(0,0,0,0.75)] transition-shadow duration-500 bg-marble-card group">
             {/* Real Hero Image: Dr. Sadik performing therapy */}
             <img
-              src="/assets/dr_sadik_acupuncture.jpg"
+              src="/assets/dr_sadik_acupuncture.webp"
               alt="Dr. Sadik - Consultation & Thérapie à Tanger"
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               loading="eager"
+              decoding="async"
             />
             {/* Soft Ambient Inner Vignette Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none"></div>

@@ -20,9 +20,9 @@ export default function Footer({ t, onOpenModal }) {
           {/* Brand Logo */}
           <a href="#home" className="flex items-center group">
             <img 
-              src="/assets/logo centre ssadik-No background.png" 
-              alt="Cabinet SSADIK Logo" 
-              className="h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-transform"
+              src="/assets/logo centre ssadik-No background.webp" 
+              alt="Logo Ssadik Thérapie" 
+              className="h-16 w-auto object-contain drop-shadow-md"
             />
           </a>
 

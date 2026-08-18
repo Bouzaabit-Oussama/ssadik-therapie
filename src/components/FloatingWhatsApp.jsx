@@ -47,7 +47,7 @@ export default function FloatingWhatsApp({ t }) {
         {/* Pulsing ring background */}
         <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-35 pointer-events-none"></span>
         <img 
-          src="/assets/whatsapp_logo.png" 
+          src="/assets/whatsapp_logo.webp" 
           alt="WhatsApp" 
           className="w-full h-full object-contain relative z-10 filter drop-shadow-lg"
         />
