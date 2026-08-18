@@ -520,7 +520,7 @@ export default function PricingCatalog({ t, onOpenModal }) {
                 <div className="pt-3 border-t border-sand-200/60 flex items-center justify-between mt-auto">
                   <div className="flex items-center gap-1 text-[11px] text-medical-700 font-semibold">
                     <Check className="w-3.5 h-3.5 text-medical-600 stroke-[3]" />
-                    <span>{isAr ? 'حجز فوري و معقم' : 'RDV Stérile'}</span>
+                    <span>{isAr ? 'حجز فوري بدون انتظار ⚡' : 'RDV Rapide Sans Attente ⚡'}</span>
                   </div>
 
                   <button
