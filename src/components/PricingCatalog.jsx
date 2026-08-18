@@ -483,10 +483,10 @@ export default function PricingCatalog({ t, onOpenModal }) {
                     {/* Soft Light Gradient Vignette */}
                     <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/40 via-transparent to-black/10 pointer-events-none"></div>
 
-                    {/* Sleek Floating Glassmorphic Pill Badge (Top Corner) */}
-                    <div className="absolute top-3 end-3 px-3 py-1 rounded-full bg-therapy-950/85 backdrop-blur-md border border-amber-400/80 text-amber-300 font-extrabold text-[11px] shadow-lg flex items-center gap-1.5 z-10 group-hover:scale-105 transition-transform">
-                      <Sparkles className="w-3 h-3 text-amber-400" />
-                      <span>{badge}</span>
+                    {/* Signature Metallic Bronze & Gold Pill Badge */}
+                    <div className="absolute top-3 end-3 px-3.5 py-1.5 rounded-full bg-gradient-to-b from-[#5c4937] via-[#3e3022] to-[#281d13] border-2 border-amber-400/90 text-yellow-300 font-black text-xs shadow-[inset_0_1px_2px_rgba(255,255,255,0.35),0_4px_12px_rgba(0,0,0,0.6)] flex items-center gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
+                      <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">{badge}</span>
+                      <Sparkles className="w-3.5 h-3.5 text-yellow-400 stroke-[2.2] flex-shrink-0" />
                     </div>
                     
                     {/* Ultra-High Contrast Liquid Gold Price Tag Badge (Bottom Corner) */}
