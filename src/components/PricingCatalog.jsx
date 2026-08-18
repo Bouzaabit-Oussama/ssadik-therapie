@@ -471,37 +471,28 @@ export default function PricingCatalog({ t, onOpenModal }) {
                 )}
 
                 <div>
-                  {/* Card Image Container Wrapper (No overflow-hidden so 3D ribbon extends past boundary) */}
-                  <div className="relative w-full h-44 mb-4">
-                    {/* Rounded Image Frame */}
-                    <div className="w-full h-full rounded-2xl overflow-hidden shadow-inner relative">
-                      <img
-                        src={item.image}
-                        alt={title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/60 via-transparent to-transparent"></div>
-                      
-                      {/* Ultra-Premium Luxury Circular Price Tag Badge */}
-                      <div className="absolute bottom-3 end-3 w-16 h-16 rounded-full bg-gradient-to-b from-therapy-950 via-therapy-900 to-therapy-950 border-2 border-amber-400 ring-2 ring-amber-300/40 shadow-[0_4px_20px_rgba(0,0,0,0.5),0_0_15px_rgba(245,158,11,0.3)] flex flex-col items-center justify-center z-10 group-hover:scale-110 group-hover:border-amber-300 transition-all duration-300">
-                        {/* Top shimmer highlight */}
-                        <div className="absolute top-1 inset-x-3 h-1.5 bg-white/20 rounded-full blur-[1px] pointer-events-none"></div>
-                        <span className="text-base sm:text-lg font-black text-transparent bg-clip-text bg-gradient-to-b from-amber-200 via-yellow-300 to-amber-400 leading-none drop-shadow-sm">
-                          {item.price}
-                        </span>
-                        <span className="text-[9px] font-black tracking-widest text-amber-300/90 uppercase border-t border-amber-400/30 mt-1 pt-0.5 px-1">
-                          {isAr ? 'درهم' : 'DH'}
-                        </span>
-                      </div>
-                    </div>
+                  {/* Card Image Container Wrapper */}
+                  <div className="relative w-full h-48 mb-4 rounded-2xl overflow-hidden border border-amber-400/40 group-hover:border-amber-400/80 transition-colors shadow-md">
+                    <img
+                      src={item.image}
+                      alt={title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                    />
+                    {/* Soft Light Gradient Vignette */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/40 via-transparent to-black/10 pointer-events-none"></div>
 
-                    {/* 3D Ribbon Tag (Placed OUTSIDE overflow-hidden image frame) */}
-                    <div className="ribbon-3d-tag">
-                      <div className="ribbon-3d-text">
-                        {badge}
-                      </div>
+                    {/* Sleek Floating Glassmorphic Pill Badge (Top Corner) */}
+                    <div className="absolute top-3 end-3 px-3 py-1 rounded-full bg-therapy-950/85 backdrop-blur-md border border-amber-400/80 text-amber-300 font-extrabold text-[11px] shadow-lg flex items-center gap-1.5 z-10 group-hover:scale-105 transition-transform">
+                      <Sparkles className="w-3 h-3 text-amber-400" />
+                      <span>{badge}</span>
+                    </div>
+                    
+                    {/* Ultra-High Contrast Liquid Gold Price Tag Badge (Bottom Corner) */}
+                    <div className="absolute bottom-3 end-3 px-3.5 py-1 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-therapy-950 font-black shadow-xl border border-yellow-100 flex items-center gap-1 z-10 group-hover:scale-105 transition-transform">
+                      <span className="text-base sm:text-lg font-black leading-none">{item.price}</span>
+                      <span className="text-[10px] font-extrabold opacity-90">{isAr ? 'درهم' : 'DH'}</span>
                     </div>
                   </div>
 
