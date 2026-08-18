@@ -148,7 +148,7 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
         {/* Modal Header */}
         <div className="text-start space-y-2 mb-6 pe-6">
           <div className="flex items-center gap-2 mb-1">
-            <img src="/assets/cabinet_ssadik_logo.jpg" alt="Logo" className="w-9 h-9 rounded-lg border border-amber-400/50 object-cover shadow-sm" />
+            <img src="/assets/logo centre ssadik-No background.png" alt="Logo" className="w-9 h-9 rounded-lg border border-amber-400/50 object-contain shadow-sm bg-white p-0.5" />
             <span className="text-xs font-black text-amber-700 uppercase tracking-widest">Cabinet SSADIK</span>
           </div>
           <h3 className="text-xl md:text-2xl font-black text-therapy-900 flex items-center gap-2">

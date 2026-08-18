@@ -7,28 +7,28 @@ export default function Services({ t, onOpenModal }) {
       id: 'hijama',
       title: t.services.hijama.title,
       desc: t.services.hijama.desc,
-      image: '/assets/hijama_equipment_room.jpg',
+      image: '/assets/service_12_cupping_therapeutique.png',
       serviceKey: 'Hijama'
     },
     {
       id: 'massage',
       title: t.services.massage.title,
       desc: t.services.massage.desc,
-      image: '/assets/massage.png',
+      image: '/assets/service_5_massage_relaxant.png',
       serviceKey: 'Massage'
     },
     {
       id: 'acupuncture',
       title: t.services.acupuncture.title,
       desc: t.services.acupuncture.desc,
-      image: '/assets/acupuncture.png',
+      image: '/assets/service_17_acupuncture_chinoise.png',
       serviceKey: 'Acupuncture'
     },
     {
       id: 'chiropraxie',
       title: t.services.chiro.title,
       desc: t.services.chiro.desc,
-      image: '/assets/chiropraxie.png',
+      image: '/assets/service_15_seance_chiropraxie.png',
       serviceKey: 'Chiropraxie'
     }
   ];
