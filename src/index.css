@@ -50,6 +50,48 @@
   animation: pulse-soft 2s infinite ease-in-out;
 }
 
+/* Marketing High-Conversion CTA Attention & Shine Animations */
+@keyframes cta-attention {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+  }
+  12% {
+    transform: scale(1.05) rotate(-2deg);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+  }
+  24% {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+  }
+  36% {
+    transform: scale(1.05) rotate(-1.5deg);
+  }
+  48% {
+    transform: scale(1.03) rotate(1deg);
+  }
+  60% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes btn-shine {
+  0% {
+    left: -100%;
+  }
+  25%, 100% {
+    left: 200%;
+  }
+}
+
+.animate-cta-attention {
+  animation: cta-attention 4s infinite cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.animate-btn-shine {
+  animation: btn-shine 3.5s infinite ease-in-out;
+}
+
 /* Fade and Slide animations for modals */
 @keyframes modal-fade-in {
   from {

@@ -108,10 +108,13 @@ export default function PromoCountdown({ t, onOpenModal }) {
         <div>
           <button
             onClick={() => onOpenModal('Pack VIP Massage + Hijama Complète + Chiro (500 DH)')}
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black px-9 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all text-base animate-pulse-soft border border-amber-300/40"
+            className="relative overflow-hidden w-full sm:w-auto flex items-center justify-center gap-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black px-9 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all text-base animate-pulse-soft border border-amber-300/40 group"
           >
-            <Percent className="w-5 h-5 text-amber-100" />
-            <span>{t.promo.cta}</span>
+            {/* Liquid Shine Reflection Sweep */}
+            <span className="absolute top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] animate-btn-shine pointer-events-none"></span>
+
+            <Percent className="relative z-10 w-5 h-5 text-amber-100" />
+            <span className="relative z-10">{t.promo.cta}</span>
           </button>
         </div>
       </div>

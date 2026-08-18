@@ -62,10 +62,13 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
               {/* Prendre RDV Button */}
               <button
                 onClick={() => onOpenModal('General')}
-                className="flex items-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-bold px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
+                className="relative overflow-hidden flex items-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-bold px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm group"
               >
-                <Calendar className="w-4 h-4" />
-                <span>{t.nav.cta}</span>
+                {/* Liquid Shine Reflection Sweep */}
+                <span className="absolute top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] animate-btn-shine pointer-events-none"></span>
+
+                <Calendar className="relative z-10 w-4 h-4" />
+                <span className="relative z-10">{t.nav.cta}</span>
               </button>
             </div>
 
@@ -111,10 +114,13 @@ export default function Header({ lang, setLang, t, onOpenModal }) {
                     setMobileMenuOpen(false);
                     onOpenModal('General');
                   }}
-                  className="w-full flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm"
+                  className="relative overflow-hidden w-full flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm group"
                 >
-                  <Calendar className="w-4 h-4" />
-                  <span>{t.nav.cta}</span>
+                  {/* Liquid Shine Reflection Sweep */}
+                  <span className="absolute top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] animate-btn-shine pointer-events-none"></span>
+
+                  <Calendar className="relative z-10 w-4 h-4" />
+                  <span className="relative z-10">{t.nav.cta}</span>
                 </button>
               </div>
             </div>

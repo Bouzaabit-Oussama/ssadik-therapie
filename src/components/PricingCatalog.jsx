@@ -534,31 +534,25 @@ export default function PricingCatalog({ t, onOpenModal }) {
           })}
         </div>
 
-        {/* Enhanced Liquid Gold & Glassmorphism Reassurance Banner */}
-        <div className="mt-16 relative rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400/60 transition-all hover:border-amber-300 group">
-          {/* Multi-layered animated liquid gold background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-therapy-950 via-therapy-900 to-therapy-950"></div>
-          
-          {/* Glowing Animated Particle & Mesh Glows */}
-          <div className="absolute top-0 start-1/4 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl animate-float-slow pointer-events-none"></div>
-          <div className="absolute bottom-0 end-1/4 w-96 h-96 bg-medical-500/20 rounded-full blur-3xl animate-float-delayed pointer-events-none"></div>
-          
-          {/* Glass Overlay Pattern */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-400/10 via-transparent to-transparent opacity-80"></div>
+        {/* Reassurance Banner Styled Matching Services Cards */}
+        <div className="mt-16 relative bg-marble-prominent rounded-3xl p-6 sm:p-8 md:p-10 border border-amber-400/60 shadow-omnidirectional hover:shadow-omnidirectional-hover transition-all duration-300 group hover:-translate-y-1">
+          {/* Subtle Ambient Glow Orbs */}
+          <div className="absolute top-0 start-1/4 w-72 h-72 bg-medical-100/40 rounded-full filter blur-3xl opacity-60 pointer-events-none animate-float-slow"></div>
+          <div className="absolute bottom-0 end-1/4 w-80 h-80 bg-sand-200/50 rounded-full filter blur-3xl opacity-60 pointer-events-none animate-float-delayed"></div>
 
-          <div className="relative p-8 sm:p-10 text-sand-100 z-10 flex flex-col md:flex-row items-center justify-between gap-8 backdrop-blur-sm">
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
             
             <div className="space-y-3 text-center md:text-start max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/40 text-amber-300 text-xs font-bold">
-                <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-50/90 border border-amber-300 text-amber-800 font-extrabold text-xs tracking-wide shadow-2xs">
+                <MessageSquare className="w-4 h-4 text-amber-600" />
                 <span>{isAr ? 'استشارة طبية مخصصة' : 'Consultation Médicale Sur Mesure'}</span>
               </div>
 
-              <h4 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-200 leading-tight">
+              <h4 className="text-2xl sm:text-3xl font-extrabold text-therapy-900 leading-tight group-hover:text-amber-600 transition-colors">
                 {isAr ? 'هل تحتاج إلى استشارة خاصة أو بروتوكول علاجي مخصص؟' : 'Besoin d’un Protocole Sur Mesure ?'}
               </h4>
 
-              <p className="text-sm sm:text-base text-sand-200/90 font-medium leading-relaxed">
+              <p className="text-sm sm:text-base text-sand-900/85 font-medium leading-relaxed">
                 {isAr
                   ? 'فريقنا الطبي المتخصص بطنجة جاهز لإجابتك وتكثيف الباقة المناسبة وفقاً لحالتك التشخيصية والبدنية.'
                   : 'Nos thérapeutes sont à votre écoute pour adapter nos formules selon votre bilan de santé.'}
@@ -567,10 +561,13 @@ export default function PricingCatalog({ t, onOpenModal }) {
 
             <button
               onClick={() => onOpenModal('Consultation Sur Mesure')}
-              className="relative group/btn whitespace-nowrap bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-therapy-950 font-black text-sm sm:text-base px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 border border-yellow-100 flex items-center gap-3"
+              className="relative overflow-hidden group/btn whitespace-nowrap bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-therapy-950 font-black text-sm sm:text-base px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-yellow-200/90 flex items-center gap-3 animate-cta-attention active:scale-95"
             >
-              <span>{isAr ? 'تواصل مع أخصائي 💬' : 'Contactez un Spécialiste 💬'}</span>
-              <ChevronRight className="w-5 h-5 rtl:rotate-180 transition-transform group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1" />
+              {/* Liquid Gold Shine Reflection Sweep */}
+              <span className="absolute top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] animate-btn-shine pointer-events-none"></span>
+
+              <span className="relative z-10">{isAr ? 'احجز استشارتك المخصصة مجاناً ✨' : 'Obtenez Votre Bilan Sur Mesure Gratuit ✨'}</span>
+              <ChevronRight className="relative z-10 w-5 h-5 rtl:rotate-180 transition-transform group-hover/btn:translate-x-1 rtl:group-hover/btn:-translate-x-1" />
             </button>
           </div>
         </div>

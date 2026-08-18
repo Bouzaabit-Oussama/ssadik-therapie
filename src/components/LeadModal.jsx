@@ -282,15 +282,18 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="order-1 sm:order-2 w-full sm:w-2/3 flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 disabled:bg-medical-300 text-white font-extrabold py-3 px-4 rounded-xl shadow-md transition-all text-sm"
+                className="relative overflow-hidden order-1 sm:order-2 w-full sm:w-2/3 flex items-center justify-center gap-2 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 disabled:bg-medical-300 text-white font-extrabold py-3 px-4 rounded-xl shadow-md transition-all text-sm group"
               >
+                {/* Liquid Shine Reflection Sweep */}
+                <span className="absolute top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] animate-btn-shine pointer-events-none"></span>
+
                 {status === 'loading' ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>{t.modal.sending}</span>
+                    <Loader2 className="relative z-10 w-4 h-4 animate-spin" />
+                    <span className="relative z-10">{t.modal.sending}</span>
                   </>
                 ) : (
-                  <span>{t.modal.btnSubmit}</span>
+                  <span className="relative z-10">{t.modal.btnSubmit}</span>
                 )}
               </button>
             </div>

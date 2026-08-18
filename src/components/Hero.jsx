@@ -88,10 +88,13 @@ export default function Hero({ t, onOpenModal }) {
             <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => onOpenModal('General')}
-                className="w-full sm:w-auto flex items-center justify-center gap-3 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white font-extrabold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-medical-500/30 hover:-translate-y-0.5 transition-all text-base tracking-wide"
+                className="relative overflow-hidden w-full sm:w-auto flex items-center justify-center gap-3 bg-medical-500 hover:bg-medical-600 active:bg-medical-700 text-white font-extrabold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-medical-500/30 hover:-translate-y-0.5 transition-all text-base tracking-wide group"
               >
-                <CalendarRange className="w-5 h-5" />
-                <span>{t.hero.cta}</span>
+                {/* Liquid Shine Reflection Sweep */}
+                <span className="absolute top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] animate-btn-shine pointer-events-none"></span>
+
+                <CalendarRange className="relative z-10 w-5 h-5" />
+                <span className="relative z-10">{t.hero.cta}</span>
               </button>
             </div>
           </div>
