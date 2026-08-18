@@ -23,6 +23,8 @@ export const translations = {
     services: {
       title: 'خدماتنا العلاجية المتميزة',
       subtitle: 'نقدم لك أفضل رعاية صحية في طنجة باستخدام تقنيات طبيعية وعلاجات فيزيائية متطورة على أيدي متخصصين.',
+      bookBtn: 'احجز الخدمة ✨',
+      detailsLink: 'التفاصيل والأسعار',
       hijama: {
         title: 'الحجامة العلاجية (Cupping)',
         desc: 'اكتشف خدماتنا للحجامة، الوخز بالإبر والتقويم اليدوي لتخفيف الآلام وتنشيط الدورة الدموية.',
@@ -198,6 +200,8 @@ export const translations = {
     services: {
       title: 'Nos Services de Soins',
       subtitle: 'Nous offrons des traitements thérapeutiques personnalisés pour soulager vos douleurs et revitaliser votre corps.',
+      bookBtn: 'Réserver ce Soin ✨',
+      detailsLink: 'Tarifs & Détails',
       hijama: {
         title: 'Hijama / Cupping',
         desc: 'Découvrez nos services Cupping, Acupuncture et Chiropratique pour éliminer les toxines et stimuler l\'immunité.',

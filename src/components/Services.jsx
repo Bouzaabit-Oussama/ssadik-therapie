@@ -91,14 +91,23 @@ export default function Services({ t, onOpenModal }) {
                 {service.desc}
               </p>
 
-              {/* Action Link (En savoir plus) */}
-              <button
-                onClick={() => onOpenModal(service.serviceKey)}
-                className="inline-flex items-center gap-1.5 text-medical-700 hover:text-amber-600 font-extrabold text-sm focus:outline-none transition-colors group/btn"
-              >
-                <span>{t.services.hijama.more.replace(' >', '')}</span>
-                <ChevronRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1 rtl:rotate-180 rtl:group-hover/btn:-translate-x-1" />
-              </button>
+              {/* Dual Action Buttons */}
+              <div className="w-full flex flex-col gap-2 mt-auto pt-4 border-t border-sand-200/60">
+                <button
+                  onClick={() => onOpenModal(service.serviceKey)}
+                  className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-therapy-950 font-black text-xs px-4 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all group/btn hover:scale-105 active:scale-95 border border-amber-300/80"
+                >
+                  <span>{t.services.bookBtn || (t.dir === 'rtl' ? 'احجز الخدمة ✨' : 'Réserver ce Soin ✨')}</span>
+                </button>
+
+                <a
+                  href="#pricing"
+                  className="inline-flex items-center justify-center gap-1 text-sand-800 hover:text-amber-600 font-bold text-xs transition-colors py-1 group/link"
+                >
+                  <span>{t.services.detailsLink || (t.dir === 'rtl' ? 'التفاصيل والأسعار' : 'Tarifs & Détails')}</span>
+                  <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 rtl:rotate-180 rtl:group-hover/link:-translate-x-0.5" />
+                </a>
+              </div>
             </div>
           ))}
         </div>
