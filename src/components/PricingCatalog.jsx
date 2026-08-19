@@ -492,8 +492,8 @@ export default function PricingCatalog({ t, onOpenModal }) {
                       </div>
                     </div>
                     
-                    {/* Top Right 3D Minted Gold Medallion Price Seal (Matches generated card design) */}
-                    <div className="absolute -top-3 -end-3 z-30 w-20 h-20 sm:w-22 sm:h-22 p-[3px] rounded-full bg-gradient-to-b from-[#fce8a6] via-[#d4af37] to-[#785307] shadow-[0_10px_25px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-300">
+                    {/* Top Right 3D Minted Gold Medallion Price Seal (Fluid Desktop Cursor Hover Popup & Mobile Visible) */}
+                    <div className="absolute -top-3 -end-3 z-30 w-20 h-20 sm:w-22 sm:h-22 p-[3px] rounded-full bg-gradient-to-b from-[#fce8a6] via-[#d4af37] to-[#785307] shadow-[0_10px_25px_rgba(0,0,0,0.45)] opacity-100 translate-y-0 scale-100 md:opacity-0 md:-translate-y-2 md:scale-75 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:translate-y-0 md:group-hover:scale-100 md:group-hover:pointer-events-auto transition-all duration-500 ease-out">
                       <div className="w-full h-full rounded-full bg-[conic-gradient(from_180deg_at_50%_50%,#fef0be_0deg,#c4972e_45deg,#fce8a6_90deg,#8b6508_135deg,#fef0be_180deg,#c4972e_225deg,#fce8a6_270deg,#8b6508_315deg,#fef0be_360deg)] border-2 border-[#785307]/60 flex flex-col items-center justify-center relative overflow-hidden">
                         {/* Concentric Engraved Ring */}
                         <div className="absolute inset-1 rounded-full border border-[#fef3c7]/80 pointer-events-none"></div>
