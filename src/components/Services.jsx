@@ -35,8 +35,8 @@ export default function Services({ t, onOpenModal }) {
 
   return (
     <section id="services" className="relative py-20 bg-therapy-50/50 scroll-mt-20 overflow-hidden">
-      {/* Subtle Top Gold Glow Stripe */}
-      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+      {/* Subtle Bottom Gold Glow Stripe */}
+      <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
 
       {/* Dynamic Background Glow Orbs */}
       <div className="absolute top-10 start-0 w-80 h-80 bg-medical-100/40 rounded-full filter blur-3xl opacity-60 animate-float-slow pointer-events-none"></div>

@@ -12,8 +12,7 @@ export default function FAQ({ t }) {
 
   return (
     <section id="faq" className="py-20 bg-transparent scroll-mt-20 relative overflow-hidden">
-      {/* Subtle Top & Bottom Gold Glow Stripes */}
-      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+      {/* Subtle Bottom Gold Glow Stripe */}
       <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

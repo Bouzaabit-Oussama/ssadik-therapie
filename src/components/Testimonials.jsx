@@ -6,8 +6,7 @@ export default function Testimonials({ t }) {
 
   return (
     <section className="py-10 md:py-12 bg-transparent relative overflow-hidden scroll-mt-20">
-      {/* Subtle Top & Bottom Gold Glow Stripes */}
-      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+      {/* Subtle Bottom Gold Glow Stripe */}
       <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
 
       {/* Background Decor */}

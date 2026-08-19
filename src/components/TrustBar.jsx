@@ -31,8 +31,7 @@ export default function TrustBar({ t }) {
 
   return (
     <section className="w-full bg-gradient-to-r from-sand-100/90 via-white to-sand-100/90 py-6 shadow-sm relative z-20 overflow-hidden">
-      {/* Subtle Top & Bottom Gold Glow Stripes */}
-      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
+      {/* Subtle Bottom Gold Glow Stripe */}
       <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
