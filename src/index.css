@@ -355,6 +355,22 @@
   );
 }
 
+/* Professional Luxury Warm Shadow for Google Review Cards */
+.google-card-shadow {
+  box-shadow: 
+    0 10px 30px -5px rgba(217, 119, 6, 0.08), 
+    0 4px 14px -2px rgba(92, 73, 55, 0.06),
+    0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.google-card-shadow:hover {
+  box-shadow: 
+    0 20px 40px -8px rgba(217, 119, 6, 0.16), 
+    0 8px 22px -4px rgba(92, 73, 55, 0.1),
+    0 2px 6px 0 rgba(0, 0, 0, 0.04);
+}
+
 
 
 
