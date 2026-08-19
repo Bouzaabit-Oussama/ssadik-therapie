@@ -524,8 +524,8 @@ export default function PricingCatalog({ t, onOpenModal }) {
                   </div>
                 </div>
 
-                {/* Card Footer: Restored exact v2.7.5 single-line styling */}
-                <div className="pt-3 border-t border-amber-300/40 flex items-center justify-between mt-auto gap-1 sm:gap-2">
+                {/* Card Footer: Restored exact single-line styling without top border line */}
+                <div className="pt-1 flex items-center justify-between mt-auto gap-1 sm:gap-2">
                   <div className="flex items-center gap-1 text-[11px] text-therapy-900 font-extrabold whitespace-nowrap">
                     <Check className="w-3.5 h-3.5 text-amber-600 stroke-[3] flex-shrink-0" />
                     <span>{isAr ? 'حجز فوري و معقم' : 'RDV Stérile'}</span>
