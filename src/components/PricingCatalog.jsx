@@ -507,26 +507,30 @@ export default function PricingCatalog({ t, onOpenModal }) {
                     </div>
                   </div>
 
-                  {/* Title & Description */}
-                  <h3 className="text-xl sm:text-2xl font-black text-therapy-900 mb-2 leading-tight group-hover:text-amber-600 transition-colors text-start">
-                    {title}
-                  </h3>
+                  {/* Title & Description with Uniform Height Containers for Pixel-Perfect Card Alignment */}
+                  <div className="min-h-[3.25rem] flex items-start mb-1.5">
+                    <h3 className="text-lg sm:text-xl font-black text-therapy-900 leading-snug group-hover:text-amber-600 transition-colors text-start">
+                      {title}
+                    </h3>
+                  </div>
 
-                  <p className="text-xs sm:text-sm text-sand-900/85 leading-relaxed mb-3 font-semibold text-start">
-                    {desc}
-                  </p>
-
+                  <div className="min-h-[3.5rem] flex items-start mb-1">
+                    <p className="text-xs sm:text-sm text-sand-900/85 leading-relaxed line-clamp-3 font-semibold text-start">
+                      {desc}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Card Footer with Gold Emblem Divider Line snapped to equal vertical height across all cards */}
-                <div className="mt-auto pt-2 flex flex-col gap-3">
-                  {/* Gold Emblem Separating Line */}
+                {/* Card Footer Container (Snapped to bottom via mt-auto) */}
+                <div className="mt-auto pt-1 flex flex-col gap-2.5">
+                  {/* Gold Emblem Separating Line (Positioned exactly a few pixels above the buttons box in all cards) */}
                   <div className="flex items-center justify-center opacity-60">
                     <div className="h-px bg-amber-400/50 flex-1"></div>
                     <span className="px-2 text-amber-600 text-xs">⚜️</span>
                     <div className="h-px bg-amber-400/50 flex-1"></div>
                   </div>
 
+                  {/* Buttons Box */}
                   <div className="flex items-center justify-between gap-1 sm:gap-2">
                     <div className="flex items-center gap-1 text-[11px] text-therapy-900 font-extrabold whitespace-nowrap">
                       <Check className="w-3.5 h-3.5 text-amber-600 stroke-[3] flex-shrink-0" />
