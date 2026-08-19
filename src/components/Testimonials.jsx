@@ -32,14 +32,8 @@ export default function Testimonials({ t }) {
           <div className="w-12 h-1 bg-amber-500 mx-auto rounded-full mt-2"></div>
         </div>
 
-        {/* Infinite Carousel Container Wrapper with Cloud/Mist Blur Degradation Effect */}
-        <div className="relative overflow-hidden w-full py-4">
-          {/* Start (Left/Start) Side Soft Cloud Blur Gradient */}
-          <div className="pointer-events-none absolute inset-y-0 start-0 w-28 sm:w-48 bg-gradient-to-r from-sand-50/95 via-sand-50/50 to-transparent backdrop-blur-[6px] z-30"></div>
-          
-          {/* End (Right/End) Side Soft Cloud Blur Gradient */}
-          <div className="pointer-events-none absolute inset-y-0 end-0 w-28 sm:w-48 bg-gradient-to-l from-sand-50/95 via-sand-50/50 to-transparent backdrop-blur-[6px] z-30"></div>
-
+        {/* Infinite Carousel Container Wrapper with Pure Alpha Mask Edge Fade */}
+        <div className="relative overflow-hidden w-full py-4 mask-edge-fade">
           {/* Marquee Moving Track (Pauses on hover so user can read) */}
           <div className={isRtl ? 'animate-marquee-rtl flex gap-6 px-4' : 'animate-marquee-ltr flex gap-6 px-4'}>
             {loopReviews.map((review, idx) => (
