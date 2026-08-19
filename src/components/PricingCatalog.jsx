@@ -516,28 +516,31 @@ export default function PricingCatalog({ t, onOpenModal }) {
                     {desc}
                   </p>
 
-                  {/* Gold Emblem Divider */}
-                  <div className="flex items-center justify-center my-3 opacity-50">
+                </div>
+
+                {/* Card Footer with Gold Emblem Divider Line snapped to equal vertical height across all cards */}
+                <div className="mt-auto pt-2 flex flex-col gap-3">
+                  {/* Gold Emblem Separating Line */}
+                  <div className="flex items-center justify-center opacity-60">
                     <div className="h-px bg-amber-400/50 flex-1"></div>
                     <span className="px-2 text-amber-600 text-xs">⚜️</span>
                     <div className="h-px bg-amber-400/50 flex-1"></div>
                   </div>
-                </div>
 
-                {/* Card Footer: Restored exact single-line styling without top border line */}
-                <div className="pt-1 flex items-center justify-between mt-auto gap-1 sm:gap-2">
-                  <div className="flex items-center gap-1 text-[11px] text-therapy-900 font-extrabold whitespace-nowrap">
-                    <Check className="w-3.5 h-3.5 text-amber-600 stroke-[3] flex-shrink-0" />
-                    <span>{isAr ? 'حجز فوري و معقم' : 'RDV Stérile'}</span>
+                  <div className="flex items-center justify-between gap-1 sm:gap-2">
+                    <div className="flex items-center gap-1 text-[11px] text-therapy-900 font-extrabold whitespace-nowrap">
+                      <Check className="w-3.5 h-3.5 text-amber-600 stroke-[3] flex-shrink-0" />
+                      <span>{isAr ? 'حجز فوري و معقم' : 'RDV Stérile'}</span>
+                    </div>
+
+                    <button
+                      onClick={() => onOpenModal(item.serviceKey)}
+                      className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-therapy-950 font-black text-xs px-3.5 py-2 rounded-xl shadow-md border border-yellow-200/90 transition-all group/btn hover:scale-105 active:scale-95 whitespace-nowrap flex-shrink-0"
+                    >
+                      <span>{isAr ? 'حجز العرض' : 'Réserver'}</span>
+                      <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 transition-transform group-hover/btn:translate-x-0.5 rtl:group-hover/btn:-translate-x-0.5" />
+                    </button>
                   </div>
-
-                  <button
-                    onClick={() => onOpenModal(item.serviceKey)}
-                    className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-therapy-950 font-black text-xs px-3.5 py-2 rounded-xl shadow-md border border-yellow-200/90 transition-all group/btn hover:scale-105 active:scale-95 whitespace-nowrap flex-shrink-0"
-                  >
-                    <span>{isAr ? 'حجز العرض' : 'Réserver'}</span>
-                    <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 transition-transform group-hover/btn:translate-x-0.5 rtl:group-hover/btn:-translate-x-0.5" />
-                  </button>
                 </div>
               </div>
             );
