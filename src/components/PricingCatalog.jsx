@@ -455,16 +455,12 @@ export default function PricingCatalog({ t, onOpenModal }) {
             return (
               <div
                 key={item.id}
-                className={`relative bg-marble-prominent rounded-3xl p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group shadow-omnidirectional hover:shadow-omnidirectional-hover border ${
-                  item.featured
-                    ? 'border-amber-400 ring-2 ring-amber-400/40'
-                    : 'border-sand-200/80 hover:border-amber-400/60'
-                }`}
+                className="relative bg-marble-prominent rounded-[2rem] p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 group shadow-omnidirectional hover:shadow-omnidirectional-hover border-2 border-amber-500/60 ring-1 ring-amber-300/30"
               >
-                {/* Featured / Popular Glow Badge */}
+                {/* Featured / VIP Prestige Header Badge */}
                 {item.featured && (
-                  <div className="absolute -top-3 inset-x-0 flex justify-center z-10">
-                    <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-therapy-950 font-black text-[11px] px-3.5 py-0.5 rounded-full shadow-lg border border-yellow-200 tracking-wider">
+                  <div className="absolute -top-3 inset-x-0 flex justify-center z-20">
+                    <span className="bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-therapy-950 font-black text-[11px] px-4 py-0.5 rounded-full shadow-lg border border-yellow-100 tracking-wider">
                       ★ PRESTIGE VIP ★
                     </span>
                   </div>
@@ -472,55 +468,76 @@ export default function PricingCatalog({ t, onOpenModal }) {
 
                 <div>
                   {/* Card Image Container Wrapper */}
-                  <div className="relative w-full h-48 mb-4 rounded-2xl overflow-hidden border border-amber-400/40 group-hover:border-amber-400/80 transition-colors shadow-md">
-                    <img
-                      src={item.image}
-                      alt={title}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
-                    />
-                    {/* Soft Light Gradient Vignette */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-therapy-950/40 via-transparent to-black/10 pointer-events-none"></div>
+                  <div className="relative w-full h-52 sm:h-56 mb-5 rounded-2xl overflow-visible">
+                    {/* Inner 3px Metallic Gold Photo Frame */}
+                    <div className="w-full h-full rounded-2xl overflow-hidden border-[3px] border-amber-400/90 shadow-[0_8px_25px_rgba(0,0,0,0.22)] relative">
+                      <img
+                        src={item.image}
+                        alt={title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                      />
+                      {/* Soft Ambient Vignette */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10 pointer-events-none"></div>
+                    </div>
 
-                    {/* Signature Metallic Bronze & Gold Pill Badge */}
-                    <div className="absolute top-3 end-3 px-3.5 py-1.5 rounded-full bg-gradient-to-b from-[#5c4937] via-[#3e3022] to-[#281d13] border-2 border-amber-400/90 text-yellow-300 font-black text-xs shadow-[inset_0_1px_2px_rgba(255,255,255,0.35),0_4px_12px_rgba(0,0,0,0.6)] flex items-center gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                      <span className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">{badge}</span>
-                      <Sparkles className="w-3.5 h-3.5 text-yellow-400 stroke-[2.2] flex-shrink-0" />
+                    {/* Top Left Metallic Brass Plaque Text Tag (Matches generated card design) */}
+                    <div className="absolute top-3 start-3 z-20 p-[2px] rounded-full bg-gradient-to-b from-[#fce8a6] via-[#d4af37] to-[#785307] shadow-[0_6px_16px_rgba(0,0,0,0.35)] group-hover:scale-105 transition-transform duration-300">
+                      <div className="bg-gradient-to-b from-[#fce8a6] via-[#c59b27] to-[#7a570c] rounded-full px-3.5 py-1 border border-[#fff4cc] flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#301c07] fill-[#301c07]" />
+                        <span className="text-[#301c07] font-black text-xs drop-shadow-[0_1px_0.5px_rgba(255,255,255,0.6)]">
+                          {badge}
+                        </span>
+                      </div>
                     </div>
                     
-                    {/* Ultra-High Contrast Liquid Gold Price Tag Badge (Bottom Corner) */}
-                    <div className="absolute bottom-3 end-3 px-3.5 py-1 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-therapy-950 font-black shadow-xl border border-yellow-100 flex items-center gap-1 z-10 group-hover:scale-105 transition-transform">
-                      <span className="text-base sm:text-lg font-black leading-none">{item.price}</span>
-                      <span className="text-[10px] font-extrabold opacity-90">{isAr ? 'درهم' : 'DH'}</span>
+                    {/* Top Right 3D Minted Gold Medallion Price Seal (Matches generated card design) */}
+                    <div className="absolute -top-3 -end-3 z-30 w-20 h-20 sm:w-22 sm:h-22 p-[3px] rounded-full bg-gradient-to-b from-[#fce8a6] via-[#d4af37] to-[#785307] shadow-[0_10px_25px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-300">
+                      <div className="w-full h-full rounded-full bg-[conic-gradient(from_180deg_at_50%_50%,#fef0be_0deg,#c4972e_45deg,#fce8a6_90deg,#8b6508_135deg,#fef0be_180deg,#c4972e_225deg,#fce8a6_270deg,#8b6508_315deg,#fef0be_360deg)] border-2 border-[#785307]/60 flex flex-col items-center justify-center relative overflow-hidden">
+                        {/* Concentric Engraved Ring */}
+                        <div className="absolute inset-1 rounded-full border border-[#fef3c7]/80 pointer-events-none"></div>
+                        <span className="text-base sm:text-lg font-black text-[#3b2005] leading-none drop-shadow-[0_1px_1px_rgba(255,255,255,0.5)]">
+                          {item.price}
+                        </span>
+                        <span className="text-[10px] sm:text-xs font-black text-[#4d2907] uppercase mt-0.5">
+                          {isAr ? 'درهم' : 'DH'}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-lg font-extrabold text-therapy-900 mb-2 leading-snug group-hover:text-amber-600 transition-colors">
+                  {/* Title & Description */}
+                  <h3 className="text-xl sm:text-2xl font-black text-therapy-900 mb-2 leading-tight group-hover:text-amber-600 transition-colors text-start">
                     {title}
                   </h3>
 
-                  {/* Description */}
-                  <p className="text-xs sm:text-sm text-sand-800/80 leading-relaxed mb-4 line-clamp-3 font-medium">
+                  <p className="text-xs sm:text-sm text-sand-900/85 leading-relaxed mb-3 font-semibold text-start">
                     {desc}
                   </p>
+
+                  {/* Gold Emblem Divider */}
+                  <div className="flex items-center justify-center my-3 opacity-50">
+                    <div className="h-px bg-amber-400/50 flex-1"></div>
+                    <span className="px-2 text-amber-600 text-xs">⚜️</span>
+                    <div className="h-px bg-amber-400/50 flex-1"></div>
+                  </div>
                 </div>
 
-                {/* Card Footer Action */}
-                <div className="pt-3 border-t border-sand-200/60 flex items-center justify-between mt-auto">
-                  <div className="flex items-center gap-1 text-[11px] text-medical-700 font-semibold">
-                    <Check className="w-3.5 h-3.5 text-medical-600 stroke-[3]" />
-                    <span>{isAr ? 'حجز فوري بدون انتظار' : 'RDV Rapide Sans Attente'}</span>
-                  </div>
-
+                {/* Card Footer: Warm Terracotta CTA Button + Trust Badge */}
+                <div className="pt-2 flex items-center justify-between mt-auto gap-2">
                   <button
                     onClick={() => onOpenModal(item.serviceKey)}
-                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-therapy-950 font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-md transition-all group/btn hover:scale-105 active:scale-95"
+                    className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-b from-[#c85a28] via-[#b64d1c] to-[#993b0f] hover:from-[#d6632f] hover:to-[#a84214] text-amber-50 font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-md border border-amber-300/40 transition-all group/btn hover:scale-105 active:scale-95"
                   >
                     <span>{isAr ? 'حجز العرض' : 'Réserver'}</span>
-                    <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 transition-transform group-hover/btn:translate-x-0.5 rtl:group-hover/btn:-translate-x-0.5" />
+                    <ChevronRight className="w-4 h-4 rtl:rotate-180 transition-transform group-hover/btn:translate-x-0.5 rtl:group-hover/btn:-translate-x-0.5" />
                   </button>
+
+                  <div className="flex items-center gap-1 text-[11px] sm:text-xs text-[#7c3a1d] font-bold">
+                    <Check className="w-4 h-4 text-[#a84214] stroke-[3]" />
+                    <span>{isAr ? 'حجز فوري بدون انتظار' : 'RDV Rapide Sans Attente'}</span>
+                  </div>
                 </div>
               </div>
             );
