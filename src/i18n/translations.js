@@ -127,13 +127,31 @@ export const translations = {
         {
           name: 'فاطمة الزهراء البقالي',
           role: 'مريضة طنجة - التدليك العلاجي',
-          comment: 'الاحترافية والمعاملة الطيبة. جلسات التلذيك والتقويم أحدثت فارقاً كبيراً في راحتي اليومية والتخلص من التوتر.',
+          comment: 'الاحترافية والمعاملة الطيبة. جلسات التدليك والتقويم أحدثت فارقاً كبيراً في راحتي اليومية والتخلص من التوتر.',
           rating: 5
         },
         {
           name: 'كريم التازي',
           role: 'مريض طنجة - الوخز بالإبر والتقويم',
           comment: 'فريق متخصص، عيادة ناتجة ونظيفة جداً بالجيراري 2. الشفاء بفضل الله ثم ببروتوكول العلاج الطبيعي الممتاز.',
+          rating: 5
+        },
+        {
+          name: 'عمر المجدوبي',
+          role: 'مريض طنجة - باقة بريستيج VIP',
+          comment: 'خدمة راقية جداً وباقة VIP تستحق كل درهم. جمعوا بين التدليك الاسترخائي والحجامة الدقيقة والتقويم وشعرت براحة خفيفة كأنني ولدت من جديد.',
+          rating: 5
+        },
+        {
+          name: 'مريم المنصوري',
+          role: 'مريضة طنجة - الحجامة وتخفيف التوتر',
+          comment: 'الطاقم النسائي محترف للغاية ويراعي الخصوصية التامة. أثر الحجامة كان سريعاً في إزالة الصداع وتوتر الكتفين.',
+          rating: 5
+        },
+        {
+          name: 'رشيد بنيس',
+          role: 'مريض طنجة - تدليك رياضي وتأهيل',
+          comment: 'عيادة ممتازة للرياضيين. بعد كل حصة تدليك رياضي وحجامة أسترجع لياقتي وتزول التشنجات العضلية بسرعة.',
           rating: 5
         }
       ]
@@ -311,6 +329,24 @@ export const translations = {
           name: 'Karim Tazi',
           role: 'Patient à Tanger - Acupuncture & GOT',
           comment: 'Cabinet propre, moderne et idéalement situé à Jirari 2. Le praticien est à l\'écoute et le suivi est remarquable.',
+          rating: 5
+        },
+        {
+          name: 'Omar El Majdoubi',
+          role: 'Patient à Tanger - Pack Prestige VIP',
+          comment: 'Service haut de gamme ! Le pack VIP combinant massage, cupping et chiropraxie m\'a remis sur pied. Une véritable renaissance.',
+          rating: 5
+        },
+        {
+          name: 'Meriem Mansouri',
+          role: 'Patiente à Tanger - Soins Féminins',
+          comment: 'Équipe féminine très qualifiée et respectueuse de la confidentialité. La hijama médicale a fait disparaître mes migraines répétitives.',
+          rating: 5
+        },
+        {
+          name: 'Rachid Bennis',
+          role: 'Patient à Tanger - Massage Sportif',
+          comment: 'Idéal pour les sportifs. Après mes séances de massage profond et cupping, mes courbatures et tensions s\'en vont immédiatement.',
           rating: 5
         }
       ]
