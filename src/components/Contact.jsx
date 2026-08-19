@@ -227,7 +227,7 @@ export default function Contact({ t, onOpenModal }) {
             <div className="relative w-full h-[200px] md:h-[210px] rounded-3xl overflow-hidden shadow-md border border-sand-200 bg-sand-200">
               <iframe
                 title="Google Maps Location - Cabinet SSADIK Tanger"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.5446!2d-5.807469!3d35.737400!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQ0JzE0LjYiTiA1wrA0OCcyNi45Ilc!5e0!3m2!1sfr!2sma!4v1700000000000!5m2!1sfr!2sma"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3239.5446!2d-5.807469!3d35.737400!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0b810059a37c67%3A0xdbd98f651349f467!2sSsadik%20th%C3%A9rapie!5e0!3m2!1sfr!2sma!4v1700000000000!5m2!1sfr!2sma"
                 className="w-full h-full border-0"
                 allowFullScreen=""
                 loading="lazy"
@@ -237,7 +237,7 @@ export default function Contact({ t, onOpenModal }) {
 
             {/* Card 1: Address (Clickable link to Google Maps) */}
             <a
-              href="https://maps.app.goo.gl/b4ATaYBiUYhr4fVh6"
+              href="https://www.google.com/maps/place/Etage+3,+Ssadik+th%C3%A9rapie,+6,+2+Av.+Aicha+Moussafer,+Tanger+90060/data=!4m2!3m1!1s0xd0b810059a37c67:0xdbd98f651349f467!18m1!1e1?utm_source=mstt_1&entry=gps&coh=192189&g_ep=CAESBzI2LjI5LjIYACCIJyq9ASw5NDI2NzcyNyw5NDI5MjE5NSw5NDI5OTUzMiwxMDA3OTY0OTgsMTAwNzk3NzYxLDEwMDgyNjQ3OSwxMDA3OTY1MzUsMTAwODIyMTI5LDk0MjgwNTc2LDk0MjA3Mzk0LDk0MjA3NTA2LDk0MjA4NTA2LDk0MjE4NjUzLDk0MjI5ODM5LDk0Mjc1MTY4LDk0Mjc5NjE5LDEwMDgxNTYzNSwxMDA4MjUwMjEsMTAwODIwMjM3LDEwMDgyMjQ4OUICTUE%3D&skid=b745a039-a436-4752-aeae-88fb0c1beeb2&g_st=aw"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white rounded-2xl p-3 border border-sand-200/60 shadow-xs flex items-center justify-between gap-3 text-start hover:border-medical-400 hover:shadow-sm transition-all group"
