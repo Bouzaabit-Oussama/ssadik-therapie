@@ -524,20 +524,20 @@ export default function PricingCatalog({ t, onOpenModal }) {
                   </div>
                 </div>
 
-                {/* Card Footer: Warm Terracotta CTA Button + Trust Badge */}
-                <div className="pt-2 flex items-center justify-between mt-auto gap-2">
+                {/* Card Footer: Gold CTA Button + Trust Badge matching user reference image */}
+                <div className="pt-3 border-t border-amber-300/40 flex items-center justify-between mt-auto gap-2">
+                  <div className="flex items-center gap-1 text-xs sm:text-sm text-therapy-900 font-extrabold">
+                    <span>{isAr ? 'حجز فوري و معقم' : 'RDV Stérile & Rapide'}</span>
+                    <Check className="w-4 h-4 text-amber-600 stroke-[3]" />
+                  </div>
+
                   <button
                     onClick={() => onOpenModal(item.serviceKey)}
-                    className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-b from-[#c85a28] via-[#b64d1c] to-[#993b0f] hover:from-[#d6632f] hover:to-[#a84214] text-amber-50 font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-md border border-amber-300/40 transition-all group/btn hover:scale-105 active:scale-95"
+                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-therapy-950 font-black text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md border border-yellow-200/90 transition-all group/btn hover:scale-105 active:scale-95"
                   >
-                    <span>{isAr ? 'حجز العرض' : 'Réserver'}</span>
                     <ChevronRight className="w-4 h-4 rtl:rotate-180 transition-transform group-hover/btn:translate-x-0.5 rtl:group-hover/btn:-translate-x-0.5" />
+                    <span>{isAr ? 'حجز العرض' : 'Réserver'}</span>
                   </button>
-
-                  <div className="flex items-center gap-1 text-[11px] sm:text-xs text-[#7c3a1d] font-bold">
-                    <Check className="w-4 h-4 text-[#a84214] stroke-[3]" />
-                    <span>{isAr ? 'حجز فوري بدون انتظار' : 'RDV Rapide Sans Attente'}</span>
-                  </div>
                 </div>
               </div>
             );
