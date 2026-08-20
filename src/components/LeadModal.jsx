@@ -1,7 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { X, CheckCircle, AlertCircle, Loader2, PhoneCall } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, CheckCircle, AlertCircle, Loader2, PhoneCall, ChevronDown } from 'lucide-react';
 import { saveLead } from '../firebase';
 
+const serviceCategories = [
+  {
+    label: "💎 الباقات والعروض المدمجة / Packs",
+    options: [
+      { value: "Massage + Hijama Dos (250 DH)", label: "مساج + حجامة ظهر (250 DH)" },
+      { value: "Massage + Hijama + Chiropraxie (400 DH)", label: "مساج + حجامة + كيروبراكتيك (400 DH)" },
+      { value: "Massage + Hijama Complète (400 DH)", label: "مساج + حجامة كاملة (400 DH)" },
+      { value: "Pack VIP Massage + Hijama Complète + Chiro (500 DH)", label: "Pack VIP: مساج + حجامة كاملة + كيروبراكتيك (500 DH)" },
+    ]
+  },
+  {
+    label: "💆‍♂️ المساج والتدليك / Massages",
+    options: [
+      { value: "Massage Relaxant (300 DH)", label: "مساج استرخائي (300 DH)" },
+      { value: "Massage Tonic (400 DH)", label: "مساج Tonic (400 DH)" },
+      { value: "Massage aux Pierres Chaudes (300 DH)", label: "مساج بالأحجار الساخنة (300 DH)" },
+      { value: "Massage Crânien & Visage (300 DH)", label: "مساج الوجه و الرأس (300 DH)" },
+      { value: "Réflexologie (300 DH)", label: "ريفلوكسولوجي (300 DH)" },
+      { value: "Massage Thaïlandais (500 DH)", label: "مساج تيلاندي (500 DH)" },
+      { value: "Massage Sportif (500 DH)", label: "مساج رياضي (500 DH)" },
+    ]
+  },
+  {
+    label: "🩺 الجلسات العلاجية / Séances",
+    options: [
+      { value: "Hijama Thérapeutique (200 DH)", label: "حجامة علاجية (200 DH)" },
+      { value: "Hijama Sportive Dos (250 DH)", label: "حجامة رياضية للظهر (250 DH)" },
+      { value: "Hijama Complète (300 DH)", label: "حجامة كاملة (300 DH)" },
+      { value: "Séance Chiropraxie (300 DH)", label: "حصة كيروبراكتيك (300 DH)" },
+      { value: "Séance Ostéopathie (400 DH)", label: "حصة أوستيوباتي (400 DH)" },
+      { value: "Acupuncture Chinoise (250 DH)", label: "أبر صينية (250 DH)" },
+    ]
+  },
+  {
+    label: "🏖️ العلاجات وحمام الرمل / Cures",
+    options: [
+      { value: "Hammam de Sable avec Massage (800 DH)", label: "حمام الرمل مع مساج (800 DH)" },
+      { value: "Cure 3 Jours (1950 DH)", label: "ثلاث حصص يومية (1950 DH)" },
+      { value: "Cure 5 Jours (2950 DH)", label: "خمس حصص يومية (2950 DH)" },
+    ]
+  }
+];
 
 export default function LeadModal({ isOpen, onClose, defaultService, t }) {
   const [name, setName] = useState('');
@@ -9,6 +51,19 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
   const [service, setService] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Update selected service whenever defaultService prop changes
   useEffect(() => {
@@ -134,7 +189,7 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
       ></div>
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-lg bg-marble-card rounded-3xl border-2 border-amber-400/50 shadow-2xl overflow-hidden p-6 md:p-8 animate-slide-up z-10">
+      <div className="relative w-full max-w-lg bg-marble-card rounded-3xl border-2 border-amber-400/50 shadow-2xl overflow-visible p-6 md:p-8 animate-slide-up z-10">
         
         {/* Close Button */}
         <button
@@ -204,61 +259,62 @@ export default function LeadModal({ isOpen, onClose, defaultService, t }) {
               />
             </div>
 
-            {/* Input Service Selection */}
-            <div className="flex flex-col space-y-1.5">
-              <label htmlFor="lead-service" className="text-xs md:text-sm font-bold text-therapy-900">
+            {/* Input Service Selection (Custom Dropdown) */}
+            <div className="flex flex-col space-y-1.5 relative" ref={dropdownRef}>
+              <label className="text-xs md:text-sm font-bold text-therapy-900">
                 {t.modal.labelService} *
               </label>
-              <select
-                id="lead-service"
-                required
-                value={service}
-                onChange={(e) => setService(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-sand-200 focus:outline-none focus:ring-2 focus:ring-medical-500 font-medium bg-sand-50/50 text-sm text-sand-900"
+              <div 
+                className={`w-full px-4 py-3 rounded-xl border ${isDropdownOpen ? 'border-medical-500 ring-2 ring-medical-500/20' : 'border-sand-200'} cursor-pointer flex justify-between items-center bg-sand-50/50 text-sm font-medium transition-all hover:border-medical-400`}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <option value="">{t.contact.selectService}</option>
-                {/* Dynamically render pre-selected service if not in default list */}
-                {service && ![
-                  'Massage + Hijama Dos (250 DH)', 'Massage + Hijama + Chiropraxie (400 DH)', 'Massage + Hijama Complète (400 DH)', 'Pack VIP Massage + Hijama Complète + Chiro (500 DH)',
-                  'Massage Relaxant (300 DH)', 'Massage Tonic (400 DH)', 'Massage aux Pierres Chaudes (300 DH)', 'Massage Crânien & Visage (300 DH)', 'Réflexologie (300 DH)', 'Massage Thaïlandais (500 DH)', 'Massage Sportif (500 DH)',
-                  'Hijama Thérapeutique (200 DH)', 'Hijama Sportive Dos (250 DH)', 'Hijama Complète (300 DH)', 'Séance Chiropraxie (300 DH)', 'Séance Ostéopathie (400 DH)', 'Acupuncture Chinoise (250 DH)',
-                  'Hammam de Sable avec Massage (800 DH)', 'Cure 3 Jours (1950 DH)', 'Cure 5 Jours (2950 DH)'
-                ].includes(service) && (
-                  <option value={service}>{service}</option>
-                )}
+                <span className={service ? "text-sand-900 truncate" : "text-sand-900/50 truncate"}>
+                  {service ? (serviceCategories.flatMap(c => c.options).find(o => o.value === service)?.label || service) : t.contact.selectService}
+                </span>
+                <ChevronDown className={`w-4 h-4 text-sand-900/50 transition-transform duration-300 flex-shrink-0 ${isDropdownOpen ? 'rotate-180 text-medical-600' : ''}`} />
+              </div>
 
-                <optgroup label="💎 الباقات والعروض المدمجة / Packs">
-                  <option value="Massage + Hijama Dos (250 DH)">مساج + حجامة ظهر (250 DH)</option>
-                  <option value="Massage + Hijama + Chiropraxie (400 DH)">مساج + حجامة + كيروبراكتيك (400 DH)</option>
-                  <option value="Massage + Hijama Complète (400 DH)">مساج + حجامة كاملة (400 DH)</option>
-                  <option value="Pack VIP Massage + Hijama Complète + Chiro (500 DH)">Pack VIP: مساج + حجامة كاملة + كيروبراكتيك (500 DH)</option>
-                </optgroup>
+              {/* Custom Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute bottom-[100%] start-0 w-full mb-2 bg-white border border-sand-200 shadow-xl rounded-xl z-50 max-h-[240px] overflow-y-auto animate-dropdown-popup custom-scrollbar">
+                  {/* Unlisted/Dynamic Service (if passed via props and not in list) */}
+                  {service && !serviceCategories.some(cat => cat.options.some(opt => opt.value === service)) && (
+                    <div 
+                      className="px-4 py-3 text-sm font-medium text-medical-700 bg-medical-50 hover:bg-medical-100 cursor-pointer border-b border-sand-100"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      {service} (Sélectionné)
+                    </div>
+                  )}
 
-                <optgroup label="💆‍♂️ المساج والتدليك / Massages">
-                  <option value="Massage Relaxant (300 DH)">مساج استرخائي (300 DH)</option>
-                  <option value="Massage Tonic (400 DH)">مساج Tonic (400 DH)</option>
-                  <option value="Massage aux Pierres Chaudes (300 DH)">مساج بالأحجار الساخنة (300 DH)</option>
-                  <option value="Massage Crânien & Visage (300 DH)">مساج الوجه و الرأس (300 DH)</option>
-                  <option value="Réflexologie (300 DH)">ريفلوكسولوجي (300 DH)</option>
-                  <option value="Massage Thaïlandais (500 DH)">مساج تيلاندي (500 DH)</option>
-                  <option value="Massage Sportif (500 DH)">مساج رياضي (500 DH)</option>
-                </optgroup>
-
-                <optgroup label="🩺 الجلسات العلاجية / Séances">
-                  <option value="Hijama Thérapeutique (200 DH)">حجامة علاجية (200 DH)</option>
-                  <option value="Hijama Sportive Dos (250 DH)">حجامة رياضية للظهر (250 DH)</option>
-                  <option value="Hijama Complète (300 DH)">حجامة كاملة (300 DH)</option>
-                  <option value="Séance Chiropraxie (300 DH)">حصة كيروبراكتيك (300 DH)</option>
-                  <option value="Séance Ostéopathie (400 DH)">حصة أوستيوباتي (400 DH)</option>
-                  <option value="Acupuncture Chinoise (250 DH)">أبر صينية (250 DH)</option>
-                </optgroup>
-
-                <optgroup label="🏖️ العلاجات وحمام الرمل / Cures">
-                  <option value="Hammam de Sable avec Massage (800 DH)">حمام الرمل مع مساج (800 DH)</option>
-                  <option value="Cure 3 Jours (1950 DH)">ثلاث حصص يومية (1950 DH)</option>
-                  <option value="Cure 5 Jours (2950 DH)">خمس حصص يومية (2950 DH)</option>
-                </optgroup>
-              </select>
+                  {/* Categories */}
+                  {serviceCategories.map((category, idx) => (
+                    <div key={idx} className="border-b border-sand-100/50 last:border-b-0 pb-1">
+                      <div className="sticky top-0 bg-sand-50/95 backdrop-blur-sm px-4 py-2 text-xs font-black text-therapy-900 uppercase tracking-wider z-10 border-y border-sand-200/50 mt-1 first:mt-0 first:border-t-0">
+                        {category.label}
+                      </div>
+                      <div className="flex flex-col py-1">
+                        {category.options.map((option, optIdx) => (
+                          <div
+                            key={optIdx}
+                            className={`px-4 py-2.5 text-sm font-semibold cursor-pointer transition-all duration-200 active:scale-[0.98] active:bg-medical-100 ${
+                              service === option.value 
+                                ? 'bg-medical-50 text-medical-700 border-s-4 border-medical-500' 
+                                : 'text-sand-800 hover:bg-sand-50 hover:text-medical-600 border-s-4 border-transparent'
+                            }`}
+                            onClick={() => {
+                              setService(option.value);
+                              setTimeout(() => setIsDropdownOpen(false), 150);
+                            }}
+                          >
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Error Message */}
